@@ -1,0 +1,14 @@
+{
+  "name": "vu-course-planner",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "yarn run firebase:emulators",
+    "firebase:emulators": "firebase emulators:start --only hosting,functions --import=./.emulatorState --export-on-exit",
+    "firebase:kill": "lsof -t -i:5005 -i:8080 -i:9000 -i:5002 -i:9099 -i:8085 -i:9299 | xargs kill -9"
+  },
+  "workspaces": [
+    "hosting"
+  ],
+  "packageManager": "yarn@3.6.3"
+}
