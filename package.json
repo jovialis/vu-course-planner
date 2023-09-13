@@ -8,8 +8,9 @@
     "dev:functions": "cd functions && chmod +x ./activate_venv.sh && ./activate_venv.sh",
     "firebase:emulators": "firebase emulators:start --only hosting,functions --import=./.emulatorState --export-on-exit",
     "firebase:emulators:kill": "lsof -t -i:5005 -i:8080 -i:9000 -i:5002 -i:9099 -i:8085 -i:9299 | xargs kill -9",
-    "script:install": "yarn run script:install:python && yarn run script:install:nodejs",
+    "script:install": "yarn run script:install:python && yarn run script:install:nodejs && yarn run script:install:hostingenv",
     "script:install:nodejs": "yarn install",
+    "script:install:hostingenv": "cd hosting && chmod +x ./init_env_file.sh && ./init_env_file.sh",
     "script:install:python": "cd functions && chmod +x ./install_dependencies.sh && ./install_dependencies.sh"
   },
   "devDependencies": {
