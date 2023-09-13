@@ -17,5 +17,3 @@ A course planner built for Vanderbilt students. Project for CS 4278 (Principles 
 1. ```yarn run dev```
 2. Visit [localhost:5002](http://localhost:5002) to see the website. 
 3. Any changes you make to the codebase will be automatically loaded.
-
-NOTE: There is a bug where functions in the "Functions" directory are not being picked up due to issues with the Python venv setup... To be fixed!

@@ -26,7 +26,6 @@
     {
       "source": "functions",
       "codebase": "functions",
-      "runtime": "python310",
       "ignore": [
         "venv",
         ".git",
