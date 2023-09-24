@@ -11,9 +11,9 @@
   "main": "lib/index.js",
   "dependencies": {
     "@types/node": "^18.15.3",
+    "@vanderbilt/yes-api": "^1.0.8",
     "firebase-admin": "^11.8.0",
-    "firebase-functions": "^4.3.1",
-    "unique-names-generator": "^4.7.1"
+    "firebase-functions": "^4.3.1"
   },
   "devDependencies": {
     "nodemon": "^3.0.1",

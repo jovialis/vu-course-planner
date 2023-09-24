@@ -39,7 +39,8 @@ We are creating the Vanderbilt Course Planner (VCP) to help Vanderbilt Undergrad
 3. Install the Firebase CLI: ```npm install -g firebase-tools```
 
 #### Install project dependencies
-```yarn run script:install```
+1. Run ```yarn install``` (only needs to be done once, ever, upon first downloading this repo)
+2. Run ```yarn run script:install```
 
 #### Connect this codebase to Firebase
 1. Login to Firebase: ```firebase login```
