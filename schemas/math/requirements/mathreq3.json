@@ -1,0 +1,11 @@
+{
+	"Name": "At least 12 credit hours math",
+    "id": 3,
+	"Hours": 12, 
+	"Prerequisites": [],
+	"Paths": [], 
+	"Remainder": {
+        "subject": "Math",
+        "cond": [">= 2800", "!= 3000"]
+    }
+}

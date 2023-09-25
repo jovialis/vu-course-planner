@@ -1,0 +1,48 @@
+{
+	"Name": "Linear Algebra and Differential Equations",
+    "id": 2, 
+	"Hours": 6,
+	"Prerequisites": null,
+	"Path": [
+        {
+            "Name": "path1",
+            "id": null, 
+            "Hours": 6,
+            "Prerequisites": [
+                {
+                    "Name": "pprereq1",
+                    "id": null,
+                    "Hours": 3, 
+                    "Prerequisites": [],
+                    "Paths": ["2420","2610"],
+                    "Remainder": null
+                }
+            ],
+            "Path": ["2410","2600",{
+                "Name": "ppath1",
+                "id": null,
+                "Hours": 6, 
+                "Prerequisites": ["2500","2501"],
+                "Paths": [],
+                "Remainder": null
+            }], 
+            "Remainder": null
+        },
+        {
+            "Name": "path2",
+            "id": null,
+            "Hours": 6, 
+            "Prerequisites": ["2400"],
+            "Paths": ["2600",{
+                "Name": "ppath1",
+                "id": null,
+                "Hours": 6, 
+                "Prerequisites": ["2500","2501"],
+                "Paths": [],
+                "Remainder": null
+            }], 
+            "Remainder": null
+        }
+    ], 
+	"Remainder": null
+}

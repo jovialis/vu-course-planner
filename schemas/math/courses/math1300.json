@@ -1,0 +1,9 @@
+{
+	"Name": "Accelerated Single-Variable Calculus I",
+	"Hour": 4,
+	"Prerequisites": [], 
+	"Paths": [],
+    "Restrictions": ["1100","1200","1201"],
+	"Description": "Functions, limits, differentiation of algebraic functions, integration, applications including extrema problems, areas, volumes, centroids, and work. Not open to students who have earned credit for MATH 1100, 1200, or 1201 without permission. Total credit for this course and MATH 1100, 1200, or 1201 will not exceed 5 credit hours. Credit hours reduced from second course taken (or from test or transfer credit) as appropriate. [4] (MNS)",
+	"School": "College of Arts and Science"
+}
