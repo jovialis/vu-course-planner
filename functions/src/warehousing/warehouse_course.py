@@ -91,10 +91,6 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         if section_term_number_value >= earliest_active_term_id:
             course_listing["active"] = True
 
-        # Skip sections that are too early for us to continue
-        elif section_term_number_value < earliest_recording_term_id:
-            continue
-
         # Decide by consensus on name and hours
         course_listing["name"].put(course_name, section_term_number_value)
         course_listing["hours"].put(course_hours, section_term_number_value)
@@ -112,14 +108,16 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
             course_listing["attributes"].put(section_attributes, section_term_number_value)
             course_listing["prerequisites"].put(section_prereqs, section_term_number_value)
 
-        course_listing["listings"][section_term].append({
-            "section_id": section_id,
-            "section_number": section_number,
-            "section_notes": section_notes,
-            "section_instructors": section_instructors
-        })
+        # Only include sections that are recent
+        if section_term_number_value >= earliest_recording_term_id:
+            course_listing["listings"][section_term].append({
+                "section_id": section_id,
+                "section_number": section_number,
+                "section_notes": section_notes,
+                "section_instructors": section_instructors
+            })
 
-        course_listing["availability"][section_term] = True
+            course_listing["availability"][section_term] = True
 
     # Arbitrate all the consensus fields
     course_listing["name"] = course_listing["name"].arbitrate()
@@ -269,6 +267,19 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
 
         course_name: str = doc_data["course"]["name"]
 
+        course_hours = doc_data["hours"]
+        section_id = doc_data["id"]
+        section_term = doc_data["term"]
+        section_number = doc_data["number"]
+        section_instructors = doc_data["instructors"]
+        section_notes = None
+
+        section_term_number_value = int(section_term)
+
+        # Skip sections/subcourses that are too early for us to continue
+        if section_term_number_value < earliest_recording_term_id:
+            continue
+
         # Use the name of the sub-listing as its unique ID
         if course_name not in contained_courses:
             contained_courses[course_name] = {
@@ -286,21 +297,9 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
                 "active": False
             }
 
-        course_hours = doc_data["hours"]
-        section_id = doc_data["id"]
-        section_term = doc_data["term"]
-        section_number = doc_data["number"]
-        section_instructors = doc_data["instructors"]
-        section_notes = None
-
         # If the course has occurred at some point in the last two years, mark it active
-        section_term_number_value = int(section_term)
         if section_term_number_value >= earliest_active_term_id:
             contained_courses[course_name]["active"] = True
-
-        # Skip sections that are too early for us to continue
-        elif section_term_number_value < earliest_recording_term_id:
-            continue
 
         # Decide by consensus on name and hours
         contained_courses[course_name]["hours"].put(course_hours, section_term_number_value)
