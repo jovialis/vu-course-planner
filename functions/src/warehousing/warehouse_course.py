@@ -5,13 +5,23 @@ from src.utils.consensus_decider import ConsensusDecider
 from src.utils.init_firestore import init_firestore
 
 
-def warehouse_course(course_id: str):
+ACTIVE_YEARS_THRESHOLD = 2  # The number of years a course can go hiatus before it's considered inactive
+INDEX_YEARS_THRESHOLD = 4  # How many years to index for space purposes
+
+
+def warehouse_course(course_id: str, force=False):
     """
     Reads through all available Sections for a given Course and generates a usable Course based on
     its historical availability and a few recency-weighted consensus mechanisms
     """
 
     db = init_firestore()
+
+    # Skip if this has already been warehoused
+    if not force:
+        existing = db.collection("courses").document(course_id).get()
+        if existing.exists:
+            return existing.to_dict()
 
     # Grab all of the Sections for that course ID
     section_docs = db.collection_group("sections").where(
@@ -35,7 +45,11 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
     its historical availability and a few recency-weighted consensus mechanisms.
     """
 
+    import re
+
     db = init_firestore()
+
+    course_number = int(re.search(r'\b\d{4}', course_id).group())
 
     # Schema for the object we're going to be creating here
     course_listing = {
@@ -44,7 +58,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         "description": ConsensusDecider(),
         "course_type": "single",
         "subject": course_id.split(" ")[0],
-        "number": int(course_id.split(" ")[1]),
+        "number": course_number,  # Regex extract the course number
         "school": ConsensusDecider(),
         "hours": ConsensusDecider(),
         "attributes": ConsensusDecider(),
@@ -56,7 +70,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         "active": False
     }
 
-    listing_template, availability_template, earliest_active_term_id = __generate_warehoused_term_templates()
+    listing_template, availability_template, earliest_active_term_id, earliest_recording_term_id = __generate_warehoused_term_templates()
     course_listing["listings"] = listing_template
     course_listing["availability"] = availability_template
 
@@ -76,6 +90,10 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         section_term_number_value = int(section_term)
         if section_term_number_value >= earliest_active_term_id:
             course_listing["active"] = True
+
+        # Skip sections that are too early for us to continue
+        elif section_term_number_value < earliest_recording_term_id:
+            continue
 
         # Decide by consensus on name and hours
         course_listing["name"].put(course_name, section_term_number_value)
@@ -183,9 +201,10 @@ def __generate_warehoused_term_templates():
         term_ids.append(int(term.id))
 
     most_recent_term_id = max(term_ids)
-    earliest_active_term_id = most_recent_term_id - (5 * 8)  # Earliest active = 2 full years ago
+    earliest_active_term_id = most_recent_term_id - (5 * 4 * ACTIVE_YEARS_THRESHOLD)  # Earliest active
+    earliest_recording_term_id = most_recent_term_id - (5 * 4 * INDEX_YEARS_THRESHOLD)  # Earliest to store
 
-    return listing_template, availability_template, earliest_active_term_id
+    return listing_template, availability_template, earliest_active_term_id, earliest_recording_term_id
 
 
 def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnapshot]):
@@ -199,17 +218,20 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
 
     db = init_firestore()
 
+    import re
+    course_number = int(re.search(r'\b\d{4}', course_id).group())
+
     # Schema for the object we're going to be creating here
     course_listing = {
         "id": course_id,
         "name": None,
         "course_type": "umbrella",
         "subject": course_id.split(" ")[0],
-        "number": int(course_id.split(" ")[1]),
+        "number": course_number,
         "contained_courses": []
     }
 
-    listing_template, availability_template, earliest_active_term_id = __generate_warehoused_term_templates()
+    listing_template, availability_template, earliest_active_term_id, earliest_recording_term_id = __generate_warehoused_term_templates()
 
     # Determine the name of the Umbrella course
     course_listing["name"] = __find_umbrella_course_name(
@@ -275,6 +297,10 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         section_term_number_value = int(section_term)
         if section_term_number_value >= earliest_active_term_id:
             contained_courses[course_name]["active"] = True
+
+        # Skip sections that are too early for us to continue
+        elif section_term_number_value < earliest_recording_term_id:
+            continue
 
         # Decide by consensus on name and hours
         contained_courses[course_name]["hours"].put(course_hours, section_term_number_value)

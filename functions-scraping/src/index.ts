@@ -219,7 +219,7 @@ export const scrapeMissingSectionDetails = onSchedule({
 	const multi = await firestore
 		.collectionGroup("sections")
 		.where("details", "==", null)
-		.limit(200)
+		.limit(1000)
 		.get();
 
 	const batch = firestore.batch();
