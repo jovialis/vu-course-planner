@@ -1,39 +1,18 @@
-import os
-import firebase_admin
-from firebase_admin import auth, credentials
-from flask import jsonify, request
+from firebase_functions import https as https_fn
+from firebase_functions import identity as identity_fn
 
-# Initialize Firebase Admin SDK
-cred_path = os.environ.get('FIREBASE_ADMIN_SDK_PATH')
-cred = credentials.Certificate(cred_path)
-firebase_admin.initialize_app(cred)
+# Block account creation with any non-acme email address.
+@identity_fn.before_user_created()
+def validatenewuser(
+    event: identity_fn.AuthBlockingEvent,
+) -> identity_fn.BeforeCreateResponse | None:
+    # User data passed in from the CloudEvent.
+    user = event.data
 
-def authenticate_with_gmail(request):
-    """
-    Authenticates user with a Gmail account using Firebase.
-    Expects an ID token from a client-side Firebase project.
-    """
-    if request.method != 'POST':
-        return 'Only POST requests are accepted', 405
-    
-    id_token = request.json.get('idToken')
-    if not id_token:
-        return 'Missing ID token', 400
-    
-    try:
-        decoded_token = auth.verify_id_token(id_token)
-        uid = decoded_token.get('uid')
-        
-        # Check if the email provider is Gmail
-        user = auth.get_user(uid)
-        if user.provider_data[0].provider_id != 'google.com':
-            return 'Only Gmail accounts are allowed', 403
-        
-        return jsonify({"uid": uid, "email": user.email})
-    except ValueError as e:
-        return f"Token verification failed: {e}", 401
-    
-    except Exception as e:
-        return f"Authentication failed: {e}", 500
-    
-
+    # Only users of a specific domain can sign up.
+    if user.email is None or "@vanderbilt.edu" not in user.email:
+        # Return None so that Firebase Auth rejects the account creation.
+        raise https_fn.HttpsError(
+            code=https_fn.FunctionsErrorCode.INVALID_ARGUMENT,
+            message="Unauthorized email",
+        )
