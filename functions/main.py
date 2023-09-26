@@ -7,8 +7,7 @@ from firebase_admin import initialize_app
 
 initialize_app()
 
-from firebase_functions import https as https_fn
-from firebase_functions import identity as identity_fn
+from firebase_functions import identity_fn
 
 # Block account creation with any non-acme email address.
 @identity_fn.before_user_created()
