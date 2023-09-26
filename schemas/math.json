@@ -1,0 +1,160 @@
+{
+    "Type": "Major",
+    "Name": "Mathematics",
+    "Track": "Applied Track",
+    "Requirements": [
+        {
+            "Name": "Calculus Sequence",
+            "id": 1,
+            "Hours": 9,
+            "Prerequisites": [
+                "MATH1300",
+                "MATH1301"
+            ],
+            "Paths": [
+                "MATH2300",
+                "MATH2310",
+                {
+                    "Name": "path1",
+                    "id": null,
+                    "Hours": 6,
+                    "Prerequisites": [
+                        "MATH2500",
+                        "MATH2501"
+                    ],
+                    "Paths": [],
+                    "Remainder": null
+                }
+            ],
+            "Remainder": null
+        },
+        {
+            "Name": "Linear Algebra and Differential Equations",
+            "id": 2,
+            "Hours": 6,
+            "Prerequisites": null,
+            "Path": [
+                {
+                    "Name": "path1",
+                    "id": null,
+                    "Hours": 6,
+                    "Prerequisites": [
+                        {
+                            "Name": "pprereq1",
+                            "id": null,
+                            "Hours": 3,
+                            "Prerequisites": [],
+                            "Paths": [
+                                "MATH2420",
+                                "MATH2610"
+                            ],
+                            "Remainder": null
+                        }
+                    ],
+                    "Path": [
+                        "MATH2410",
+                        "MATH2600",
+                        {
+                            "Name": "ppath1",
+                            "id": null,
+                            "Hours": 6,
+                            "Prerequisites": [
+                                "MATH2500",
+                                "MATH2501"
+                            ],
+                            "Paths": [],
+                            "Remainder": null
+                        }
+                    ],
+                    "Remainder": null
+                },
+                {
+                    "Name": "path2",
+                    "id": null,
+                    "Hours": 6,
+                    "Prerequisites": [
+                        "MATH2400"
+                    ],
+                    "Paths": [
+                        "MATH2600",
+                        {
+                            "Name": "ppath1",
+                            "id": null,
+                            "Hours": 6,
+                            "Prerequisites": [
+                                "MATH2500",
+                                "MATH2501"
+                            ],
+                            "Paths": [],
+                            "Remainder": null
+                        }
+                    ],
+                    "Remainder": null
+                }
+            ],
+            "Remainder": null
+        },
+        {
+            "Name": "At least 12 credit hours math",
+            "id": 3,
+            "Hours": 12,
+            "Prerequisites": [],
+            "Paths": [],
+            "Remainder": {
+                "subject": "Math",
+                "cond": [
+                    ">= 2800",
+                    "!= 3000"
+                ]
+            }
+        },
+        {
+            "Name": "Remainder",
+            "id": 4,
+            "Hours": 0,
+            "Prerequisites": [],
+            "Paths": [],
+            "Remainder": {
+                "subject": "Math",
+                "cond": [
+                    ">= 2800"
+                ]
+            }
+        },
+        {
+            "Name": "Double or approval",
+            "id": 5,
+            "Hours": 0,
+            "Prerequisites": [],
+            "Paths": [
+                {
+                    "Name": "path1",
+                    "id": null,
+                    "Hours": 6,
+                    "Prerequisites": [],
+                    "Paths": [],
+                    "Remainder": {
+                        "subject": "Math",
+                        "cond": [
+                            "dir_approval"
+                        ]
+                    }
+                },
+                {
+                    "Name": "path2",
+                    "id": null,
+                    "Hours": 0,
+                    "Prerequisites": [],
+                    "Paths": [],
+                    "Remainder": {
+                        "subject": null,
+                        "cond": [
+                            "another_major"
+                        ]
+                    }
+                }
+            ],
+            "Remainder": null
+        }
+    ]
+}
