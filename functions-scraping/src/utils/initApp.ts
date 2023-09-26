@@ -1,6 +1,6 @@
 /**
  * initApp
- * Project: lumenats
+ * Project: vu-course-planner
  * Author: jovialis (Dylan Hanson)
  * Date: 9/6/23
  */
