@@ -61,6 +61,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         "number": course_number,  # Regex extract the course number
         "school": ConsensusDecider(),
         "hours": ConsensusDecider(),
+        "format": ConsensusDecider(),
         "attributes": ConsensusDecider(),
         "prerequisites": ConsensusDecider(),
         # What semesters are sections available in
@@ -84,6 +85,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         section_term = doc_data["term"]
         section_number = doc_data["number"]
         section_instructors = doc_data["instructors"]
+        section_format = doc_data["type"]
         section_notes = None
 
         # If the course has occurred at some point in the last two years, mark it active
@@ -94,6 +96,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         # Decide by consensus on name and hours
         course_listing["name"].put(course_name, section_term_number_value)
         course_listing["hours"].put(course_hours, section_term_number_value)
+        course_listing["format"].put(section_format, section_term_number_value)
 
         if doc_data["details"] is not None:
             section_desc = doc_data["details"]["description"]
@@ -126,9 +129,10 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
     course_listing["hours"] = course_listing["hours"].arbitrate()
     course_listing["attributes"] = course_listing["attributes"].arbitrate()
     course_listing["prerequisites"] = course_listing["prerequisites"].arbitrate()
+    course_listing["format"] = course_listing["format"].arbitrate()
 
     # Set the course listing
-    db.collection("courses").document(course_id).set(course_listing)
+    db.collection("courses").document(course_id.lower()).set(course_listing)
     return course_listing
 
 
@@ -272,6 +276,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         section_term = doc_data["term"]
         section_number = doc_data["number"]
         section_instructors = doc_data["instructors"]
+        section_format = doc_data["type"]
         section_notes = None
 
         section_term_number_value = int(section_term)
@@ -288,6 +293,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
                 "description": ConsensusDecider(),
                 "school": ConsensusDecider(),
                 "hours": ConsensusDecider(),
+                "format": ConsensusDecider(),
                 "attributes": ConsensusDecider(),
                 "prerequisites": ConsensusDecider(),
                 # What semesters are sections available in
@@ -303,6 +309,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
 
         # Decide by consensus on name and hours
         contained_courses[course_name]["hours"].put(course_hours, section_term_number_value)
+        contained_courses[course_name]["format"].put(section_format, section_term_number_value)
 
         if doc_data["details"] is not None:
             section_desc = doc_data["details"]["description"]
@@ -334,11 +341,12 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         contained_course["hours"] = contained_course["hours"].arbitrate()
         contained_course["prerequisites"] = contained_course["prerequisites"].arbitrate()
         contained_course["attributes"] = contained_course["attributes"].arbitrate()
+        contained_course["format"] = contained_course["format"].arbitrate()
 
     course_listing["contained_courses"] = contained_courses
 
     # Set the course listing
-    db.collection("courses").document(course_id).set(course_listing)
+    db.collection("courses").document(course_id.lower()).set(course_listing)
     return course_listing
 
 
