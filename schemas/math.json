@@ -7,20 +7,20 @@
             "Name": "Calculus Sequence",
             "id": 1,
             "Hours": 9,
-            "Prerequisites": [
-                "MATH1300",
-                "MATH1301"
+            "Required": [
+                "MATH 1300",
+                "MATH 1301"
             ],
             "Paths": [
-                "MATH2300",
-                "MATH2310",
+                "MATH 2300",
+                "MATH 2310",
                 {
                     "Name": "path1",
                     "id": null,
                     "Hours": 6,
-                    "Prerequisites": [
-                        "MATH2500",
-                        "MATH2501"
+                    "Required": [
+                        "MATH 2500",
+                        "MATH 2501"
                     ],
                     "Paths": [],
                     "Remainder": null
@@ -32,35 +32,35 @@
             "Name": "Linear Algebra and Differential Equations",
             "id": 2,
             "Hours": 6,
-            "Prerequisites": null,
+            "Required": null,
             "Path": [
                 {
                     "Name": "path1",
                     "id": null,
                     "Hours": 6,
-                    "Prerequisites": [
+                    "Required": [
                         {
                             "Name": "pprereq1",
                             "id": null,
                             "Hours": 3,
-                            "Prerequisites": [],
+                            "Required": [],
                             "Paths": [
-                                "MATH2420",
-                                "MATH2610"
+                                "MATH 2420",
+                                "MATH 2610"
                             ],
                             "Remainder": null
                         }
                     ],
                     "Path": [
-                        "MATH2410",
-                        "MATH2600",
+                        "MATH 2410",
+                        "MATH 2600",
                         {
                             "Name": "ppath1",
                             "id": null,
                             "Hours": 6,
-                            "Prerequisites": [
-                                "MATH2500",
-                                "MATH2501"
+                            "Required": [
+                                "MATH 2500",
+                                "MATH 2501"
                             ],
                             "Paths": [],
                             "Remainder": null
@@ -72,18 +72,18 @@
                     "Name": "path2",
                     "id": null,
                     "Hours": 6,
-                    "Prerequisites": [
-                        "MATH2400"
+                    "Required": [
+                        "MATH 2400"
                     ],
                     "Paths": [
-                        "MATH2600",
+                        "MATH 2600",
                         {
                             "Name": "ppath1",
                             "id": null,
                             "Hours": 6,
-                            "Prerequisites": [
-                                "MATH2500",
-                                "MATH2501"
+                            "Required": [
+                                "MATH 2500",
+                                "MATH 2501"
                             ],
                             "Paths": [],
                             "Remainder": null
@@ -98,7 +98,7 @@
             "Name": "At least 12 credit hours math",
             "id": 3,
             "Hours": 12,
-            "Prerequisites": [],
+            "Required": [],
             "Paths": [],
             "Remainder": {
                 "subject": "Math",
@@ -112,7 +112,7 @@
             "Name": "Remainder",
             "id": 4,
             "Hours": 0,
-            "Prerequisites": [],
+            "Required": [],
             "Paths": [],
             "Remainder": {
                 "subject": "Math",
@@ -125,13 +125,13 @@
             "Name": "Double or approval",
             "id": 5,
             "Hours": 0,
-            "Prerequisites": [],
+            "Required": [],
             "Paths": [
                 {
                     "Name": "path1",
                     "id": null,
                     "Hours": 6,
-                    "Prerequisites": [],
+                    "Required": [],
                     "Paths": [],
                     "Remainder": {
                         "subject": "Math",
@@ -144,7 +144,7 @@
                     "Name": "path2",
                     "id": null,
                     "Hours": 0,
-                    "Prerequisites": [],
+                    "Required": [],
                     "Paths": [],
                     "Remainder": {
                         "subject": null,
