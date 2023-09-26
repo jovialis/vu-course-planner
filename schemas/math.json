@@ -100,13 +100,13 @@
             "Hours": 12,
             "Required": [],
             "Paths": [],
-            "Remainder": {
+            "Remainder": [{
                 "subject": "Math",
                 "cond": [
                     ">= 2800",
                     "!= 3000"
                 ]
-            }
+            }]
         },
         {
             "Name": "Remainder",
@@ -114,12 +114,12 @@
             "Hours": 0,
             "Required": [],
             "Paths": [],
-            "Remainder": {
+            "Remainder": [{
                 "subject": "Math",
                 "cond": [
                     ">= 2800"
                 ]
-            }
+            }]
         },
         {
             "Name": "Double or approval",
@@ -133,12 +133,12 @@
                     "Hours": 6,
                     "Required": [],
                     "Paths": [],
-                    "Remainder": {
+                    "Remainder": [{
                         "subject": "Math",
                         "cond": [
                             "dir_approval"
                         ]
-                    }
+                    }]
                 },
                 {
                     "Name": "path2",
@@ -146,12 +146,12 @@
                     "Hours": 0,
                     "Required": [],
                     "Paths": [],
-                    "Remainder": {
+                    "Remainder": [{
                         "subject": null,
                         "cond": [
                             "another_major"
                         ]
-                    }
+                    }]
                 }
             ],
             "Remainder": null
