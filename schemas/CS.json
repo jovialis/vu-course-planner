@@ -1,0 +1,169 @@
+{
+    "Type": "Major",
+    "Name": "Computer Science",
+    "Track": null,
+    "Requirements": [
+        {
+            "Name" : "Calculus/Linear algebra",
+            "id" : 1,
+            "Hours" : "N/A",
+            "Required" : [
+                "Math 1300",
+                "Math 1301"
+            ], "Path" : [
+                {
+                    "Name": "path1",
+                    "id": null,
+                    "Hours": 8,
+                    "Required": [
+                        "MATH 2500",
+                        "MATH 2501"
+                    ],
+                    "Paths": [],
+                    "Remainder": null
+                },
+                {
+                    "Name" : "path2",
+                    "id" : null,
+                    "Hours": 3,
+                    "Required": [
+                        "Math 2300"
+                    ], "Paths" : [
+                        "Math 2410",
+                        "Math 2600"
+                    ], 
+                    "Remainder": null
+                }
+                
+            ]
+
+        },{
+            "Name" : "Statistics/Probability", 
+            "id": 2,
+            "Hours": 3,
+            "Required": null,
+            "Path" : [
+                "MATH 2810", 
+                "Math 2820", 
+                "Math 3640"
+            ]
+        }, {
+            "Name" : "Science",
+            "id": 3,
+            "Hours":"",
+            "Required":"",
+            "Path" :""
+        }, {
+            "Name" : "Introduction to Engineering ",
+            "id": 4,
+            "Hours": 3,
+            "Required":[
+                "ES 1401", 
+                "ES 1402", 
+                "ES 1403"
+            ],
+            "Path" : null
+        },{
+            "Name" : "Liberal Arts Core", //Not complete
+            "id": 5,
+            "Hours": 18,
+            "Required": null,
+            "Path" :[
+
+            ]
+        },{
+            "Name" : "Software/Problem Solving",
+            "id": 6,
+            "Hours": 12,
+            "Required": [
+                "CS 2201", 
+                "CS 3251", 
+                "CS 3270"
+            ],
+            "Path" : [
+                "CS 1101",
+                "CS 1104"
+            ]
+        }, {
+            "Name" : "Hardware/Systems",
+            "id": 7,
+            "Hours": 7,
+            "Required": ["CS 3281"],
+            "Path" : [
+                {
+                    "Name" : "path1",
+                    "id": 1,
+                    "Hours": 4,
+                    "Required":["CS 2281", "CS 2281L"],
+                    "Path" : null
+                },
+                {
+                    "Name" : "path1",
+                    "id": 1,
+                    "Hours": 4,
+                    "Required":["ECE 2281", "ECE 2281L"],
+                    "Path" : null
+                }
+            ]
+        }, {
+            "Name" : "Foundations",
+            "id": 8,
+            "Hours": 6,
+            "Required": ["CS 2212", "CS 3250"],
+            "Path": null
+        }, {
+            "Name" : "Computer Science Depth",  // Not complete
+            "id": 9,
+            "Hours": 15,
+            "Required":[],
+            "Path":[]
+        }, {
+            "Name": "Computer Science Project",
+            "id": 10,
+            "Hours": 3,
+            "Required": null,
+            "Path": [
+                "CS 3892", 
+                "CS 4239", 
+                "CS 4249", 
+                "CS 4269",
+                "CS 4279", 
+                "CS 4287", 
+                "CS 4289"
+            ]
+        }, {
+            "Name" : "Computer Science Seminar",
+            "id": 11,
+            "Hours": 1,
+            "Required": ["CS 4959"],
+            "Path" : null
+        }, {
+            "Name" : "Technical Electives", //Incomplete
+            "id": 12,
+            "Hours": 6,
+            "Required": null,
+            "Path": [
+
+            ] 
+        }, {
+            "Name" : "Open Elective",
+            "id": 13,
+            "Hours": "N/A",
+            "Required": null,
+            "Path" : []
+        }, {
+            "Name" : "Computers and Ethics", // Can be used for Liberal Art Core
+            "id": 14,
+            "Hours": "3",
+            "Required": ["CS 1151"],
+            "Path": null
+        }, {
+            "Name" : "Writing Component", // Not sure is this needed
+            "id": 15,
+            "Hours": 3,
+            "Required": []
+            "Path" :
+        }
+
+    ]
+}

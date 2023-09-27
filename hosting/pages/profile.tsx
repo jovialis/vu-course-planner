@@ -1,9 +1,15 @@
 import { Input, Text, Box, Select, Button, ButtonGroup, FormLabel, FormControl } from '@chakra-ui/react'
 import React, {useContext, useEffect, useState} from "react";
 
+import { getFunctions, httpsCallable } from 'firebase/functions'
 
 
 export default function UserProfile() {
+
+    const functions = getFunctions();
+    const addUser = httpsCallable(functions, 'addUser');
+
+
     const [username, setUsername] = useState("")
 
     const [first_major, set_first_major] = useState("")
@@ -31,7 +37,13 @@ export default function UserProfile() {
     }
 
     function handleSubmit(){
-        
+        console.log('test')
+        // const addUser = firebase.functions().httpsCallable('addUser');
+        addUser({ address: "Home" })
+            .then((result) => {
+                var sanitizedMessage = result.data.text;
+                console.log(sanitizedMessage)
+        });
     }
 
     
