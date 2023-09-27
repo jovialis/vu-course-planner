@@ -42,6 +42,7 @@ export default function UserProfile() {
         addUser({ address: "Home" })
             .then((result) => {
                 var sanitizedMessage = result.data.text;
+                console.log(1)
                 console.log(sanitizedMessage)
         });
     }
