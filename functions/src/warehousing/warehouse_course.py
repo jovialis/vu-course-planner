@@ -4,7 +4,6 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 from src.utils.consensus_decider import ConsensusDecider
 from src.utils.init_firestore import init_firestore
 
-
 ACTIVE_YEARS_THRESHOLD = 2  # The number of years a course can go hiatus before it's considered inactive
 INDEX_YEARS_THRESHOLD = 4  # How many years to index for space purposes
 
@@ -63,7 +62,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         "hours": ConsensusDecider(),
         "format": ConsensusDecider(),
         "attributes": ConsensusDecider(),
-        "prerequisites": ConsensusDecider(),
+        "prerequisites_raw": ConsensusDecider(),
         # What semesters are sections available in
         "listings": {},
         # In which semesters the course is available in
@@ -74,6 +73,8 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
     listing_template, availability_template, earliest_active_term_id, earliest_recording_term_id = __generate_warehoused_term_templates()
     course_listing["listings"] = listing_template
     course_listing["availability"] = availability_template
+
+    listing_batch = db.batch()
 
     # Iterate through sections that we've found and update the course listing
     for section in section_docs:
@@ -109,18 +110,36 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
             course_listing["school"].put(section_school, section_term_number_value)
             course_listing["description"].put(section_desc, section_term_number_value)
             course_listing["attributes"].put(section_attributes, section_term_number_value)
-            course_listing["prerequisites"].put(section_prereqs, section_term_number_value)
+            course_listing["prerequisites_raw"].put(section_prereqs, section_term_number_value)
 
-        # Only include sections that are recent
-        if section_term_number_value >= earliest_recording_term_id:
-            course_listing["listings"][section_term].append({
-                "section_id": section_id,
-                "section_number": section_number,
-                "section_notes": section_notes,
-                "section_instructors": section_instructors
-            })
+        # Add the listing to a subcollection and write it in a batch
+        listing_ref = db.collection(
+            "courses"
+        ).document(
+            course_id.lower()
+        ).collection(
+            __san(f"{section_term}_{course_id}")
+        ).document(section_id)
+        listing_batch.set(listing_ref, {
+            "section_id": section_id,
+            "section_number": section_number,
+            "section_notes": section_notes,
+            "section_instructors": section_instructors
+        })
 
-            course_listing["availability"][section_term] = True
+        # Add a pointer to the listing path
+        course_listing["listings"][section_term].append(listing_ref.path)
+
+        # # Only include sections that are recent
+        # if section_term_number_value >= earliest_recording_term_id:
+        #     course_listing["listings"][section_term].append({
+        #         "section_id": section_id,
+        #         "section_number": section_number,
+        #         "section_notes": section_notes,
+        #         "section_instructors": section_instructors
+        #     })
+
+        course_listing["availability"][section_term] = True
 
     # Arbitrate all the consensus fields
     course_listing["name"] = course_listing["name"].arbitrate()
@@ -128,11 +147,15 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
     course_listing["school"] = course_listing["school"].arbitrate()
     course_listing["hours"] = course_listing["hours"].arbitrate()
     course_listing["attributes"] = course_listing["attributes"].arbitrate()
-    course_listing["prerequisites"] = course_listing["prerequisites"].arbitrate()
+    course_listing["prerequisites_raw"] = course_listing["prerequisites_raw"].arbitrate()
     course_listing["format"] = course_listing["format"].arbitrate()
 
     # Set the course listing
     db.collection("courses").document(course_id.lower()).set(course_listing)
+
+    # Commit the batch
+    listing_batch.commit()
+
     return course_listing
 
 
@@ -265,6 +288,9 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
     # Map for us to keep the sub-courses
     contained_courses = {}
 
+    # Batch for writing multiple session listings
+    listings_batch = db.batch()
+
     # Iterate through sections that we've found and update the course listing
     for section in section_docs:
         doc_data = section.to_dict()
@@ -282,20 +308,22 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         section_term_number_value = int(section_term)
 
         # Skip sections/subcourses that are too early for us to continue
-        if section_term_number_value < earliest_recording_term_id:
-            continue
+        # if section_term_number_value < earliest_recording_term_id:
+        #     continue
+
+        subcourse_id = f"{course_id}_{course_name}"
 
         # Use the name of the sub-listing as its unique ID
         if course_name not in contained_courses:
             contained_courses[course_name] = {
-                "id": f"{course_id}_{course_name}",
+                "id": subcourse_id,
                 "name": strip_umbrella_course_name(course_name),
                 "description": ConsensusDecider(),
                 "school": ConsensusDecider(),
                 "hours": ConsensusDecider(),
                 "format": ConsensusDecider(),
                 "attributes": ConsensusDecider(),
-                "prerequisites": ConsensusDecider(),
+                "prerequisites_raw": ConsensusDecider(),
                 # What semesters are sections available in
                 "listings": listing_template.copy(),
                 # In which semesters the course is available in
@@ -321,15 +349,27 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
             # Decide by consensus on school and description
             contained_courses[course_name]["school"].put(section_school, section_term_number_value)
             contained_courses[course_name]["description"].put(section_desc, section_term_number_value)
-            contained_courses[course_name]["prerequisites"].put(section_prereqs, section_term_number_value)
+            contained_courses[course_name]["prerequisites_raw"].put(section_prereqs, section_term_number_value)
             contained_courses[course_name]["attributes"].put(section_attributes, section_term_number_value)
 
-        contained_courses[course_name]["listings"][section_term].append({
+        listing_ref = db.collection("courses").document(course_id.lower()).collection(
+            __san(f"{section_term}_{subcourse_id}")
+        ).document(section_id)
+        listings_batch.set(listing_ref, {
             "section_id": section_id,
             "section_number": section_number,
             "section_notes": section_notes,
             "section_instructors": section_instructors
         })
+
+        contained_courses[course_name]["listings"][section_term].append(listing_ref.path)
+
+        # contained_courses[course_name]["listings"][section_term].append({
+        #     "section_id": section_id,
+        #     "section_number": section_number,
+        #     "section_notes": section_notes,
+        #     "section_instructors": section_instructors
+        # })
 
         contained_courses[course_name]["availability"][section_term] = True
 
@@ -339,7 +379,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         contained_course["description"] = contained_course["description"].arbitrate()
         contained_course["school"] = contained_course["school"].arbitrate()
         contained_course["hours"] = contained_course["hours"].arbitrate()
-        contained_course["prerequisites"] = contained_course["prerequisites"].arbitrate()
+        contained_course["prerequisites_raw"] = contained_course["prerequisites_raw"].arbitrate()
         contained_course["attributes"] = contained_course["attributes"].arbitrate()
         contained_course["format"] = contained_course["format"].arbitrate()
 
@@ -347,6 +387,10 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
 
     # Set the course listing
     db.collection("courses").document(course_id.lower()).set(course_listing)
+
+    # Commit the listings batch
+    listings_batch.commit()
+
     return course_listing
 
 
@@ -390,3 +434,9 @@ def __find_umbrella_course_name(course_titles: list[str]):
             )
         )
     ).strip()
+
+
+def __san(string: str) -> str:
+    import re
+    sanitized_string = re.sub(r'[^a-zA-Z0-9_\s]', '', string)
+    return sanitized_string
