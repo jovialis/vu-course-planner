@@ -1,4 +1,4 @@
-import { Input, Text, Box, Select, Button, ButtonGroup, FormLabel, FormControl } from '@chakra-ui/react'
+import { Input, Text, Box, Select, Button, ButtonGroup, FormLabel, FormControl,  } from '@chakra-ui/react'
 import React, {useContext, useEffect, useState} from "react";
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
@@ -6,11 +6,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export default function UserProfile() {
 
-    const functions = getFunctions();
-    const addUser = httpsCallable(functions, 'addUser');
-
-
-    const [username, setUsername] = useState("")
+    const [username, setUsername] = useState("Bruce")
 
     const [first_major, set_first_major] = useState("")
     const [second_major, set_second_major] = useState("")
@@ -19,6 +15,13 @@ export default function UserProfile() {
     const [year, set_year] = useState("")
     const [term, set_term] = useState("")
 
+    const [name, setName] = useState("")
+
+    useEffect(() => {
+        // handleRead()
+        handleSubmit()
+      }, []);
+    
     function changeUsername(event) {
         console.log(event.target.value)
         setUsername(event.target.value)
@@ -35,16 +38,55 @@ export default function UserProfile() {
     function handleMinorChange(event){
         set_minor(event.target.value)
     }
+    
+    function handleRead() {
+        const functions = getFunctions()
+        const readDoc = httpsCallable(functions, 'readDoc')
+
+        readDoc({address: "Home", username: "JPjFjauMlLF12oOwXcJI"}).then((result) => {
+            console.log(result.data)
+        })
+        
+    }
 
     function handleSubmit(){
         console.log('test')
-        // const addUser = firebase.functions().httpsCallable('addUser');
+        const functions = getFunctions()
+        const addUser = httpsCallable(functions, 'addUser')
+        console.log("add0")
         addUser({ address: "Home" })
             .then((result) => {
-                var sanitizedMessage = result.data.text;
-                console.log(1)
-                console.log(sanitizedMessage)
-        });
+                conosole.log("ret1")
+                console.log(result)
+        }).catch((error) => {
+            console.error('Error calling Cloud Function:', error);
+          });
+
+
+        // const functions = getFunctions()
+        // const addUser = httpsCallable(functions, 'addUser')
+    
+        // console.log('test')
+        // const inputData = {
+        //     username: 'johndoe',
+        //     name: 'John Doe',
+        //     major: 'Computer Science',
+        //     minor: 'N/A',
+        // };
+
+        // addUser({ address: "Home" })
+        //     .then((result) => {
+        //         console.log("In the front end start")
+        //         var sanitizedMessage = result.data.text;
+        //         console.log(1)
+        //         console.log(sanitizedMessage)
+        //     }).catch((error) => {
+               
+        //         const code = error.code;
+        //         const message = error.message;
+        //         const details = error.details;
+        //         console.log(code)
+        //     });
     }
 
     
@@ -54,7 +96,10 @@ export default function UserProfile() {
             <form onSubmit={handleSubmit}>
                 <FormControl>
                     <Text>User Name</Text>
-                    <Input placeholder='Input your name' size='md' onChange={changeUsername}/>
+                    <Input placeholder='Input your User Name' size='md' onChange={changeUsername}/>
+
+                    <Text>Full Name</Text>
+                    <Input placeholder='Input your name' size='md' onChange={(event) => {setName(event.target.value)}}/>
 
                     <Text>First Major</Text>
                     <Select placeholder='Choose My First Major' onChange={handleMajorChange}>
