@@ -6,7 +6,7 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 
 export default function UserProfile() {
 
-    const [username, setUsername] = useState("Bruce")
+    const [username, setUsername] = useState("")
 
     const [first_major, set_first_major] = useState("")
     const [second_major, set_second_major] = useState("")
@@ -16,6 +16,8 @@ export default function UserProfile() {
     const [term, set_term] = useState("")
 
     const [name, setName] = useState("")
+
+    const [completedCourses, setComplete] = useState([])
 
     useEffect(() => {
         // handleRead()
@@ -29,6 +31,7 @@ export default function UserProfile() {
 
     function handleMajorChange(event) {
         set_first_major(event.target.value)
+        console.log(event.target.value)
     }
 
     function handleSecMajorChange(event){
@@ -53,8 +56,12 @@ export default function UserProfile() {
         console.log('test')
         const functions = getFunctions()
         const addUser = httpsCallable(functions, 'addUser')
-        console.log("add0")
-        addUser({ address: "Home" })
+        // console.log(first_major)
+        let data  = { address: "Home", major: first_major, minor: minor, second_major : second_major, year : year, term: term, name : name, username: username }
+
+        console.log(data);
+
+        addUser(data)
             .then((result) => {
                 conosole.log("ret1")
                 console.log(result)
@@ -63,30 +70,7 @@ export default function UserProfile() {
           });
 
 
-        // const functions = getFunctions()
-        // const addUser = httpsCallable(functions, 'addUser')
-    
-        // console.log('test')
-        // const inputData = {
-        //     username: 'johndoe',
-        //     name: 'John Doe',
-        //     major: 'Computer Science',
-        //     minor: 'N/A',
-        // };
-
-        // addUser({ address: "Home" })
-        //     .then((result) => {
-        //         console.log("In the front end start")
-        //         var sanitizedMessage = result.data.text;
-        //         console.log(1)
-        //         console.log(sanitizedMessage)
-        //     }).catch((error) => {
-               
-        //         const code = error.code;
-        //         const message = error.message;
-        //         const details = error.details;
-        //         console.log(code)
-        //     });
+     
     }
 
     
@@ -146,8 +130,7 @@ export default function UserProfile() {
                         <option value='Summer'>Summer</option>
                     </Select>
 
-
-                    <Button colorScheme='teal' size='lg' type='submit'>
+                    <Button colorScheme='teal' size='lg' onClick={handleSubmit}>
                         Update Profile
                     </Button>
                 </FormControl>

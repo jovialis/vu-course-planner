@@ -6,16 +6,25 @@ initialize_app()
 @https_fn.on_call()
 def addUser(req: https_fn.CallableRequest) -> https_fn.Response:
     print("add1")
-    print(req)
-    print("Here1")
+    print(req.data)
+    print(req.data["major"])
+    # print("Here1")
     db = firestore.client()
-    print("Here2")
+    # print("Here2")
     # data =  { "Name" : "Billy", "Major" : "Computer Science", "Minor" : "N/A", "Second Major" : "N/A", "Expected Graduation Term" : "Spring 2026" }
-    data = {"name": "Los Angeles", "state": "CA", "country": "US"}
-    ref = db.collection("Users").document("JPjFjauMlLF12oOwXcJI")
+    data = {"name": req.data["name"], 
+            "major": req.data["major"],
+            "minor": req.data["minor"],
+            "sec_major": req.data["second_major"],
+            "graduation_year": req.data["year"],
+            "graduation_term": req.data["term"]}
+    
+    ref = db.collection("Users").document(req.data["username"])
 
     ret = ref.set(data)
-    return ret
+    print("ret")
+    print(ret)
+    return True
 
 @https_fn.on_call()
 def readDoc(req : https_fn.CallableRequest, ) -> https_fn.Response:
