@@ -260,6 +260,20 @@
         "ECON 4998",
         "ECON 4999"
       ]
+    },
+    {
+      "Name": "24 Hours Only Math Major",
+      "id": 8,
+      "Hours": 24,
+      "Required": null,
+      "Remainder": [
+        {
+          "subject": "Math",
+          "condition": [
+            "only_math"
+          ]
+        }
+      ]
     }
   ]
 }
