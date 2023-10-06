@@ -83,13 +83,13 @@ export function UserLoginGate(props: PropsWithChildren) {
 				<Box h={20}/>
 				<VStack w={"100%"} alignItems={"stretch"} spacing={8}>
 					<Heading size={"md"} textAlign={"center"}>
-						Login
+						Vanderbilt University Course Planner
 					</Heading>
 					<Card variant={"outline"} shadow={"lg"}>
 						<CardBody>
 							<Button
 								onClick={login}
-								colorScheme={"blue"}
+								colorScheme={"yellow"}
 								w={"100%"}
 							>
 								Login with Google
