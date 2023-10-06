@@ -1,9 +1,11 @@
-from firebase_functions import https as https_fn
-from firebase_functions import identity as identity_fn
+from firebase_admin import credentials, firestore
+from firebase_functions import https_fn, options
+from firebase_admin import initialize_app
+from firebase_functions import identity_fn
 
-# Block account creation with any non-acme email address.
+# Block account creation with any non-Vanderbilt email address.
 @identity_fn.before_user_created()
-def validatenewuser(
+def validate_new_user(
     event: identity_fn.AuthBlockingEvent,
 ) -> identity_fn.BeforeCreateResponse | None:
     # User data passed in from the CloudEvent.
@@ -16,3 +18,4 @@ def validatenewuser(
             code=https_fn.FunctionsErrorCode.INVALID_ARGUMENT,
             message="Unauthorized email",
         )
+
