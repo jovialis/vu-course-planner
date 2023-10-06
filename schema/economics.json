@@ -1,0 +1,279 @@
+{
+  "Type": "Major",
+  "Name": "Economics",
+  "Track": null,
+  "Requirements": [
+    {
+      "Name": "Principles of Macroeconomics",
+      "id": 1,
+      "Hours": 3,
+      "Required": null,
+      "Paths": [
+        "ECON 1010"
+      ],
+      "Remainder": null
+    },
+    {
+      "Name": "Principles of Microeconomics",
+      "id": 2,
+      "Hours": 3,
+      "Required": null,
+      "Paths": [
+        "ECON 1020"
+      ],
+      "Remainder": null
+    },
+    {
+      "Name": "Statistics with Calculus",
+      "id": 3,
+      "Hours": 3,
+      "Required": {
+        "Requirements": [
+          {
+            "Name": "Math Requirement",
+            "id": 100,
+            "Hours": 3,
+            "Required": null,
+            "Paths": [
+              "MATH 1100",
+              "MATH 1200",
+              "MATH 1300"
+            ],
+            "Remainder": null
+          }
+        ]
+      },
+      "Paths": [
+        "ECON 1500",
+        "ECON 1510"
+      ],
+      "Remainder": null
+    },
+    {
+      "Name": "Microeconomics",
+      "id": 4,
+      "Hours": 3,
+      "Required": [
+        "ECON 1010",
+        "ECON 1020",
+        {
+          "Name": "Math Prerequisite",
+          "id": 101,
+          "Hours": 3,
+          "Required": null,
+          "Paths": [
+            "MATH 1201",
+            "MATH 1301"
+          ],
+          "Remainder": null
+        }
+      ],
+      "Paths": [
+        "ECON 3012"
+      ],
+      "Remainder": null
+    },
+    {
+      "Name": "Macroeconomics",
+      "id": 5,
+      "Hours": 3,
+      "Required": [
+        "ECON 1010",
+        "ECON 1020",
+        {
+          "Name": "Math Prerequisite",
+          "id": 102,
+          "Hours": 3,
+          "Required": null,
+          "Paths": [
+            "MATH 1201",
+            "MATH 1301"
+          ],
+          "Remainder": null
+        }
+      ],
+      "Paths": [
+        "ECON 3022"
+      ],
+      "Remainder": null
+    },
+    {
+      "Name": "Econometrics",
+      "id": 6,
+      "Hours": 3,
+      "Required": [
+        "ECON 1020",
+        {
+          "Name": "Stats Prerequisite",
+          "id": 103,
+          "Hours": 3,
+          "Required": null,
+          "Paths": [
+            "MATH 1201",
+            "MATH 1301",
+            {
+              "Name": "Math Replacement",
+              "id": 104,
+              "Hours": 3,
+              "Required": [
+                "Math 2820L"
+              ],
+              "Paths": [
+                "Math 2810",
+                "Math 2820"
+              ],
+              "Remainder": null
+            }
+          ],
+          "Remainder": null
+        },
+        {
+          "Name": "Calculus Prerequisite",
+          "id": 105,
+          "Hours": 3,
+          "Required": null,
+          "Paths": [
+            "MATH 1201",
+            "Math 1301"
+          ],
+          "Remainder": null
+        }
+      ],
+      "Paths": [
+        "ECON 3032",
+        "ECON 3035"
+      ],
+      "Remainder": null
+    },
+    {
+      "Name": "Courses Above ECON 3035",
+      "id": 7,
+      "Hours": 9,
+      "Required": null,
+      "Paths": null,
+      "Remainder": [
+        "ECON 3100",
+        "ECON 3110",
+        "ECON 3150",
+        "ECON 3160",
+        "ECON 3170",
+        "ECON 3200",
+        "ECON 3210",
+        "ECON 3230",
+        "ECON 3250",
+        "ECON 3270",
+        "ECON 3300",
+        "ECON 3330",
+        "ECON 3350",
+        "ECON 3600",
+        "ECON 3610",
+        "ECON 3650",
+        "ECON 3698",
+        "ECON 3700",
+        "ECON 3750",
+        "ECON 3851",
+        "ECON 3852",
+        "ECON 3893",
+        "ECON 3894",
+        "ECON 4050",
+        "ECON 4110",
+        "ECON 4210",
+        "ECON 4220",
+        "ECON 4230",
+        "ECON 4240",
+        "ECON 4260",
+        "ECON 4280",
+        "ECON 4510",
+        "ECON 4510W",
+        "ECON 4520W",
+        "ECON 4530",
+        "ECON 453OW",
+        "ECON 4540W",
+        "ECON 4550",
+        "ECON 4981",
+        "ECON 4982",
+        "ECON 4998",
+        "ECON 4999"
+      ]
+    },
+    {
+      "Name": "Econ Electives",
+      "id": 8,
+      "Hours": 6,
+      "Required": null,
+      "Paths": null,
+      "Remainder": [
+        "ECON 2100",
+        "ECON 2150",
+        "ECON 2160",
+        "ECON 2170",
+        "ECON 2180",
+        "ECON 2210",
+        "ECON 2220",
+        "ECON 2260",
+        "ECON 3300",
+        "ECON 2340",
+        "ECON 2350",
+        "ECON 2890",
+        "ECON 3010",
+        "ECON 3020",
+        "ECON 3100",
+        "ECON 3110",
+        "ECON 3150",
+        "ECON 3160",
+        "ECON 3170",
+        "ECON 3200",
+        "ECON 3210",
+        "ECON 3230",
+        "ECON 3250",
+        "ECON 3270",
+        "ECON 3300",
+        "ECON 3330",
+        "ECON 3350",
+        "ECON 3600",
+        "ECON 3610",
+        "ECON 3650",
+        "ECON 3698",
+        "ECON 3700",
+        "ECON 3750",
+        "ECON 3851",
+        "ECON 3852",
+        "ECON 3893",
+        "ECON 3894",
+        "ECON 4050",
+        "ECON 4110",
+        "ECON 4210",
+        "ECON 4220",
+        "ECON 4230",
+        "ECON 4240",
+        "ECON 4260",
+        "ECON 4280",
+        "ECON 4510",
+        "ECON 4510W",
+        "ECON 4520W",
+        "ECON 4530",
+        "ECON 453OW",
+        "ECON 4540W",
+        "ECON 4550",
+        "ECON 4981",
+        "ECON 4982",
+        "ECON 4998",
+        "ECON 4999"
+      ]
+    },
+    {
+      "Name": "24 Hours Only Math Major",
+      "id": 8,
+      "Hours": 24,
+      "Required": null,
+      "Remainder": [
+        {
+          "subject": "Math",
+          "condition": [
+            "only_math"
+          ]
+        }
+      ]
+    }
+  ]
+}

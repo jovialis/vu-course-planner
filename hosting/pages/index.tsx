@@ -4,10 +4,14 @@
  * Author: jovialis (Dylan Hanson)
  * Date: 9/6/23
  */
-import {UserLoginGate} from "../components/UserLoginGate";
+import { UserLoginGate } from "../components/UserLoginGate";
+import ImageDisplay from "../components/Header";
 
 export default function HomePage() {
-	return <UserLoginGate>
-		Hello, world!
-	</UserLoginGate>
+  return (
+    <>
+      <ImageDisplay imagePath="/images/vuplannerbanner.png" altText=""/>
+      <UserLoginGate>Hello, world!</UserLoginGate>
+    </>
+  );
 }
