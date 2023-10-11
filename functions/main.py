@@ -3,6 +3,10 @@ from firebase_functions import https_fn, options
 from firebase_admin import initialize_app
 from firebase_functions import identity_fn
 from src.functions.login import validate_new_user
+from src.functions.timelines import get_user_timelines
+from src.functions.timelines import get_user_timeline
+from src.functions.timelines import rename_user_timeline
+from src.functions.timelines import create_user_timeline
 
 initialize_app()
 @https_fn.on_call()
