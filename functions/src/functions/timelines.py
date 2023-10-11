@@ -61,7 +61,8 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     # Write a function that said if they are graduating in Spring 2023, let me go back 8 semester -> for now assume they graduate in Spring 2024
     # Functionality needed: create timeline document
     user_id = 'JPjFjauMlLF12oOwXcJI'
-    grad_date = ('Spring 2024')
+    grad_date = 'Spring 2024'
+    name = 'Math Timeline'
     sem = []
 
     cur_sem = grad_date[0]
@@ -80,6 +81,7 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             sem.append({'name': tmp, 'course': []})
 
     new_user = {
+        'name': name,
         'user_id': user_id,
         'grad_date': grad_date,
         'semester': sem
