@@ -16,18 +16,19 @@ def get_user_timelines(req: https_fn.CallableRequest) -> https_fn.Response:
     Queries firestore for all Timeline documents with a "user" field equal to the authenticated user's ID
     """
 
+    user_id = req.data["user_id"]
+    # uid = req.auth.uid
+
     db = init_firestore()
 
-    doc_ref = db.collection('timelines').where('user_id', '==', 1).stream()
+    doc_ref = db.collection('timelines').where('user_id', '==', user_id).stream()
+    # doc_ref = db.collection('timelines').where(filter=FieldFilter('user_id', "==", 'JPjFjauMlLF12oOwXcJI')).stream()
 
     doc_list = []
 
     for doc in doc_ref:
         document_data = doc.to_dict()
         doc_list.append(document_data)
-        # print("Document ID: {}".format(doc.id))
-        # print("Document Data: {}".format(document_data))
-
 
     result = json.dumps(doc_list)
 
@@ -42,7 +43,9 @@ def get_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     db = init_firestore()
 
-    doc_ref = db.collection("timelines").document("XoXfJMQmFGYHcN8ZqIME").get()
+    # doc_ref = db.collection("timelines").document("9SRMpNVx8N5DClZsgKO7").get()
+    timeline_id = req.data["timeline_id"]
+    doc_ref = db.collection("timelines").document(timeline_id).get()
     doc = doc_ref.to_dict()
 
     return json.dumps(doc)
@@ -60,9 +63,9 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     # Get the semester in which the person is graduating -> go from person graduating semester and work backwards
     # Write a function that said if they are graduating in Spring 2023, let me go back 8 semester -> for now assume they graduate in Spring 2024
     # Functionality needed: create timeline document
-    user_id = 'JPjFjauMlLF12oOwXcJI'
+    # user_id = userID
     grad_date = 'Spring 2024'
-    name = 'Math Timeline'
+    name = 'CS Timeline'
     sem = []
 
     cur_sem = grad_date[0]
@@ -82,7 +85,7 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
     new_user = {
         'name': name,
-        'user_id': user_id,
+        'user_id': 'JPjFjauMlLF12oOwXcJI',
         'grad_date': grad_date,
         'semester': sem
     }
@@ -95,7 +98,10 @@ def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     Renames a specific timeline document with a given ID. Should throw an error if the user doesn't have access.
     """
     db = init_firestore()
-    doc_ref = db.collection("timelines").document("eLRyIDS4G8sMiYQ2NvAr")
+
+    timeline_id = req.data["timeline_id"]
+    new_name = req.data["new_name"]
+    doc_ref = db.collection("timelines").document(timeline_id)
     doc_ref.update({
-        'name': 'Math Major'
+        'name': new_name
     })
