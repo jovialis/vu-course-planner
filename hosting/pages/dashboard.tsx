@@ -7,11 +7,11 @@
 import {
 	Avatar,
 	Box,
-	Button,
+	Button, Card, CardBody,
 	Container,
 	Heading,
 	HStack,
-	IconButton,
+	IconButton, Spacer,
 	Step,
 	StepDescription,
 	StepIcon,
@@ -25,24 +25,87 @@ import {
 	TabList,
 	TabPanel,
 	TabPanels,
-	Tabs,
+	Tabs, Text,
 	VStack
 } from "@chakra-ui/react";
 import React from "react";
 import {CourseCard} from "../components/dashboard/CourseCard";
 import {SemesterCard} from "../components/dashboard/SemesterCard";
+import {SidebarMajorChunk} from "../components/dashboard/SidebarMajorChunk";
+import {Timeline, TimelineProps} from "../components/dashboard/Timeline";
 
 export default function Dashboard() {
-	const timelines = [{
-		name: "My First Timeline",
-		id: "1"
-	}, {
-		name: "My Second Timeline",
-		id: "2"
+	const timelines: TimelineProps[] = [{
+		timeline_name: "My First Timeline",
+		timeline_id: "1",
+		timeline_semesters: [
+			{
+				semester_id: "Fall 2023",
+				semester_name: "Fall 2023",
+				semester_initial_courses: [
+					{
+						course_id: "CS 2201",
+						course_name: "Discrete Structures",
+						course_hours: 3
+					},
+					{
+						course_id: "CS 3901",
+						course_name: "A CS course",
+						course_hours: 3
+					},
+					{
+						course_id: "HIST 2139",
+						course_name: "Technology, Nature, and Power in Africa",
+						course_hours: 3
+					},
+					{
+						course_id: "HONS 4139",
+						course_name: "Honors Seminar",
+						course_hours: 3
+					},
+					{
+						course_id: "TEST 1322",
+						course_name: "Test Course for Admin",
+						course_hours: 3
+					}
+				]
+			},
+			{
+				semester_id: "Spring 2024",
+				semester_name: "Spring 2024",
+				semester_initial_courses: [
+					{
+						course_id: "CS 2201",
+						course_name: "Discrete Structures",
+						course_hours: 3
+					},
+					{
+						course_id: "CS 3901",
+						course_name: "A CS course",
+						course_hours: 3
+					},
+					{
+						course_id: "HIST 2139",
+						course_name: "Technology, Nature, and Power in Africa",
+						course_hours: 3
+					},
+					{
+						course_id: "HONS 4139",
+						course_name: "Honors Seminar",
+						course_hours: 3
+					},
+					{
+						course_id: "TEST 1322",
+						course_name: "Test Course for Admin",
+						course_hours: 3
+					}
+				]
+			}
+		]
 	}];
 
 	return <>
-		<Container maxW={"full"} py={2}>
+		<Container maxW={"container.lg"} py={2}>
 
 			<Tabs size={"md"}>
 				<Box key={"Header"}>
@@ -55,8 +118,8 @@ export default function Dashboard() {
 								VCP
 							</Heading>
 							<TabList>
-								{timelines.map(timeline => <Tab key={timeline.id}>
-									{timeline.name}
+								{timelines.map(timeline => <Tab key={timeline.timeline_id}>
+									{timeline.timeline_name}
 								</Tab>)}
 							</TabList>
 							<Button
@@ -79,49 +142,12 @@ export default function Dashboard() {
 					py={0}
 					key={"Timeline Tabs"}
 				>
-					{timelines.map(timeline => <React.Fragment key={timeline.id}>
+					{timelines.map(timeline => <React.Fragment key={timeline.timeline_id}>
 						<TabPanel
 							key={"Timeline"}
 							p={0}
 						>
-
-								<VStack alignItems={"stretch"} spacing={8}>
-									<Heading size={"md"}>
-										{timeline.name}
-									</Heading>
-
-									<Stepper
-										index={1}
-										orientation='vertical'
-										gap={0}
-										size={"md"}
-									>
-										{Array.from((Array(5).keys())).map((step, index) => (
-											<Step key={index} >
-												<StepIndicator>
-													<StepStatus
-														complete={<StepIcon />}
-														incomplete={<></>}
-														active={<></>}
-													/>
-												</StepIndicator>
-
-												<VStack w={80} alignItems={"stretch"} mb={10} ml={2} mt={-2}>
-													<SemesterCard/>
-												</VStack>
-
-												{/*<Box flexShrink='0'>*/}
-												{/*	<StepTitle>{"My Step"}</StepTitle>*/}
-												{/*	<StepDescription>{"My Description"}</StepDescription>*/}
-												{/*</Box>*/}
-
-												<StepSeparator/>
-											</Step>
-										))}
-									</Stepper>
-
-								</VStack>
-
+							<Timeline {...timeline}/>
 						</TabPanel>
 					</React.Fragment>)}
 				</TabPanels>
