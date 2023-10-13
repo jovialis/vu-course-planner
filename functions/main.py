@@ -3,6 +3,7 @@ from firebase_functions import https_fn, options
 from firebase_admin import initialize_app
 from firebase_functions import identity_fn
 from src.functions.login import validate_new_user
+from src.functions.lookups import lookup_course
 
 initialize_app()
 @https_fn.on_call()
