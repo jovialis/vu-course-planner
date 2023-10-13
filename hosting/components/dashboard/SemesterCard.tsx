@@ -28,6 +28,10 @@ export interface SemesterCardProps {
 export function SemesterCard(props: SemesterCardProps) {
 	const [courses, setCourses] = useState<CourseCardProps[]>(props.semester_initial_courses);
 
+	// 1: Remove the Course from the semester when removeCourseFromSemester is called
+	// 2: Add the Course to the semester when addCourseToSemester is called.
+
+
 	function removeCourseFromSemester(course_id: string) {
 		// TODO: Remove from the Timeline and Semester on the server
 
