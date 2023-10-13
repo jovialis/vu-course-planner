@@ -30,9 +30,7 @@ def get_user_timelines(req: https_fn.CallableRequest) -> https_fn.Response:
         document_data = doc.to_dict()
         doc_list.append(document_data)
 
-    result = json.dumps(doc_list)
-
-    return result
+    return doc_list
 
 
 @https_fn.on_call()
@@ -48,7 +46,7 @@ def get_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     doc_ref = db.collection("timelines").document(timeline_id).get()
     doc = doc_ref.to_dict()
 
-    return json.dumps(doc)
+    return doc
 
 # Consider Korean students who are going to military -> semester should have a label to see whether or not the
 # student attended that semester
@@ -92,6 +90,8 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
     doc_red = db.collection('timelines').add(new_user)
 
+    return True
+
 @https_fn.on_call()
 def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
@@ -105,3 +105,29 @@ def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     doc_ref.update({
         'name': new_name
     })
+
+    return True
+
+
+@https_fn.on_call()
+def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
+    """
+    Add a new course to the timeline course list
+    """
+
+    db = init_firestore()
+
+    timeline_id = req.data["timeline_id"]
+    course_name = req.data["c_name"]
+    cid = req.data["c_id"]
+
+    doc_ref = db.collection("timelines").document(timeline_id).get()
+    course_arr = doc_ref.get('course')
+
+    new_course = {
+        "c_name": course_name,
+        "cid": cid
+    }
+
+
+
