@@ -35,6 +35,12 @@ import {SidebarMajorChunk} from "../components/dashboard/SidebarMajorChunk";
 import {Timeline, TimelineProps} from "../components/dashboard/Timeline";
 
 export default function Dashboard() {
+	// Things to code
+	// 1: Perform a fetch to get_user_timelines when this component loads
+	// 2: Add a new Timeline (by calling the appropriate function) when the user clicks the "Add" button
+
+	// const {data, loading, error} = useCallable("get_user_timelines", {});
+
 	const timelines: TimelineProps[] = [{
 		timeline_name: "My First Timeline",
 		timeline_id: "1",
