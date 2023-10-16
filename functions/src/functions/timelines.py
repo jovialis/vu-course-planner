@@ -48,6 +48,7 @@ def get_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
     return doc
 
+
 # Consider Korean students who are going to military -> semester should have a label to see whether or not the
 # student attended that semester
 @https_fn.on_call()
@@ -65,11 +66,12 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     grad_date = 'Spring 2024'
     name = 'CS Timeline'
     sem = []
+    hours = []
 
     cur_sem = grad_date[0]
     cur_year = int(grad_date[-4:])
 
-    for x in range (0, 8):
+    for x in range(0, 8):
         tmp = ''
         if (cur_sem == 'S'):
             tmp += 'Spring' + ' ' + str(cur_year)
@@ -81,16 +83,18 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             cur_sem = 'S'
             sem.append({'name': tmp, 'course': []})
 
-    new_user = {
+    new_timeline = {
         'name': name,
         'user_id': 'JPjFjauMlLF12oOwXcJI',
         'grad_date': grad_date,
-        'semester': sem
+        'semester': sem,
+        'hours': hours
     }
 
-    doc_red = db.collection('timelines').add(new_user)
+    doc_red = db.collection('timelines').add(new_timeline)
 
     return True
+
 
 @https_fn.on_call()
 def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
@@ -117,17 +121,59 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
     db = init_firestore()
 
-    timeline_id = req.data["timeline_id"]
+    # timeline_id = req.data["timeline_id"]
     course_name = req.data["c_name"]
     cid = req.data["c_id"]
+    s_name = req.data['sem_name']
+    index = 0
 
-    doc_ref = db.collection("timelines").document(timeline_id).get()
-    course_arr = doc_ref.get('course')
+    doc_ref = db.collection('timelines').document('rdlXzZy61znFjkXVpg2S')
+    doc = doc_ref.get()
+    sem_ref = doc.get('semester')
 
-    new_course = {
-        "c_name": course_name,
-        "cid": cid
-    }
+    for x in range(0, len(sem_ref)):
+        if (sem_ref[x]['name'] == s_name):
+            index = x
+            break
+
+    course = sem_ref[index]['course']
+
+    course.append({'course': course_name, 'course_id': cid})
+    sem_ref[index]['course'] = course
+
+    doc_ref.update({
+        'semester': sem_ref
+    })
+
+    return True
 
 
+@https_fn.on_call()
+def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
+    db = init_firestore()
 
+    cid = req.data["cid"]
+    sem_name = req.data['sem_name']
+
+    doc_ref = db.collection('timelines').document('rdlXzZy61znFjkXVpg2S')
+    doc = doc_ref.get()
+    sem_ref = doc.get('semester')
+
+    for x in range(0, len(sem_ref)):
+        if (sem_ref[x]['name'] == sem_name):
+            index = x
+            break
+
+    course = sem_ref[index]['course']
+    for x in range(0, len(course)):
+        if (course[x]['course_id'] == cid):
+            course.pop(x)
+            break
+
+    sem_ref[index]['course'] = course
+
+    doc_ref.update({
+        'semester': sem_ref
+    })
+
+    return True

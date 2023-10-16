@@ -7,6 +7,8 @@ from src.functions.timelines import get_user_timelines
 from src.functions.timelines import get_user_timeline
 from src.functions.timelines import rename_user_timeline
 from src.functions.timelines import create_user_timeline
+from src.functions.timelines import add_course_timeline
+from src.functions.timelines import del_course_timeline
 
 initialize_app()
 @https_fn.on_call()
