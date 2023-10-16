@@ -4,17 +4,20 @@
  * Author: jovialis (Dylan Hanson)
  * Date: 10/6/23
  */
-import {ArrowLeftIcon, CheckCircleIcon} from "@chakra-ui/icons";
+import {CheckCircleIcon} from "@chakra-ui/icons";
 import {
 	Accordion,
-	AccordionButton, AccordionIcon, AccordionItem, AccordionPanel,
+	AccordionButton,
+	AccordionIcon,
+	AccordionItem,
+	AccordionPanel,
 	Badge,
-	Box, Card,
+	Box,
+	Card,
 	CardBody,
 	Heading,
-	HStack, Link,
-	Tag,
-	TagLabel,
+	HStack,
+	Link,
 	Text,
 	VStack
 } from "@chakra-ui/react";
@@ -45,7 +48,7 @@ export function SidebarMajorChunk() {
 							<Text>
 								Requirements
 							</Text>
-							<AccordionIcon />
+							<AccordionIcon/>
 						</AccordionButton>
 						<AccordionPanel px={0} shadow={0} pb={2}>
 							<VStack alignItems={"stretch"} spacing={1}>

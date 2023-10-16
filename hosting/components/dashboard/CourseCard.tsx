@@ -4,21 +4,24 @@
  * Author: jovialis (Dylan Hanson)
  * Date: 10/5/23
  */
-import {ChevronDownIcon} from "@chakra-ui/icons";
 import {
-	Button,
-	Card,
-	CardBody,
-	HStack, Icon, IconButton, Menu, MenuButton, MenuItem, MenuList, Popover, PopoverArrow, PopoverBody,
-	PopoverCloseButton, PopoverContent, PopoverHeader, PopoverTrigger,
+	HStack,
+	Icon,
+	IconButton,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
+	Popover,
+	PopoverArrow,
+	PopoverBody,
+	PopoverContent,
+	PopoverTrigger,
 	Spacer,
 	Tag,
-	TagCloseButton,
 	TagLabel,
-	TagRightIcon,
 	Text
 } from "@chakra-ui/react";
-import {CgOptions} from "react-icons/cg";
 import {MdMoreHoriz} from "react-icons/md";
 import {CourseDetailsModal} from "../CourseDetailsModal";
 
@@ -44,12 +47,13 @@ export function CourseCard(props: CourseCardProps & {
 										textDecorationLine={"underline"}
 										cursor={"pointer"}
 										onClick={onOpen}
+										textTransform={"uppercase"}
 									>
 										{props.course_id}
 									</Text>
 								</PopoverTrigger>
 								<PopoverContent shadow={"xl"}>
-									<PopoverArrow />
+									<PopoverArrow/>
 									<PopoverBody>
 										<Text>
 											{props.course_name}

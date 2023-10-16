@@ -11,8 +11,8 @@ import {getFunctions, httpsCallable, HttpsCallableOptions} from "firebase/functi
 import {useEffect, useState} from "react";
 
 export type UseCallableOptions<Data> = HttpsCallableOptions & {
-	onSuccess: (data: Data) => void,
-	onError: (error: Error) => void
+	onSuccess?: (data: Data) => void,
+	onError?: (error: Error) => void
 }
 
 export function useCallable<Data = any, RequestData = any>(func: string, data?: RequestData, options?: UseCallableOptions<Data>, ignoreFetchOnMount?: boolean) {
