@@ -1,0 +1,57 @@
+{
+    "Type": "Major",
+    "Name": "Psychology",
+    "Track": null,
+    "Requirements": [
+        {
+            "Name": "General Requirements",
+            "id": 1,
+            "Hours": 9,
+            "Required": ["PSY 1200",
+                         "PSY 2150"],
+            "Paths": ["PSY 2100", 
+                      "PSY-PC 2110"],
+            "Remainder": []
+        },
+        {
+            "Name": "Distribution Courses",
+            "id": 2,
+            "Hours": 12,
+            "Required": [],
+            "Paths": [],
+            "Remainder": ["PSY 3100", 
+                          "PSY 3110", 
+                          "PSY 3120", 
+                          "PSY 3750",
+                          "NSC 2201", 
+                          "PSY-PC 1250"]
+        },
+        {
+            "Name": "Distribution Courses",
+            "id": 2,
+            "Hours": 12,
+            "Required": [],
+            "Paths": [],
+            "Remainder": [
+                {
+                    "subject": "PSY",
+                    "cond": [
+                        "!= 1200",
+                        "!= 2150",
+                        "!= 2100",
+                        "!= 2110",
+                        "!= 3100",
+                        "!= 3110",
+                        "!= 3120",
+                        "!= 3750",
+                        "!= 2201",
+                        "!= 1250"
+                    ]
+                },
+                {
+                    "subject": "HOD"
+                }
+            ]
+        }
+    ]
+}
