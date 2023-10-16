@@ -7,11 +7,12 @@
 
 import {
 	Button,
-	Card, CardBody,
+	Card,
 	Heading,
-	HStack, Icon, Spacer,
+	HStack,
+	Icon,
+	Spacer,
 	Step,
-	StepIcon,
 	StepIndicator,
 	Stepper,
 	StepSeparator,
@@ -19,8 +20,7 @@ import {
 	VStack
 } from "@chakra-ui/react";
 import React, {useState} from "react";
-import {MdCalendarToday, MdCalendarViewMonth} from "react-icons/md";
-import {CourseCardProps} from "./CourseCard";
+import {MdCalendarToday} from "react-icons/md";
 import {SemesterCard, SemesterCardProps} from "./SemesterCard";
 import {SidebarMajorChunk} from "./SidebarMajorChunk";
 
@@ -69,7 +69,7 @@ export function Timeline(props: TimelineProps) {
 					gap={0}
 					size={"md"}
 				>
-					{semesters.map((semester, i) => <Step key={i} >
+					{semesters.map((semester, i) => <Step key={i}>
 						<StepIndicator>
 							<StepStatus
 								complete={<Icon as={MdCalendarToday} boxSize={4}/>}
