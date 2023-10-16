@@ -14,7 +14,7 @@ import {
 
 import {getFunctions, httpsCallable} from 'firebase/functions'
 import React, {useEffect, useState} from "react";
-
+import {CourseSearchBar} from "../components/CourseSearchBar"
 
 export default function UserProfile() {
 
@@ -113,20 +113,20 @@ export default function UserProfile() {
 	}
 
 	return (
-		<Container maxW={"container.lg"}>
+		<Container maxW={"container.lg"} mb="200">
 			<VStack spacing={4} alignItems={"stretch"}>
 				<Link href={"/"} color={"teal"} fontWeight={"bold"}>
 					Back to Dashboard
 				</Link>
 
-				<Text>User Name</Text>
+				<Text fontWeight="bold">User Name</Text>
 				<Input placeholder='Input your User Name' size='md' onChange={changeUsername}/>
-				<Text>Full Name</Text>
+				<Text fontWeight="bold">Full Name</Text>
 				<Input placeholder='Input your name' size='md' onChange={(event) => {
 					setName(event.target.value)
 				}}/>
 
-				<Text>First Major</Text>
+				<Text fontWeight="bold">First Major</Text>
 				<Select placeholder='Choose My First Major' onChange={handleMajorChange}>
 					<option value='Computer Science'>Computer Science</option>
 					<option value='History'>History</option>
@@ -135,7 +135,7 @@ export default function UserProfile() {
 					<option value="Political Science">Political Science</option>
 				</Select>
 
-				<Text>Second Major</Text>
+				<Text fontWeight="bold">Second Major</Text>
 				<Select placeholder='Choose My Second Major' onChange={handleSecMajorChange}>
 					<option value='Computer Science'>Computer Science</option>
 					<option value='History'>History</option>
@@ -145,7 +145,7 @@ export default function UserProfile() {
 					<option value="N/A">N/A</option>
 				</Select>
 
-				<Text>Minor</Text>
+				<Text fontWeight="bold">Minor</Text>
 				<Select placeholder='Choose My Minor' onChange={handleMinorChange}>
 					<option value='Computer Science'>Computer Science</option>
 					<option value='History'>History</option>
@@ -155,7 +155,7 @@ export default function UserProfile() {
 					<option value="N/A">N/A</option>
 				</Select>
 
-				<Text>Expected Graduation Year</Text>
+				<Text fontWeight="bold">Expected Graduation Year</Text>
 				<Select placeholder='Expected Graduation Year' onChange={(event) => set_year(event.target.value)}>
 					<option value='2024'>2024</option>
 					<option value='2025'>2025</option>
@@ -164,7 +164,7 @@ export default function UserProfile() {
 					<option value="2028">2028</option>
 				</Select>
 
-				<Text>Expected Graduation Term</Text>
+				<Text fontWeight="bold">Expected Graduation Term</Text>
 				<Select placeholder='Expected Graduation Term' onChange={(event) => set_term(event.target.value)}>
 					<option value='Fall'>Fall</option>
 					<option value='Spring'>Spring</option>
@@ -173,9 +173,17 @@ export default function UserProfile() {
 
 				<Stack mt='10' mb='10'>
 					{listOfComplete}
-					<Input placeholder='Input the course' size='md' onChange={(event) => {
+					{/* <Input placeholder='Input the course' size='md' onChange={(event) => {
 						setAddingCourse(event.target.value)
-					}}/>
+					}}/> */}
+                    
+                    <CourseSearchBar 
+                        on_course_selected={course => {
+                            setAddingCourse(course.course_id)          
+                            // addCourseToSemester(course.course_id, course.course_name, course.course_hours)
+                        }}
+                    />
+                    <Text fontWeight="bold" fontSize="20px" pt='10' >Adding This Course: <Text as="span" color="blue">{addingCourse.toUpperCase()}</Text> ?</Text>
 					<Button colorScheme='teal' size='md' onClick={handleAddCourse}
 					        style={{width: '200px',}}>
 						Add Course Completed
