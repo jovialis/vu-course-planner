@@ -9,7 +9,7 @@ def warehouse_all():
 
     # Find all Undergraduate sections
     db = init_firestore()
-    section_docs = db.collection_group("sections").where("course.number", "<", 5000).stream()
+    section_docs = db.collection_group("sections").where("course.number", "<", 5000).get()
 
     # Make sure courses don't get double-warehoused
     warehoused_course_ids = {}
