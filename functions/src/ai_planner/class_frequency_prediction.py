@@ -1,6 +1,27 @@
 from src.utils.init_firestore import init_firestore
 
-def predict_class_availability(class_id: str, term_type: str, num_sem = 3) -> int:
+all_term_ids = ["fall", "spring", "summer", "year"]
+
+def predict_class_availability(class_id: str, num_sem = 3, pre_fetched_terms = None):
+    db = init_firestore()
+
+    ref_terms = db.collection("yes_terms") # Collection for the terms information
+
+    if pre_fetched_terms is not None:
+        terms = pre_fetched_terms
+    else:
+        terms = ref_terms.get()
+
+    results = {}
+
+    for term_id in all_term_ids:
+        availability = predict_class_term_availability(class_id, term_id, num_sem, terms)
+        results[term_id] = availability
+
+    return results
+
+
+def predict_class_term_availability(class_id: str, term_type: str, num_sem = 3, pre_fetched_terms = None) -> int:
     """
     Takes in a class ID e.g. "CS 2201" and a term_type ("fall", "spring", "summer", "year") and returns
     0, -1, or 1 for whether we expect the class to be available in that term.
@@ -14,7 +35,7 @@ def predict_class_availability(class_id: str, term_type: str, num_sem = 3) -> in
     num_sem is the number of past semester we want to track back
     """
     db = init_firestore()
-    
+
     ref_courses = db.collection("courses") # Collrection for the courses
     ref_terms = db.collection("yes_terms") # Collection for the terms information
     course = ref_courses.document(class_id).get()
@@ -24,28 +45,31 @@ def predict_class_availability(class_id: str, term_type: str, num_sem = 3) -> in
         content = course.to_dict()
         # print(content)
         avail = content["availability"]
-        print("terms")
-        print(ref_terms)
-        terms = ref_terms.stream()
+        # print("terms")
+        # print(ref_terms)
+        if pre_fetched_terms is not None:
+            terms = pre_fetched_terms
+        else:
+            terms = ref_terms.stream()
 
         terms_list = []
         
         for term in terms:
-            print("lower")
-            print(term.get("name").lower())
+            # print("lower")
+            # print(term_type, "in", term.get("name").lower())
             if term_type in term.get("name").lower():
                 terms_list.append((term.get("id"), int(term.get("id")))) #All terms that fit the term type
         
-        print("terms_list")
-        print(terms_list)
+        # print("terms_list")
+        # print(terms_list)
         terms_list = sorted(terms_list, reverse=True, key=lambda term: term[1])
 
 
         top = terms_list[:num_sem]      
         # After finding the top num_sem semseter with the term type, I need to check the frequency of that 
         # course is offered in the past num_sem semesters
-        print("top")
-        print(top)
+        # print("top", term_type)
+        # print(top)
 
         count = 0
         for i in range(num_sem):
@@ -63,8 +87,3 @@ def predict_class_availability(class_id: str, term_type: str, num_sem = 3) -> in
 
     else:
         raise Exception("The course you try to look for doesn't exist")
-    
-
-
-
-    pass
