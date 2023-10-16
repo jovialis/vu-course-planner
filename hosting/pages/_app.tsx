@@ -9,6 +9,7 @@ import {ChakraProvider, extendTheme} from "@chakra-ui/react";
 import {getApp, getApps, initializeApp} from "firebase/app"
 import {connectFunctionsEmulator, getFunctions} from "firebase/functions";
 import {AppProps} from "next/app";
+import {UserLoginGate} from "../components/UserLoginGate";
 
 const firebaseConfig = {
 	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -37,7 +38,9 @@ export default function App({Component, pageProps}: AppProps) {
 				},
 			},
 		})}>
-			<Component {...pageProps} />
+			<UserLoginGate>
+				<Component {...pageProps} />
+			</UserLoginGate>
 		</ChakraProvider>
 	</>
 }

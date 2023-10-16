@@ -1,16 +1,16 @@
 import React from 'react';
 
 interface ImageDisplayProps {
-  imagePath: string;
-  altText: string;
+	imagePath: string;
+	altText: string;
 }
 
-const ImageDisplay: React.FC<ImageDisplayProps> = ({ imagePath, altText }) => {
-  return (
-    <div>
-      <img src={imagePath} alt={altText} />
-    </div>
-  );
+const ImageDisplay: React.FC<ImageDisplayProps> = ({imagePath, altText}) => {
+	return (
+		<div>
+			<img src={imagePath} alt={altText}/>
+		</div>
+	);
 };
 
 export default ImageDisplay;
