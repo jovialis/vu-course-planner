@@ -6,6 +6,12 @@ from firebase_functions import identity_fn
 # from src.functions.timelines import
 from src.ai_planner.class_frequency_prediction import predict_class_availability
 from src.functions.login import validate_new_user
+from src.functions.timelines import get_user_timelines
+from src.functions.timelines import get_user_timeline
+from src.functions.timelines import rename_user_timeline
+from src.functions.timelines import create_user_timeline
+from src.functions.timelines import add_course_timeline
+from src.functions.timelines import del_course_timeline
 from src.functions.lookups import lookup_course
 
 initialize_app()
