@@ -57,7 +57,7 @@ export default function UserProfile() {
 
 	function handleRead() {
 		const functions = getFunctions()
-		const readDoc = httpsCallable(functions, 'readDoc')
+		const readDoc = httpsCallable(functions, 'get_user_data')
 
 		readDoc({address: "Home", username: "JPjFjauMlLF12oOwXcJI"}).then((result) => {
 			console.log(result.data)
@@ -68,7 +68,7 @@ export default function UserProfile() {
 	function handleSubmit() {
 		console.log('test')
 		const functions = getFunctions()
-		const addUser = httpsCallable(functions, 'addUser')
+		const addUser = httpsCallable(functions, 'set_user_data')
 		// console.log(first_major)
 		let data = {
 			address: "Home",
