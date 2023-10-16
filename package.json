@@ -20,5 +20,8 @@
     "hosting",
     "functions-scraping"
   ],
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.6.3",
+  "dependencies": {
+    "react-icons": "^4.11.0"
+  }
 }

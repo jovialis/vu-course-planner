@@ -19,6 +19,8 @@ import {
 import React, {useMemo, useState} from "react";
 import {CourseCard, CourseCardProps} from "./CourseCard";
 
+import  Searchbar from "../SearchBar"
+
 export interface SemesterCardProps {
 	semester_name: string
 	semester_id: string
@@ -88,10 +90,12 @@ export function SemesterCard(props: SemesterCardProps) {
 				</>}
 			</CardBody>
 			<CardFooter>
-				<Input
+				{/* <Input
 					size={"md"}
 					placeholder={"Add courses"}
-				/>
+				/> */}
+				
+				<Searchbar />
 			</CardFooter>
 		</Card>
 	</>

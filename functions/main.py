@@ -2,10 +2,21 @@ from firebase_admin import credentials, firestore
 from firebase_functions import https_fn, options
 from firebase_admin import initialize_app
 from firebase_functions import identity_fn
+
+from src.functions.timelines import 
+from src.ai_planner.class_frequency_prediction import predict_class_availability
 from src.functions.login import validate_new_user
 from src.functions.lookups import lookup_course
 
 initialize_app()
+
+@https_fn.on_request()
+def test(req: https_fn.CallableRequest):
+    return {
+        "result": predict_class_availability("amer 1001", "spring")
+    }
+
+
 @https_fn.on_call()
 def addUser(req: https_fn.CallableRequest) -> https_fn.Response:
     print("add1")

@@ -1,4 +1,4 @@
-import { Input, Text, Box, Select, Button, ButtonGroup, FormLabel, FormControl, Stack } from '@chakra-ui/react'
+import { Input, Text, Box, Select, Button, ButtonGroup, FormLabel, FormControl, Stack, UnorderedList, ListItem } from '@chakra-ui/react'
 import React, {useContext, useEffect, useState} from "react";
 
 import { getFunctions, httpsCallable } from 'firebase/functions'
@@ -17,8 +17,9 @@ export default function UserProfile() {
 
     const [name, setName] = useState("")
 
+    const [addingCourse, setAddingCourse] = useState("")
     const [completedCourses, setComplete] = useState([])
-
+    const [listOfComplete, setListOfComplete] = useState(<Box><Text>Currently No Courses Added</Text></Box>)
     useEffect(() => {
         // handleRead()
         handleSubmit()
@@ -71,12 +72,26 @@ export default function UserProfile() {
 
     }
 
-    function handleAddCourse() {
-        return 1
+    function handleAddCourse(event) {
+        let courses = completedCourses
+        console.log(event)
+        courses.push(addingCourse)
+        setComplete(courses)
+        console.log(completedCourses)
+
+        let tmp = completedCourses.map((item, index) => (
+            <ListItem>{item}</ListItem>
+        ))
+        setListOfComplete(
+            <Box>
+                <UnorderedList>
+                    {tmp}
+                </UnorderedList>
+            </Box>
+        )
+        console.log(1)
     }
-
-    
-
+       
     return (
         <Box spacing ={4}>
             <Text>User Name</Text>
@@ -129,8 +144,9 @@ export default function UserProfile() {
                 <option value='Summer'>Summer</option>
             </Select>
 
-            <Stack>
-                
+            <Stack mt='10' mb='10'>
+                {listOfComplete}
+                <Input placeholder='Input the course' size='md' onChange={(event) => {setAddingCourse(event.target.value)}}/>
                 <Button colorScheme='teal' size= 'md' onClick = {handleAddCourse}
                 style={{ width: '200px', }}>
                     Add Course Completed
