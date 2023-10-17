@@ -16,18 +16,20 @@ def get_user_timelines(req: https_fn.CallableRequest) -> https_fn.Response:
     Queries firestore for all Timeline documents with a "user" field equal to the authenticated user's ID
     """
 
-    user_id = req.data["user_id"]
+    # user_id = req.data["user_id"]
     # uid = req.auth.uid
 
     db = init_firestore()
 
-    doc_ref = db.collection('timelines').where('user_id', '==', user_id).stream()
+    doc_ref = db.collection('timelines').where('user_id', '==', 'JPjFjauMlLF12oOwXcJI').stream()
     # doc_ref = db.collection('timelines').where(filter=FieldFilter('user_id', "==", 'JPjFjauMlLF12oOwXcJI')).stream()
 
     doc_list = []
 
     for doc in doc_ref:
         document_data = doc.to_dict()
+        # doc_list.append(document_data)
+        document_data['timeline_id'] = doc.id
         doc_list.append(document_data)
 
     return doc_list
@@ -77,18 +79,18 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             tmp += 'Spring' + ' ' + str(cur_year)
             cur_sem = 'F'
             cur_year = cur_year - 1
-            sem.append({'name': tmp, 'course': []})
+            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_course': []})
         else:
             tmp += 'Fall' + ' ' + str(cur_year)
             cur_sem = 'S'
-            sem.append({'name': tmp, 'course': []})
+            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_course': []})
 
     new_timeline = {
-        'name': name,
+        'timeline_name': name,
         'user_id': 'JPjFjauMlLF12oOwXcJI',
         'grad_date': grad_date,
-        'semester': sem,
-        'hours': hours
+        'timeline_semester': sem,
+        'timeline_hours': hours
     }
 
     doc_red = db.collection('timelines').add(new_timeline)
@@ -107,7 +109,7 @@ def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     new_name = req.data["new_name"]
     doc_ref = db.collection("timelines").document(timeline_id)
     doc_ref.update({
-        'name': new_name
+        'timeline_name': new_name
     })
 
     return True
@@ -127,23 +129,27 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     s_name = req.data['sem_name']
     index = 0
 
-    doc_ref = db.collection('timelines').document('rdlXzZy61znFjkXVpg2S')
+    doc_ref = db.collection('timelines').document('vhFPkz7iipy0qlgj7ulo')
     doc = doc_ref.get()
-    sem_ref = doc.get('semester')
+    sem_ref = doc.get('timeline_semester')
 
-    for x in range(0, len(sem_ref)):
-        if (sem_ref[x]['name'] == s_name):
-            index = x
-            break
+    print(sem_ref)
 
-    course = sem_ref[index]['course']
+    # for x in range(0, len(sem_ref)):
+    #     if (sem_ref[x]['semester_name'] == s_name):
+    #         index = x
+    #         break
 
-    course.append({'course': course_name, 'course_id': cid})
-    sem_ref[index]['course'] = course
+    course = sem_ref[0]['semester_course']
 
-    doc_ref.update({
-        'semester': sem_ref
-    })
+    print(course)
+
+    course.append({'course_name': course_name, 'course_id': cid})
+    sem_ref[0]['semester_course'] = course
+
+    # doc_ref.update({
+    #     'semester_course': sem_ref
+    # })
 
     return True
 
@@ -155,25 +161,25 @@ def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     cid = req.data["cid"]
     sem_name = req.data['sem_name']
 
-    doc_ref = db.collection('timelines').document('rdlXzZy61znFjkXVpg2S')
+    doc_ref = db.collection('timelines').document('SE0S8BbHG3wCmztB4HZN')
     doc = doc_ref.get()
-    sem_ref = doc.get('semester')
+    sem_ref = doc.get('timeline_semester')
 
     for x in range(0, len(sem_ref)):
-        if (sem_ref[x]['name'] == sem_name):
+        if (sem_ref[x]['semester_name'] == sem_name):
             index = x
             break
 
-    course = sem_ref[index]['course']
+    course = sem_ref[index]['semester_course']
     for x in range(0, len(course)):
         if (course[x]['course_id'] == cid):
             course.pop(x)
             break
 
-    sem_ref[index]['course'] = course
+    sem_ref[index]['semester_course'] = course
 
     doc_ref.update({
-        'semester': sem_ref
+        'timeline_semester': sem_ref
     })
 
     return True

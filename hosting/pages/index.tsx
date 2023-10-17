@@ -20,6 +20,7 @@ import {
 import React from "react";
 import {Timeline, TimelineProps} from "../components/dashboard/Timeline";
 import {useUser} from "../components/UserLoginGate";
+import {useCallable} from "../hooks/UseCallable";
 
 export default function Dashboard() {
 	// Things to code
@@ -28,6 +29,10 @@ export default function Dashboard() {
 
 	// const {data, loading, error} = useCallable("get_user_timelines", {});
 	const user = useUser()
+
+	const {data} = useCallable("get_user_timelines", {})
+
+	console.log(data)
 
 	const timelines: TimelineProps[] = [{
 		timeline_name: "My First Timeline",
@@ -112,7 +117,7 @@ export default function Dashboard() {
 								VCP
 							</Heading>
 							<TabList>
-								{timelines.map(timeline => <Tab key={timeline.timeline_id}>
+								{data && data.map(timeline => <Tab key={timeline.timeline_id}>
 									{timeline.timeline_name}
 								</Tab>)}
 							</TabList>
@@ -138,14 +143,18 @@ export default function Dashboard() {
 					py={0}
 					key={"Timeline Tabs"}
 				>
-					{timelines.map(timeline => <React.Fragment key={timeline.timeline_id}>
+					{!data? (
+						<>Loading...</>
+					): (data && data.map(timeline => (<React.Fragment key={timeline.timeline_id}>
 						<TabPanel
 							key={"Timeline"}
 							p={0}
 						>
 							<Timeline {...timeline}/>
 						</TabPanel>
-					</React.Fragment>)}
+					</React.Fragment>
+					))
+					)}
 				</TabPanels>
 
 			</Tabs>
