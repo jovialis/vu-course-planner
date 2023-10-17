@@ -133,23 +133,20 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     doc = doc_ref.get()
     sem_ref = doc.get('timeline_semester')
 
+    for x in range(0, len(sem_ref)):
+        if (sem_ref[x]['semester_name'] == s_name):
+            index = x
+            break
+
+    course = sem_ref[index]['semester_course']
+    course.append({'course_name': course_name, 'course_id': cid})
+    sem_ref[index]['semester_course'] = course
+
     print(sem_ref)
 
-    # for x in range(0, len(sem_ref)):
-    #     if (sem_ref[x]['semester_name'] == s_name):
-    #         index = x
-    #         break
-
-    course = sem_ref[0]['semester_course']
-
-    print(course)
-
-    course.append({'course_name': course_name, 'course_id': cid})
-    sem_ref[0]['semester_course'] = course
-
-    # doc_ref.update({
-    #     'semester_course': sem_ref
-    # })
+    doc_ref.update({
+        'timeline_semester': sem_ref
+    })
 
     return True
 
@@ -161,7 +158,7 @@ def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     cid = req.data["cid"]
     sem_name = req.data['sem_name']
 
-    doc_ref = db.collection('timelines').document('SE0S8BbHG3wCmztB4HZN')
+    doc_ref = db.collection('timelines').document('vhFPkz7iipy0qlgj7ulo')
     doc = doc_ref.get()
     sem_ref = doc.get('timeline_semester')
 
@@ -177,6 +174,8 @@ def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             break
 
     sem_ref[index]['semester_course'] = course
+
+    print(sem_ref)
 
     doc_ref.update({
         'timeline_semester': sem_ref
