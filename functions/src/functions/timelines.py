@@ -15,13 +15,13 @@ def get_user_timelines(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     Queries firestore for all Timeline documents with a "user" field equal to the authenticated user's ID
     """
-    # uid = req.auth.uid -> will later use to get timeline for current logged in user
+    uid = req.auth.uid # -> will later use to get timeline for current logged in user
 
     # Call function that initializes firestore
     db = init_firestore()
 
-    # Hard code to get all the timelines of user id 'JPjFjauMlLF12oOwXcJI'
-    doc_ref = db.collection('timelines').where('user_id', '==', 'JPjFjauMlLF12oOwXcJI').stream()
+    #  code to get all the timelines of currently logged in user
+    doc_ref = db.collection('timelines').where('user_id', '==', uid).stream()
     doc_list = []
 
     # Iterate through the returned streams and converting the referenced doc into a dictonary
@@ -59,11 +59,13 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     db = init_firestore()
 
+    user_id = req.auth.uid
+
     # Get the semester in which the person is graduating -> go from person graduating semester and work backwards
     # Write a function that said if they are graduating in Spring 2023, let me go back 8 semester -> for now assume they graduate in Spring 2024
     # Functionality needed: create timeline document
 
-    grad_date = 'Spring 2024'
+    grad_date = 'Spring 2026'
     name = 'CS Timeline'
     sem = []
     hours = []
@@ -79,18 +81,21 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             tmp += 'Spring' + ' ' + str(cur_year)
             cur_sem = 'F'
             cur_year = cur_year - 1
-            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_course': []})
+            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_courses': []})
         else:
             tmp += 'Fall' + ' ' + str(cur_year)
             cur_sem = 'S'
-            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_course': []})
+            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_courses': []})
+
+    # Reverse the Timeline semesters so they're ascending
+    sem.reverse()
 
     # New timeline object to add to the firestore collection of the new timeline
     new_timeline = {
         'timeline_name': name,
-        'user_id': 'JPjFjauMlLF12oOwXcJI',
+        'user_id': user_id,
         'grad_date': grad_date,
-        'timeline_semester': sem,
+        'timeline_semesters': sem,
         'timeline_hours': hours
     }
 
@@ -120,14 +125,14 @@ def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
 
 @https_fn.on_call()
-def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
+def add_course_to_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     Add a new course to the timeline course list
     """
 
     db = init_firestore()
 
-    # timeline_id = req.data["timeline_id"] -> will use later
+    timeline_id = req.data["timeline_id"] # -> will use later
 
     # Data requested from the frontend
     course_name = req.data["c_name"]
@@ -137,9 +142,13 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     # Use to traverse through the timeline_semester dictionary
     index = 0
 
-    doc_ref = db.collection('timelines').document('vhFPkz7iipy0qlgj7ulo')
+    doc_ref = db.collection('timelines').document(timeline_id)
     doc = doc_ref.get()
-    sem_ref = doc.get('timeline_semester')
+
+    if not doc.exists:
+        raise ValueError("Timeline does not exist")
+
+    sem_ref = doc.get('timeline_semesters')
 
     # For loop to find the semester to add the course to
     for x in range(0, len(sem_ref)):
@@ -148,34 +157,39 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             break
 
     # Get the dictionary of course from the Timeline document in Firestore
-    course = sem_ref[index]['semester_course']
+    course = sem_ref[index]['semester_courses']
     # Append the new course to the list
     course.append({'course_name': course_name, 'course_id': cid})
     # Updating the semester dictionary with the new dictionary with the added course
-    sem_ref[index]['semester_course'] = course
+    sem_ref[index]['semester_courses'] = course
 
     # Update the semester in the database
     doc_ref.update({
-        'timeline_semester': sem_ref
+        'timeline_semesters': sem_ref
     })
 
     return True
 
 
 @https_fn.on_call()
-def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
+def del_course_from_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
     db = init_firestore()
 
     # Data requested from the frontend
     cid = req.data["cid"]
     sem_name = req.data['sem_name']
+    timeline_id = req.data["timeline_id"]
 
     # Hard code to retrieve the Timeline document with id 'vhFPkz7iipy0qlgj7ulo'
-    doc_ref = db.collection('timelines').document('vhFPkz7iipy0qlgj7ulo')
+    doc_ref = db.collection('timelines').document(timeline_id)
     doc = doc_ref.get()
+
+    if not doc.exists:
+        raise ValueError("Timeline does not exist")
+
     # Get the semester dictionary from the timeline document
-    sem_ref = doc.get('timeline_semester')
+    sem_ref = doc.get('timeline_semesters')
 
     # Iterate through the semester array to find which semester to delete course from
     for x in range(0, len(sem_ref)):
@@ -184,7 +198,7 @@ def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             break
 
     # Retrieve the course array from the correct semester
-    course = sem_ref[index]['semester_course']
+    course = sem_ref[index]['semester_courses']
 
     # Remove the target course from the course array based on the given course id
     for x in range(0, len(course)):
@@ -193,11 +207,11 @@ def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
             break
 
     # Update semester course array to be the new array with the class removed
-    sem_ref[index]['semester_course'] = course
+    sem_ref[index]['semester_courses'] = course
 
     # Update the timeline_semester field in the document
     doc_ref.update({
-        'timeline_semester': sem_ref
+        'timeline_semesters': sem_ref
     })
 
     return True

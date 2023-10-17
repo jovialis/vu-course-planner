@@ -19,10 +19,22 @@ import {
 	StepStatus,
 	VStack
 } from "@chakra-ui/react";
-import React, {useState} from "react";
+import React, {PropsWithChildren, useContext, useState} from "react";
 import {MdCalendarToday} from "react-icons/md";
 import {SemesterCard, SemesterCardProps} from "./SemesterCard";
 import {SidebarMajorChunk} from "./SidebarMajorChunk";
+
+const TimelineContext = React.createContext<TimelineProps>(null)
+
+export function TimelineProvider(props: TimelineProps & PropsWithChildren) {
+	return <TimelineContext.Provider value={props}>
+		{props.children}
+	</TimelineContext.Provider>
+}
+
+export function useTimeline() {
+	return useContext(TimelineContext);
+}
 
 export interface TimelineProps {
 	timeline_id: string
@@ -48,12 +60,16 @@ export function Timeline(props: TimelineProps) {
 			{
 				semester_name: "Fall 202X",
 				semester_id: "fall202x",
-				semester_initial_courses: []
+				semester_courses: []
 			}
 		])
 	}
 
-	return <>
+	return <TimelineProvider {...{
+		timeline_id: props.timeline_id,
+		timeline_semesters: semesters,
+		timeline_name: name
+	}}>
 		<VStack alignItems={"stretch"} spacing={8}>
 			<Heading size={"md"}>
 				{name}
@@ -84,9 +100,9 @@ export function Timeline(props: TimelineProps) {
 
 						<StepSeparator/>
 					</Step>)}
-					<Button w={"100%"} onClick={() => addTimelineSemester()}>
-						Add Semester
-					</Button>
+					{/*<Button w={"100%"} onClick={() => addTimelineSemester()}>*/}
+					{/*	Add Semester*/}
+					{/*</Button>*/}
 				</Stepper>
 
 				<HStack flex={1} justifyContent={"flex-end"}>
@@ -99,5 +115,5 @@ export function Timeline(props: TimelineProps) {
 			</HStack>
 
 		</VStack>
-	</>
+	</TimelineProvider>
 }
