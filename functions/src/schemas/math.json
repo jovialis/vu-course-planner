@@ -23,17 +23,17 @@
                         "MATH 2501"
                     ],
                     "Paths": [],
-                    "Remainder": null
+                    "Remainder": []
                 }
             ],
-            "Remainder": null
+            "Remainder": []
         },
         {
             "Name": "Linear Algebra and Differential Equations",
             "id": 2,
             "Hours": 6,
-            "Required": null,
-            "Path": [
+            "Required": [],
+            "Paths": [
                 {
                     "Name": "path1",
                     "id": null,
@@ -48,10 +48,10 @@
                                 "MATH 2420",
                                 "MATH 2610"
                             ],
-                            "Remainder": null
+                            "Remainder": []
                         }
                     ],
-                    "Path": [
+                    "Paths": [
                         "MATH 2410",
                         "MATH 2600",
                         {
@@ -63,10 +63,10 @@
                                 "MATH 2501"
                             ],
                             "Paths": [],
-                            "Remainder": null
+                            "Remainder": []
                         }
                     ],
-                    "Remainder": null
+                    "Remainder": []
                 },
                 {
                     "Name": "path2",
@@ -86,13 +86,13 @@
                                 "MATH 2501"
                             ],
                             "Paths": [],
-                            "Remainder": null
+                            "Remainder": []
                         }
                     ],
-                    "Remainder": null
+                    "Remainder": []
                 }
             ],
-            "Remainder": null
+            "Remainder": []
         },
         {
             "Name": "At least 12 credit hours math",
@@ -154,7 +154,7 @@
                     }]
                 }
             ],
-            "Remainder": null
+            "Remainder": []
         }
     ]
 }

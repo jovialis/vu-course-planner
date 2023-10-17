@@ -7,7 +7,7 @@
 			"Name": "Concentration",
 			"id": "concentration",
 			"Hours": 15,
-			"Required": null,
+			"Required": [],
 			"Paths": [
 				{
 					"Name": "Asia",
@@ -626,7 +626,7 @@
 					]
 				}
 			],
-			"Remainder": null
+			"Remainder": []
 		},
 		{
 			"Name": "Capstone",
@@ -644,8 +644,8 @@
 						"HIST 3883",
 						"HIST 3880"
 					],
-					"Paths": null,
-					"Remainder": null
+					"Paths": [],
+					"Remainder": []
 				},
 				{
 					"Name": "Majors Seminar",
@@ -654,18 +654,18 @@
 					"Required": [
 						"HIST 4960"
 					],
-					"Paths": null,
-					"Remainder": null
+					"Paths": [],
+					"Remainder": []
 				}
 			],
-			"Remainder": null
+			"Remainder": []
 		},
 		{
 			"Name": "Concentration",
 			"id": "concentration",
 			"Hours": 12,
-			"Required": null,
-			"Paths": null,
+			"Required": [],
+			"Paths": [],
 			"Remainder": [{
 				"subject": "HIST",
 				"cond": []
