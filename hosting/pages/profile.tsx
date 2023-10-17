@@ -33,6 +33,7 @@ export default function UserProfile() {
 	const [completedCourses, setComplete] = useState([])
 	const [listOfComplete, setListOfComplete] = useState(<Box><Text>Currently No Courses Added</Text></Box>)
 	
+    const [retSubmission, setRetSubmission] = useState("")
     
     useEffect(() => {
 		handleRead()
@@ -108,14 +109,18 @@ export default function UserProfile() {
 			username: username,
             completeCourses: completedCourses,
 		}
-
-		console.log(data);
-
+        setRetSubmission("")
+		// console.log(data);
 		addUser(data)
 			.then((result) => {
 				console.log(result)
+                if(result.data){
+                    setRetSubmission("Successfully Submitted!")
+                } else {
+                    setRetSubmission("Error Calling Cloud Function")
+                }
 			}).catch((error) => {
-			console.error('Error calling Cloud Function:', error);
+                setRetSubmission("Error Calling Cloud Function")
 		});
 
 	}
@@ -218,8 +223,12 @@ export default function UserProfile() {
 					</Button>
 				</Stack>
 
-
-				<Button colorScheme='teal' size='lg' onClick={handleSubmit}>
+                {/* {retSubmission != "" && ? {retSubmission == "Successfully Submitted!" ? 
+                    <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text color="red" fontWeight="bold" fontSize="24px">{retSubmission}</Text>} : <Text></Text>} */}
+				{retSubmission == "Successfully Submitted!" ? <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text></Text>}
+                {retSubmission == "" ? <Text color="green" fontWeight="bold" fontSize="24px"></Text> : <Text></Text>}
+                {retSubmission == "Error Calling Cloud Function" ? <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text></Text>}
+                <Button colorScheme='teal' size='lg' onClick={handleSubmit}>
 					Update Profile
 				</Button>
 			</VStack>
