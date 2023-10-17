@@ -15,19 +15,20 @@ def get_user_timelines(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     Queries firestore for all Timeline documents with a "user" field equal to the authenticated user's ID
     """
+    # uid = req.auth.uid -> will later use to get timeline for current logged in user
 
-    user_id = req.data["user_id"]
-    # uid = req.auth.uid
-
+    # Call function that initializes firestore
     db = init_firestore()
 
-    doc_ref = db.collection('timelines').where('user_id', '==', user_id).stream()
-    # doc_ref = db.collection('timelines').where(filter=FieldFilter('user_id', "==", 'JPjFjauMlLF12oOwXcJI')).stream()
-
+    # Hard code to get all the timelines of user id 'JPjFjauMlLF12oOwXcJI'
+    doc_ref = db.collection('timelines').where('user_id', '==', 'JPjFjauMlLF12oOwXcJI').stream()
     doc_list = []
 
+    # Iterate through the returned streams and converting the referenced doc into a dictonary
+    # Inject the converted dictionary with the timeline_is before appending it to the doc_list array
     for doc in doc_ref:
         document_data = doc.to_dict()
+        document_data['timeline_id'] = doc.id
         doc_list.append(document_data)
 
     return doc_list
@@ -41,7 +42,6 @@ def get_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     db = init_firestore()
 
-    # doc_ref = db.collection("timelines").document("9SRMpNVx8N5DClZsgKO7").get()
     timeline_id = req.data["timeline_id"]
     doc_ref = db.collection("timelines").document(timeline_id).get()
     doc = doc_ref.to_dict()
@@ -62,7 +62,7 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     # Get the semester in which the person is graduating -> go from person graduating semester and work backwards
     # Write a function that said if they are graduating in Spring 2023, let me go back 8 semester -> for now assume they graduate in Spring 2024
     # Functionality needed: create timeline document
-    # user_id = userID
+
     grad_date = 'Spring 2024'
     name = 'CS Timeline'
     sem = []
@@ -71,24 +71,27 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     cur_sem = grad_date[0]
     cur_year = int(grad_date[-4:])
 
+    # Create a dictonary of semester based on the student's graduation date, for now it is hard code for Spring 2024
     for x in range(0, 8):
         tmp = ''
+        # Alternate between adding fall and spring semester into the dictionary
         if (cur_sem == 'S'):
             tmp += 'Spring' + ' ' + str(cur_year)
             cur_sem = 'F'
             cur_year = cur_year - 1
-            sem.append({'name': tmp, 'course': []})
+            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_course': []})
         else:
             tmp += 'Fall' + ' ' + str(cur_year)
             cur_sem = 'S'
-            sem.append({'name': tmp, 'course': []})
+            sem.append({'semester_name': tmp, 'semester_id': tmp, 'semester_course': []})
 
+    # New timeline object to add to the firestore collection of the new timeline
     new_timeline = {
-        'name': name,
+        'timeline_name': name,
         'user_id': 'JPjFjauMlLF12oOwXcJI',
         'grad_date': grad_date,
-        'semester': sem,
-        'hours': hours
+        'timeline_semester': sem,
+        'timeline_hours': hours
     }
 
     doc_red = db.collection('timelines').add(new_timeline)
@@ -103,11 +106,14 @@ def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     db = init_firestore()
 
+    # Data requested from the frontend
     timeline_id = req.data["timeline_id"]
     new_name = req.data["new_name"]
+
+    # Retrieve reference of the timeline that needs to be renamed
     doc_ref = db.collection("timelines").document(timeline_id)
     doc_ref.update({
-        'name': new_name
+        'timeline_name': new_name
     })
 
     return True
@@ -121,28 +127,36 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
     db = init_firestore()
 
-    # timeline_id = req.data["timeline_id"]
+    # timeline_id = req.data["timeline_id"] -> will use later
+
+    # Data requested from the frontend
     course_name = req.data["c_name"]
     cid = req.data["c_id"]
     s_name = req.data['sem_name']
+
+    # Use to traverse through the timeline_semester dictionary
     index = 0
 
-    doc_ref = db.collection('timelines').document('rdlXzZy61znFjkXVpg2S')
+    doc_ref = db.collection('timelines').document('vhFPkz7iipy0qlgj7ulo')
     doc = doc_ref.get()
-    sem_ref = doc.get('semester')
+    sem_ref = doc.get('timeline_semester')
 
+    # For loop to find the semester to add the course to
     for x in range(0, len(sem_ref)):
-        if (sem_ref[x]['name'] == s_name):
+        if (sem_ref[x]['semester_name'] == s_name):
             index = x
             break
 
-    course = sem_ref[index]['course']
+    # Get the dictionary of course from the Timeline document in Firestore
+    course = sem_ref[index]['semester_course']
+    # Append the new course to the list
+    course.append({'course_name': course_name, 'course_id': cid})
+    # Updating the semester dictionary with the new dictionary with the added course
+    sem_ref[index]['semester_course'] = course
 
-    course.append({'course': course_name, 'course_id': cid})
-    sem_ref[index]['course'] = course
-
+    # Update the semester in the database
     doc_ref.update({
-        'semester': sem_ref
+        'timeline_semester': sem_ref
     })
 
     return True
@@ -150,30 +164,40 @@ def add_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
 @https_fn.on_call()
 def del_course_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
+
     db = init_firestore()
 
+    # Data requested from the frontend
     cid = req.data["cid"]
     sem_name = req.data['sem_name']
 
-    doc_ref = db.collection('timelines').document('rdlXzZy61znFjkXVpg2S')
+    # Hard code to retrieve the Timeline document with id 'vhFPkz7iipy0qlgj7ulo'
+    doc_ref = db.collection('timelines').document('vhFPkz7iipy0qlgj7ulo')
     doc = doc_ref.get()
-    sem_ref = doc.get('semester')
+    # Get the semester dictionary from the timeline document
+    sem_ref = doc.get('timeline_semester')
 
+    # Iterate through the semester array to find which semester to delete course from
     for x in range(0, len(sem_ref)):
-        if (sem_ref[x]['name'] == sem_name):
+        if (sem_ref[x]['semester_name'] == sem_name):
             index = x
             break
 
-    course = sem_ref[index]['course']
+    # Retrieve the course array from the correct semester
+    course = sem_ref[index]['semester_course']
+
+    # Remove the target course from the course array based on the given course id
     for x in range(0, len(course)):
         if (course[x]['course_id'] == cid):
             course.pop(x)
             break
 
-    sem_ref[index]['course'] = course
+    # Update semester course array to be the new array with the class removed
+    sem_ref[index]['semester_course'] = course
 
+    # Update the timeline_semester field in the document
     doc_ref.update({
-        'semester': sem_ref
+        'timeline_semester': sem_ref
     })
 
     return True
