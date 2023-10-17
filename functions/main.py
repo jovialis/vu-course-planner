@@ -33,14 +33,16 @@ def addUser(req: https_fn.CallableRequest) -> https_fn.Response:
     db = firestore.client()
     # print("Here2")
     # data =  { "Name" : "Billy", "Major" : "Computer Science", "Minor" : "N/A", "Second Major" : "N/A", "Expected Graduation Term" : "Spring 2026" }
-    data = {"name": req.data["name"], 
+    data = {"username": req.data["username"],
+            "name": req.data["name"], 
             "major": req.data["major"],
             "minor": req.data["minor"],
             "sec_major": req.data["second_major"],
             "graduation_year": req.data["year"],
-            "graduation_term": req.data["term"]}
+            "graduation_term": req.data["term"],
+            "completed_courses": req.data["completeCourses"]}
     
-    ref = db.collection("Users").document(req.data["username"])
+    ref = db.collection("Users").document(req.auth.uid)
 
     ret = ref.set(data)
     print("ret")
@@ -50,19 +52,16 @@ def addUser(req: https_fn.CallableRequest) -> https_fn.Response:
 @https_fn.on_call()
 def readDoc(req : https_fn.CallableRequest, ) -> https_fn.Response:
     # print(req)
-    doc_name = req.data["username"]
+    # doc_name = req.data["username"]
     db = firestore.client()
-    ref = db.collection("Users").document(doc_name)
+    ref = db.collection("Users").document(req.auth.uid)
 
     doc = ref.get()
-    # print("Doc: ")
-    # print(doc)
+    
     if doc.exists:
         return doc.to_dict()
-    
     else:
         return doc.to_dict()
-        # print("No such document!")
     
 
 # @https_fn.on_call()
