@@ -138,15 +138,6 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         # Add a pointer to the listing path
         course_listing["listings"][section_term].append(listing_ref.path)
 
-        # # Only include sections that are recent
-        # if section_term_number_value >= earliest_recording_term_id:
-        #     course_listing["listings"][section_term].append({
-        #         "section_id": section_id,
-        #         "section_number": section_number,
-        #         "section_notes": section_notes,
-        #         "section_instructors": section_instructors
-        #     })
-
         course_listing["availability"][section_term] = True
 
     # Arbitrate all the consensus fields

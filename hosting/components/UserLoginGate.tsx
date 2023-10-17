@@ -11,6 +11,9 @@ import React, {PropsWithChildren, useContext, useEffect, useState} from "react";
 const UserProvider = React.createContext<User>(null);
 
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({
+	hd: "vanderbilt.edu"
+})
 
 export function useUser() {
 	return useContext(UserProvider);
