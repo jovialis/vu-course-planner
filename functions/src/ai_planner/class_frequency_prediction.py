@@ -24,20 +24,15 @@ def predict_class_availability(class_id: str, term_type: str, num_sem = 3) -> in
         content = course.to_dict()
         # print(content)
         avail = content["availability"]
-        print("terms")
-        print(ref_terms)
+     
         terms = ref_terms.stream()
 
         terms_list = []
         
         for term in terms:
-            print("lower")
-            print(term.get("name").lower())
             if term_type in term.get("name").lower():
                 terms_list.append((term.get("id"), int(term.get("id")))) #All terms that fit the term type
         
-        print("terms_list")
-        print(terms_list)
         terms_list = sorted(terms_list, reverse=True, key=lambda term: term[1])
 
 
