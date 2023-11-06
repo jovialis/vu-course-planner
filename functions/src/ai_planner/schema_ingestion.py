@@ -1,30 +1,35 @@
 import json
-"""
-
-"""
 
 def ingest_schema(path: str):
     """
     Should read in a schema from the "src/schemas" folder. Should generate a recursive class structure with
     the "Degree Schema" class as its root and a series of "DegreeSchemaRequirement" classes as the recursive part.
     """
+
+    # open the file as json 
     with open(path) as json_file:
         json_data = json.load(json_file)
+    
+    # pass in the json data to be deserialized as a DegreeSchema object
     return DegreeSchema(json_data)
 
 class DegreeSchema:
     """
     Base class
-
+    This is the object representation of our degree requirements schema
+    It encapsulates all the data in our major schema
     """
 
     def __init__(self, data) -> None:
         self.type = data['Type']
         self.name = data['Name']
         self.track = data['Track']
+        # this contains all the unique courses that may be required for the major
         self.courses = set()
         self.requirements = self.generate_requirements(data['Requirements'])
 
+    # Function that iterates through the requirements and creates a 
+    # nested DegreeSchemaRequirement object
     def generate_requirements(self, requirement):
         requirements = []
         for req in requirement:
@@ -32,7 +37,7 @@ class DegreeSchema:
             self.courses.update(requirements[-1].find_satisfying_courses())
         return requirements
     
-    # for testing purposes
+    # Prints out the degree schema in a readable format
     def print_beautifully(self):
         print('Type: {}'.format(self.type)) 
         print('Name: {}'.format(self.name)) 
@@ -43,12 +48,16 @@ class DegreeSchema:
             else:
                 print(r)
 
+    # returns all courses that may contribute to the degree requirement
     def find_satisfying_courses(self):
         return self.courses
 
 class DegreeSchemaRequirement:
     """
     Recursive requirement object
+    This is a nested sub requirement for the DegreeSchema 
+    It is the individual requirement components that combine to create the 
+    overall degree requirement 
     """
 
     def __init__(self, req) -> None:  
@@ -60,23 +69,29 @@ class DegreeSchemaRequirement:
         self.paths = self.create_paths(req['Paths'])
         self.remainder = req['Remainder']
 
+    # Deserializes the required field in our json data 
     def create_required(self, required):
         reqs = []
         for r in required:
+            # Create a nested DegreeSchemaRequirement
             if isinstance(r,dict):
                 reqs.append(DegreeSchemaRequirement(r))
                 self.courses.update(reqs[-1].find_satisfying_courses())
+            # Requirement is simply a class
             else:
                 reqs.append(r)
                 self.courses.add(r)
         return reqs
 
+    # Deserializes the path field in our json data 
     def create_paths(self, paths):
         ps = []
         for p in paths:
+            # Create a nested DegreeSchemaRequirement
             if isinstance(p,dict):
                 ps.append(DegreeSchemaRequirement(p))
                 self.courses.update(ps[-1].find_satisfying_courses())
+            # Requirement is simply a class
             else:
                 ps.append(p)
                 self.courses.add(p)
@@ -84,12 +99,11 @@ class DegreeSchemaRequirement:
     
     def find_satisfying_courses(self):
         """
-        Should query the Firestore database for any/all classes that would satisfy this Requirement.
-        :return:
+        Return all the unique course ids that may contribute to the DegreeSchemaRequirement
         """
         return self.courses
         
-    # for testing purposes
+    # Prints out the degree schema requirement in a readable format
     def print_beautifully(self, offset):
         res = ""
         res += (" " * offset + "Name : {}".format(self.name) + '\n')
@@ -118,11 +132,14 @@ class DegreeSchemaRequirement:
         res += (" " * offset + "]\n")
         return res
 
+# testing
 subjects = ["economics", "history", "math", "psychology"]
 schemas= []
 for subject in subjects:
+    # create a DegreeSchema for each major
     schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
     print("------------------------------------------------------")
+    # print the DegreeSchema to verify json is deserialized properly
     schemas[-1].print_beautifully()
     print(schemas[-1].find_satisfying_courses())
 
