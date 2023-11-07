@@ -1,4 +1,8 @@
 import json
+from firebase_functions import https_fn, options
+import sys
+sys.path.insert(1, 'functions/src/functions')
+import courses
 """
 
 """
@@ -58,7 +62,7 @@ class DegreeSchemaRequirement:
         self.hours = req['Hours']
         self.required = self.create_required(req['Required'])
         self.paths = self.create_paths(req['Paths'])
-        self.remainder = req['Remainder']
+        self.remainder = self.create_remainder(req['Remainder'])
 
     def create_required(self, required):
         reqs = []
@@ -68,7 +72,7 @@ class DegreeSchemaRequirement:
                 self.courses.update(reqs[-1].find_satisfying_courses())
             else:
                 reqs.append(r)
-                self.courses.add(r)
+                self.courses.update(courses.search(r))
         return reqs
 
     def create_paths(self, paths):
@@ -79,9 +83,22 @@ class DegreeSchemaRequirement:
                 self.courses.update(ps[-1].find_satisfying_courses())
             else:
                 ps.append(p)
-                self.courses.add(p)
+                self.courses.update(courses.search(p))
         return ps
     
+    def create_remainder(self, remainder):
+        rem = set()
+        for r in remainder:
+            if isinstance(r, dict):
+                if "cond" in r:
+                    ret = courses.fetch_cond_courses(r["subject"], r["cond"])
+                    rem.update(ret)
+                    self.courses.update(ret)
+            else:
+                rem.add(r)
+                self.courses.update(courses.search(r))
+        return list(rem)
+
     def find_satisfying_courses(self):
         """
         Should query the Firestore database for any/all classes that would satisfy this Requirement.
@@ -123,6 +140,5 @@ schemas= []
 for subject in subjects:
     schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
     print("------------------------------------------------------")
-    schemas[-1].print_beautifully()
+    # schemas[-1].print_beautifully()
     print(schemas[-1].find_satisfying_courses())
-
