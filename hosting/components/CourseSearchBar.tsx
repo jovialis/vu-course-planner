@@ -28,6 +28,7 @@ import {
 
 } from 'react-instantsearch';
 import {CourseCardProps} from "./dashboard/CourseCard";
+import {useDelayedCallback} from "../hooks/UseDelayedCallback";
 
 const searchClient = algoliasearch('TPO32B3BGQ', 'f275caf0f2df54d0da6a11ded70f877c');
 const index = searchClient.initIndex('prod_COURSES_SEARCH');
@@ -62,15 +63,16 @@ function CustomSearchBox(props: UseSearchBoxProps & {
 	const [inputValue, setInputValue] = useState(query);
 	const inputRef = useRef<HTMLInputElement>(null);
 
+	const loading = useDelayedCallback(() => {
+		if (inputValue.length === 0) {
+			clear();
+		} else {
+			refine(inputValue);
+		}
+	}, 500, [inputValue]);
 
 	function setQuery(newQuery: string) {
 		setInputValue(newQuery);
-
-		if (newQuery.length === 0) {
-			clear();
-		} else {
-			refine(newQuery);
-		}
 	}
 
 	function CourseMenuItem(localProps: { hit: { id: string, name: string, number: number, subject: string, objectID: string } }) {
@@ -90,7 +92,7 @@ function CustomSearchBox(props: UseSearchBoxProps & {
 
 	return <>
 		<Menu
-			isOpen={inputValue.length > 0 && results.hits.length > 0}
+			isOpen={!loading && inputValue.length > 0 && results.hits.length > 0}
 			autoSelect={false}
 			initialFocusRef={inputRef}
 		>
@@ -106,10 +108,10 @@ function CustomSearchBox(props: UseSearchBoxProps & {
 					w={"100%"}
 				/>
 				<VisuallyHidden>
-					<MenuButton mt={10}/>
+					<MenuButton mt={10} onFocusCapture={e => e.preventDefault()}/>
 				</VisuallyHidden>
 			</VStack>
-			<MenuList shadow={"xl"} autoFocus={false} onFocusCapture={e => e.stopPropagation()}>
+			<MenuList onFocus={e => e.preventDefault()} shadow={"xl"} autoFocus={false} onFocusCapture={e => e.stopPropagation()}>
 				{results.hits.map((hit, i) => <CourseMenuItem hit={hit} key={i}/>)}
 				{/*<Hits hitComponent={CourseMenuItem} />*/}
 			</MenuList>

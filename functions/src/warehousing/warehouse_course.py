@@ -4,6 +4,8 @@ from google.cloud.firestore_v1.base_query import FieldFilter
 from src.utils.consensus_decider import ConsensusDecider
 from src.utils.init_firestore import init_firestore
 
+from src.ai_planner.class_frequency_prediction import predict_class_availability
+
 ACTIVE_YEARS_THRESHOLD = 2  # The number of years a course can go hiatus before it's considered inactive
 INDEX_YEARS_THRESHOLD = 4  # How many years to index for space purposes
 
@@ -67,7 +69,13 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         "listings": {},
         # In which semesters the course is available in
         "availability": {},
-        "active": False
+        "active": False,
+        "availability_pred": {
+            "spring": -1,
+            "fall": -1,
+            "year": -1,
+            "summer": -1
+        }
     }
 
     listing_template, availability_template, earliest_active_term_id, earliest_recording_term_id = __generate_warehoused_term_templates()
@@ -118,8 +126,8 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         ).document(
             course_id.lower()
         ).collection(
-            __san(f"{section_term}_{course_id}")
-        ).document(section_id)
+            "course_listings"
+        ).document(__san(f"{section_term}_{section_id}_{course_id}"))
         listing_batch.set(listing_ref, {
             "section_id": section_id,
             "section_number": section_number,
@@ -129,15 +137,6 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
 
         # Add a pointer to the listing path
         course_listing["listings"][section_term].append(listing_ref.path)
-
-        # # Only include sections that are recent
-        # if section_term_number_value >= earliest_recording_term_id:
-        #     course_listing["listings"][section_term].append({
-        #         "section_id": section_id,
-        #         "section_number": section_number,
-        #         "section_notes": section_notes,
-        #         "section_instructors": section_instructors
-        #     })
 
         course_listing["availability"][section_term] = True
 
@@ -151,10 +150,17 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
     course_listing["format"] = course_listing["format"].arbitrate()
 
     # Set the course listing
-    db.collection("courses").document(course_id.lower()).set(course_listing)
+    course_ref = db.collection("courses").document(course_id.lower())
+    course_ref.set(course_listing)
 
     # Commit the batch
     listing_batch.commit()
+
+    # Predict class frequency availability
+    if course_listing["active"]:
+        course_ref.update({
+            "availability_pred": predict_class_availability(course_id.lower())
+        })
 
     return course_listing
 
@@ -291,6 +297,9 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
     # Batch for writing multiple session listings
     listings_batch = db.batch()
 
+    # Batch for writing multiple subcourse listings
+    subcourse_batch = db.batch()
+
     # Iterate through sections that we've found and update the course listing
     for section in section_docs:
         doc_data = section.to_dict()
@@ -353,8 +362,9 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
             contained_courses[course_name]["attributes"].put(section_attributes, section_term_number_value)
 
         listing_ref = db.collection("courses").document(course_id.lower()).collection(
-            __san(f"{section_term}_{subcourse_id}")
-        ).document(section_id)
+            "course_listings"
+        ).document(__san(f"{section_term}_{section_id}_{subcourse_id}"))
+
         listings_batch.set(listing_ref, {
             "section_id": section_id,
             "section_number": section_number,
@@ -374,6 +384,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         contained_courses[course_name]["availability"][section_term] = True
 
     # Now, insert the contained courses into the main document
+    written_contained_course_paths = []
     contained_courses = list(contained_courses.values())
     for contained_course in contained_courses:
         contained_course["description"] = contained_course["description"].arbitrate()
@@ -383,13 +394,22 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         contained_course["attributes"] = contained_course["attributes"].arbitrate()
         contained_course["format"] = contained_course["format"].arbitrate()
 
-    course_listing["contained_courses"] = contained_courses
+        # Write the contained_course
+        contained_course_ref = db.collection("courses").document(course_id.lower()).collection("courses").document(
+            __san(contained_course["id"])
+        )
+
+        subcourse_batch.set(contained_course_ref, contained_course)
+        written_contained_course_paths.append(contained_course_ref.path)
+
+    course_listing["contained_courses"] = written_contained_course_paths
 
     # Set the course listing
     db.collection("courses").document(course_id.lower()).set(course_listing)
 
-    # Commit the listings batch
+    # Commit the batches
     listings_batch.commit()
+    subcourse_batch.commit()
 
     return course_listing
 

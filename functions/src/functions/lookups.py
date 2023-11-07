@@ -22,5 +22,6 @@ def lookup_course(req: https_fn.CallableRequest):
         "hours": course_ref.get("hours"),
         "format": course_ref.get("format"),
         "school": course_ref.get("school"),
-        "active": course_ref.get("active")
+        "active": course_ref.get("active"),
+        "availability": course_ref.get("availability_pred")
     }

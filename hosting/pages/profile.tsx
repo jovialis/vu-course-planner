@@ -1,7 +1,8 @@
 import {
+	Avatar,
 	Box,
 	Button,
-	Container,
+	Container, Heading, HStack,
 	Input,
 	Link,
 	ListItem,
@@ -15,10 +16,10 @@ import {
 import {getFunctions, httpsCallable} from 'firebase/functions'
 import React, {useEffect, useState} from "react";
 import {CourseSearchBar} from "../components/CourseSearchBar"
+import {useUser} from "../components/UserLoginGate";
 
 export default function UserProfile() {
-
-	const [username, setUsername] = useState("")
+	const user = useUser();
 
 	const [first_major, set_first_major] = useState("")
 	const [second_major, set_second_major] = useState("")
@@ -26,8 +27,6 @@ export default function UserProfile() {
 
 	const [year, set_year] = useState("")
 	const [term, set_term] = useState("")
-
-	const [name, setName] = useState("")
 
 	const [addingCourse, setAddingCourse] = useState("")
 	const [completedCourses, setComplete] = useState([])
@@ -54,11 +53,6 @@ export default function UserProfile() {
         
 	}, [completedCourses]);
 
-	function changeUsername(event) {
-		// console.log(event.target.value)
-		setUsername(event.target.value)
-	}
-
 	function handleMajorChange(event) {
 		set_first_major(event.target.value)
 		// console.log(event.target.value)
@@ -74,18 +68,16 @@ export default function UserProfile() {
 
 	function handleRead() {
 		const functions = getFunctions()
-		const readDoc = httpsCallable(functions, 'readDoc')
+		const readDoc = httpsCallable(functions, 'get_user_data')
 
-		readDoc({address: "Home"}).then((result) => {
+		readDoc({}).then((result) => {
             if (result != null){
-                setUsername(result.data.username)
-                set_first_major(result.data.major)
-                set_second_major(result.data.sec_major)
-                set_minor(result.data.minor)
-                set_year(result.data.graduation_year)
-                set_term(result.data.graduation_term)
-                setName(result.data.name)
-                setComplete(result.data.completed_courses)
+                set_first_major(result.data?.major || "")
+                set_second_major(result.data?.sec_major || "")
+                set_minor(result.data?.minor || "")
+                set_year(result.data?.graduation_year || "")
+                set_term(result.data?.graduation_term || "")
+                setComplete(result.data?.completed_courses || [])
             }
             // console.log("read")
 			// console.log(result.data)
@@ -97,7 +89,8 @@ export default function UserProfile() {
 	function handleSubmit() {
 		console.log('test')
 		const functions = getFunctions()
-		const addUser = httpsCallable(functions, 'addUser')
+		const addUser = httpsCallable(functions, 'set_user_data')
+		// console.log(first_major)
 		let data = {
 			address: "Home",
 			major: first_major,
@@ -105,9 +98,7 @@ export default function UserProfile() {
 			second_major: second_major,
 			year: year,
 			term: term,
-			name: name,
-			username: username,
-            completeCourses: completedCourses,
+			completeCourses: completedCourses,
 		}
         setRetSubmission("")
 		// console.log(data);
@@ -148,16 +139,29 @@ export default function UserProfile() {
 	return (
 		<Container maxW={"container.lg"} mb="200">
 			<VStack spacing={4} alignItems={"stretch"}>
+				<Box h={2}/>
+
 				<Link href={"/"} color={"teal"} fontWeight={"bold"}>
 					Back to Dashboard
 				</Link>
 
-				<Text fontWeight="bold">User Name</Text>
-				<Input placeholder='Input your User Name' size='md' onChange={changeUsername} value={username || ''}/>
-				<Text fontWeight="bold">Full Name</Text>
-				<Input placeholder='Input your name' size='md' value={name || ''} onChange={(event) => {
-					setName(event.target.value)
-				}}/>
+				<Box h={6}/>
+
+				<HStack alignItems={"flex-start"} spacing={4}>
+					<Avatar src={user.photoURL}/>
+					<VStack alignItems={"flex-start"}>
+						<Heading>
+							{user.displayName}
+						</Heading>
+						<Text>
+							{user.email}
+						</Text>
+					</VStack>
+				</HStack>
+
+				<Box h={6}/>
+
+
 
 				<Text fontWeight="bold">First Major</Text>
 				<Select placeholder='Choose My First Major' onChange={handleMajorChange} value={first_major}>

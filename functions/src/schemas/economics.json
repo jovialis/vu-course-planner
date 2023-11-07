@@ -7,21 +7,21 @@
       "Name": "Principles of Macroeconomics",
       "id": 1,
       "Hours": 3,
-      "Required": null,
+      "Required": [],
       "Paths": [
         "ECON 1010"
       ],
-      "Remainder": null
+      "Remainder": []
     },
     {
       "Name": "Principles of Microeconomics",
       "id": 2,
       "Hours": 3,
-      "Required": null,
+      "Required": [],
       "Paths": [
         "ECON 1020"
       ],
-      "Remainder": null
+      "Remainder": []
     },
     {
       "Name": "Statistics with Calculus",
@@ -33,13 +33,13 @@
             "Name": "Math Requirement",
             "id": 100,
             "Hours": 3,
-            "Required": null,
+            "Required": [],
             "Paths": [
               "MATH 1100",
               "MATH 1200",
               "MATH 1300"
             ],
-            "Remainder": null
+            "Remainder": []
           }
         ]
       },
@@ -47,7 +47,7 @@
         "ECON 1500",
         "ECON 1510"
       ],
-      "Remainder": null
+      "Remainder": []
     },
     {
       "Name": "Microeconomics",
@@ -60,18 +60,18 @@
           "Name": "Math Prerequisite",
           "id": 101,
           "Hours": 3,
-          "Required": null,
+          "Required": [],
           "Paths": [
             "MATH 1201",
             "MATH 1301"
           ],
-          "Remainder": null
+          "Remainder": []
         }
       ],
       "Paths": [
         "ECON 3012"
       ],
-      "Remainder": null
+      "Remainder": []
     },
     {
       "Name": "Macroeconomics",
@@ -84,18 +84,18 @@
           "Name": "Math Prerequisite",
           "id": 102,
           "Hours": 3,
-          "Required": null,
+          "Required": [],
           "Paths": [
             "MATH 1201",
             "MATH 1301"
           ],
-          "Remainder": null
+          "Remainder": []
         }
       ],
       "Paths": [
         "ECON 3022"
       ],
-      "Remainder": null
+      "Remainder": []
     },
     {
       "Name": "Econometrics",
@@ -107,7 +107,7 @@
           "Name": "Stats Prerequisite",
           "id": 103,
           "Hours": 3,
-          "Required": null,
+          "Required": [],
           "Paths": [
             "MATH 1201",
             "MATH 1301",
@@ -122,35 +122,35 @@
                 "Math 2810",
                 "Math 2820"
               ],
-              "Remainder": null
+              "Remainder": []
             }
           ],
-          "Remainder": null
+          "Remainder": []
         },
         {
           "Name": "Calculus Prerequisite",
           "id": 105,
           "Hours": 3,
-          "Required": null,
+          "Required": [],
           "Paths": [
             "MATH 1201",
             "Math 1301"
           ],
-          "Remainder": null
+          "Remainder": []
         }
       ],
       "Paths": [
         "ECON 3032",
         "ECON 3035"
       ],
-      "Remainder": null
+      "Remainder": []
     },
     {
       "Name": "Courses Above ECON 3035",
       "id": 7,
       "Hours": 9,
-      "Required": null,
-      "Paths": null,
+      "Required": [],
+      "Paths": [],
       "Remainder": [
         "ECON 3100",
         "ECON 3110",
@@ -200,8 +200,8 @@
       "Name": "Econ Electives",
       "id": 8,
       "Hours": 6,
-      "Required": null,
-      "Paths": null,
+      "Required": [],
+      "Paths": [],
       "Remainder": [
         "ECON 2100",
         "ECON 2150",
@@ -265,7 +265,8 @@
       "Name": "24 Hours Only Math Major",
       "id": 8,
       "Hours": 24,
-      "Required": null,
+      "Required": [],
+      "Paths": [],
       "Remainder": [
         {
           "subject": "Math",

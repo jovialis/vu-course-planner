@@ -5,15 +5,18 @@
  * Date: 10/10/23
  */
 import {
+	Badge,
 	Grid, GridItem,
 	Modal,
 	ModalBody,
+	Text,
 	ModalCloseButton,
 	ModalContent, ModalFooter,
 	ModalHeader,
 	ModalOverlay, Spinner,
-	useDisclosure
+	useDisclosure, Wrap, WrapItem
 } from "@chakra-ui/react";
+import React from "react";
 import {ReactElement, useEffect} from "react";
 import {useCallable} from "../hooks/UseCallable";
 import {CourseInfo} from "./CourseInfo";
@@ -58,7 +61,7 @@ export function CourseDetailsModal(props: {
                             templateRows='repeat(4, 1fr)'
                             templateColumns='repeat(20, 1fr)'
                             gap={10}>
-                            <GridItem rowSpan={4} colSpan={8} bg='tomato'>
+                            <GridItem rowSpan={4} colSpan={8} bg='gray.50' p={1}>
 	                            {data.description}
                             </GridItem>
                             <GridItem colSpan={6} rowSpan={3} bg='papayawhip'/>
@@ -75,7 +78,26 @@ export function CourseDetailsModal(props: {
                             templateColumns='repeat(20, 1fr)'
                             gap={10}>
                             <GridItem rowSpan={3} colSpan={8} bg='papayawhip'/>
-                            <GridItem rowSpan={2} colSpan={10} bg='green.500'/>
+                            <GridItem rowSpan={2} colSpan={10} bg='gray.50' p={1}>
+								{!data.active && <Text>
+									Course is inactive (hasn't been listed in the past four years)
+								</Text>}
+								{data.active && <Wrap>
+									{Object.keys(data.availability).map(key => <React.Fragment key={key}>
+										<WrapItem>
+											<Badge colorScheme={(() => {
+												switch (data.availability[key]) {
+													case -1: return "red";
+													case 0: return "gray";
+													case 1: return "green"
+												}
+											})()}>
+												{key}
+											</Badge>
+										</WrapItem>
+								</React.Fragment>)}
+								</Wrap>}
+							</GridItem>
                             <GridItem rowSpan={1} colSpan={2}/>
                             <GridItem rowSpan={1} colSpan={2} bg='purple'/>
                             <GridItem rowSpan={1} colSpan={5} bg='beige'/>
