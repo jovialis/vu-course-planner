@@ -1447,6 +1447,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@choc-ui/chakra-autocomplete@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@choc-ui/chakra-autocomplete@npm:5.2.8"
+  dependencies:
+    react-nanny: 2.15.0
+  peerDependencies:
+    "@chakra-ui/react": ^2.5.5
+    "@chakra-ui/react-utils": ^2.0.5
+    "@chakra-ui/utils": ^2.0.8
+    "@emotion/react": ^11.10.0
+    "@emotion/styled": ^11.10.0
+    framer-motion: ">7.6.14"
+    react: ^18.2.0
+  checksum: 32788422b0675c851439c8e84caae2e3bee9acd3c2447651ded893dac08b4fcff2d6cf23f631be97b3829eadd2f4f0e95cd7a581d1fbf37d5e39925afc9630e2
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/babel-plugin@npm:11.11.0"
@@ -4658,6 +4675,7 @@ __metadata:
   dependencies:
     "@chakra-ui/icons": ^2.1.0
     "@chakra-ui/react": ^2.8.0
+    "@choc-ui/chakra-autocomplete": ^5.2.8
     "@emotion/react": ^11.11.1
     "@emotion/styled": ^11.11.0
     "@types/node": ^18.15.3
@@ -6370,6 +6388,15 @@ next@latest:
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
   checksum: f7a19ac3496de32ca9ae12aa030f00f14a3d45374f1ceca0af707c831b2a6098ef0d6bdae51bd437b0a306d7f01d4677fcc8de7c0d331eb47ad0f46130e53c5f
+  languageName: node
+  linkType: hard
+
+"react-nanny@npm:2.15.0":
+  version: 2.15.0
+  resolution: "react-nanny@npm:2.15.0"
+  peerDependencies:
+    react: ">=16.0.0"
+  checksum: f7f8fd7ff5814e07f17ecde4226e9ac3458ce654ede269f841bf530a882f364c8853e16f9cea66be785041edf5376c2ec579598f93525910899bdd21259047f5
   languageName: node
   linkType: hard
 

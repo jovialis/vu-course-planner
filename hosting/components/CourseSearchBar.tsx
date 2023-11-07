@@ -1,7 +1,7 @@
 import {
 	Badge,
 	Box,
-	Button,
+	Button, FormControl, FormLabel,
 	HStack,
 	Input,
 	Menu,
@@ -12,6 +12,7 @@ import {
 	VisuallyHidden,
 	VStack
 } from '@chakra-ui/react'
+import {AutoComplete, AutoCompleteInput, AutoCompleteItem, AutoCompleteList} from "@choc-ui/chakra-autocomplete";
 import algoliasearch from 'algoliasearch/lite';
 import {getFunctions, httpsCallable} from 'firebase/functions'
 import React, {useRef, useState} from "react";
@@ -75,49 +76,84 @@ function CustomSearchBox(props: UseSearchBoxProps & {
 		setInputValue(newQuery);
 	}
 
-	function CourseMenuItem(localProps: { hit: { id: string, name: string, number: number, subject: string, objectID: string } }) {
-		return (
-			<MenuItem onClick={() => {
-				props.on_course_selected({
-					course_id: localProps.hit.objectID,
-					course_name: localProps.hit.name,
-					course_hours: localProps.hit.hours || 3
-				})
-				setQuery("");
-			}}>
-				{localProps.hit.id} - {localProps.hit.name}
-			</MenuItem>
-		)
-	}
+	// function CourseMenuItem(localProps: { hit: { id: string, name: string, number: number, subject: string, objectID: string } }) {
+	// 	return (
+	// 		<MenuItem onClick={() => {
+	// 			props.on_course_selected({
+	// 				course_id: localProps.hit.objectID,
+	// 				course_name: localProps.hit.name,
+	// 				course_hours: localProps.hit.hours || 3
+	// 			})
+	// 			setQuery("");
+	// 		}}>
+	// 			{localProps.hit.id} - {localProps.hit.name}
+	// 		</MenuItem>
+	// 	)
+	// }
 
 	return <>
-		<Menu
-			isOpen={!loading && inputValue.length > 0 && results.hits.length > 0}
-			autoSelect={false}
-			initialFocusRef={inputRef}
-		>
-			<VStack alignItems={"stretch"}>
-				<Input
-					ref={inputRef}
-					placeholder="Add courses"
-					type={"search"}
-					value={inputValue}
-					onChange={(event) => {
-						setQuery(event.currentTarget.value);
-					}}
-					w={"100%"}
-				/>
-				<VisuallyHidden>
-					<MenuButton mt={10} onFocusCapture={e => e.preventDefault()}/>
-				</VisuallyHidden>
-			</VStack>
-			<MenuList onFocus={e => e.preventDefault()} shadow={"xl"} autoFocus={false} onFocusCapture={e => e.stopPropagation()}>
-				{results.hits.map((hit, i) => <CourseMenuItem hit={hit} key={i}/>)}
-				{/*<Hits hitComponent={CourseMenuItem} />*/}
-			</MenuList>
-		</Menu>
-
-
-
+		<AutoComplete isLoading={loading} disableFilter={true}>
+			<AutoCompleteInput
+				ref={inputRef}
+				placeholder="Add courses"
+				type={"search"}
+				variant={"outline"}
+				w={"100%"}
+				value={inputValue}
+				onChange={(event) => {
+					setQuery(event.currentTarget.value);
+				}}
+			/>
+			<AutoCompleteList>
+				{results.hits.map((hit, i) => (
+					<AutoCompleteItem
+						key={`option-${hit.id}`}
+						value={hit.id}
+						textTransform={"capitalize"}
+						onClick={() => {
+							props.on_course_selected({
+								course_id: hit.objectID,
+								course_name: hit.name,
+								course_hours: hit.hours || 3
+							})
+							setQuery("");
+						}}
+					>
+						{hit.id} - {hit.name}
+					</AutoCompleteItem>
+				))}
+			</AutoCompleteList>
+		</AutoComplete>
 	</>
+
+	// return <>
+	// 	<Menu
+	// 		isOpen={!loading && inputValue.length > 0 && results.hits.length > 0}
+	// 		autoSelect={false}
+	// 		initialFocusRef={inputRef}
+	// 	>
+	// 		<VStack alignItems={"stretch"}>
+	// 			<Input
+	// 				ref={inputRef}
+	// 				placeholder="Add courses"
+	// 				type={"search"}
+	// 				value={inputValue}
+	// 				onChange={(event) => {
+	// 					setQuery(event.currentTarget.value);
+	// 				}}
+	// 				w={"100%"}
+	// 			/>
+	// 			<VisuallyHidden>
+	// 				<MenuButton mt={10} onFocusCapture={e => e.preventDefault()}/>
+	// 			</VisuallyHidden>
+	// 		</VStack>
+	// 		<MenuList onFocus={e => e.preventDefault()} shadow={"xl"} autoFocus={false} onFocusCapture={e => e.stopPropagation()}>
+	// 			{results.hits.map((hit, i) => <CourseMenuItem hit={hit} key={i}/>)}
+	// 			{/*<Hits hitComponent={CourseMenuItem} />*/}
+	// 		</MenuList>
+	// 	</Menu>
+	//
+	//
+	//
+	// </>
 }
