@@ -32,18 +32,21 @@ def fetch_cond_courses(subj, cond):
         cred = credentials.Certificate('functions/src/functions/firebase_cred.json')
         firebase_admin.initialize_app(cred)
     db = firestore.client()
-    valid_conds = {'==', '>', '<', '>=', '<=', '!='}
+    valid_conds = {'==', '>', '<', '>=', '<='}
+    ne = set()
     res = set()
+    query = db.collection('courses').where('subject', '==', subj)
     for c in cond:
-        curset = set()
         if ' ' in c:
             eq, val = c.split(' ')
             if eq in valid_conds:
-                query = db.collection('courses').where('subject', '==', subj)
-                doc_ref = query.where('id', eq, val).stream()
-                for dr in doc_ref:
-                    d = dr.to_dict()
-                    curset.add(d['id'])
-                    curset.update(search(d['id']))
-        res.update(curset)
+                query = query.where('id', eq, val)
+            elif eq == '!=':
+                ne.add(val)
+    doc_ref = query.stream()
+    for dr in doc_ref:
+        d = dr.to_dict()
+        major, num = d['id'].split(' ')
+        if num not in ne:
+            res.update(search(d['id']))
     return res
