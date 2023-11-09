@@ -12,14 +12,15 @@
     "script:install": "yarn run script:install:python && yarn run script:install:nodejs && yarn run script:install:hostingenv",
     "script:install:nodejs": "yarn install",
     "script:install:hostingenv": "cd hosting && chmod +x ./init_env_file.sh && ./init_env_file.sh",
-    "script:install:python": "cd functions && chmod +x ./install_dependencies.sh && ./install_dependencies.sh"
+    "script:install:python": "cd functions && chmod +x ./install_dependencies.sh && ./install_dependencies.sh",
+    "test:functions": "cd functions && chmod +x ./test.sh && ./test.sh",
+    "test:hosting": "yarn workspace hosting run test"
   },
   "devDependencies": {
     "concurrently": "^8.2.1"
   },
   "workspaces": [
-    "hosting",
-    "functions-scraping"
+    "hosting"
   ],
   "packageManager": "yarn@3.6.3",
   "dependencies": {

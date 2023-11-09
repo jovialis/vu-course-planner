@@ -135,3 +135,5 @@ dist
 .idea/
 
 .coverage
+
+hosting/__tests__/__snapshots__/
