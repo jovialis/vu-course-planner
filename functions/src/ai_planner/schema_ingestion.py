@@ -118,10 +118,10 @@ class DegreeSchemaRequirement:
         res += (" " * offset + "]\n")
         return res
 
-subjects = ["economics", "history", "math", "psychology"]
-schemas= []
-for subject in subjects:
-    schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
-    print("------------------------------------------------------")
-    schemas[-1].print_beautifully()
-    print(schemas[-1].find_satisfying_courses())
+# subjects = ["economics", "history", "math", "psychology"]
+# schemas= []
+# for subject in subjects:
+#     schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
+#     print("------------------------------------------------------")
+#     schemas[-1].print_beautifully()
+#     print(schemas[-1].find_satisfying_courses())

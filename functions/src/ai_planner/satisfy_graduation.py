@@ -1,11 +1,8 @@
-import sys
 from schema_ingestion import DegreeSchema
 from schema_ingestion import DegreeSchemaRequirement
 from schema_ingestion import ingest_schema
 # from firebase_functions import https_fn
-# from ..functions.lookups import lookup_course
-sys.path.append('../functions')
-import lookups
+from ..functions.lookups import lookup_course
 
 psychology =ingest_schema("../schemas/" + "psychology" + ".json")
 print(psychology)
