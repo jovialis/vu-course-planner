@@ -2,28 +2,40 @@ from schema_ingestion import DegreeSchema
 from schema_ingestion import DegreeSchemaRequirement
 from schema_ingestion import ingest_schema
 # from firebase_functions import https_fn
-from ..functions.lookups import lookup_course
+# from src.utils.init_firestore import init_firestore
 
-psychology =ingest_schema("../schemas/" + "psychology" + ".json")
-print(psychology)
-print(1)
+def lookups(obj):
+    ret = {
+        "hours": 3
+    }
+    return ret
+
+psychology = ingest_schema("../schemas/" + "psychology" + ".json")
+# print(psychology)
+# print(1)
 
 def determine_graduation(course_list: set(), major : DegreeSchema):
     for requirement in major.requirements:
-        if not determine_requirement_schema(course_list, requirement):
+        result = determine_requirement_schema(course_list, requirement)
+        print(result)
+        if not result:
             return False
     return True
 
 def determine_requirement_schema(course_list: set(), schema_requirement : DegreeSchemaRequirement):
     required = satisfy_requirement_schema_required(course_list, schema_requirement)
+    # print("required")
+    # print(required)
     if required < 0:
         return False
     
     path = satisfy_requirment_schema_path(course_list, schema_requirement)
+    # print("path")
+    # print(path)
     if path < 0:
         return False
     
-    remain = schema_requirement["Hours"] - required - path
+    remain = schema_requirement.hours - required - path
 
     return check_remainder(remain, schema_requirement.remainder, course_list)
 
@@ -45,6 +57,8 @@ def satisfy_requirement_schema_required(course_list: set(), schema_requirement :
     return ret
 
 def satisfy_requirment_schema_path(course_list: set(), schema_requirement: DegreeSchemaRequirement):
+    if not schema_requirement.paths:
+        return 0
     for path in schema_requirement.paths:
         if isinstance(path, dict):
             ret = determine_requirement_schema(course_list, path)
@@ -61,25 +75,45 @@ def check_remainder(hours, remainders, course_list):
     for remain in remainders:
         if sum >= hours:
             return True
-        if isinstance(remain, dict):
-            subject = remain["subject"]
-            if 'cond' in remain:
-                print(1)
-            else :
-                for course in course_list:
-                    if subject.lower() in course:
-                        course_info = lookups({"id": course})
-                        sum += course_info["hours"]
-                        if sum >= hours:
-                            return True             
-        else :
-            if remain in course_list:
-                course_info = lookups({"id": remain})
-                sum += course_info["hours"]
+        # if isinstance(remain, dict):
+        #     subject = remain["subject"]
+        #     if 'cond' in remain:
+        #         print(1)
+        #     else :
+        #         for course in course_list:
+        #             if subject.lower() in course:
+        #                 course_info = lookups({"id": course})
+        #                 sum += course_info["hours"]
+        #                 if sum >= hours:
+        #                     return True             
+        # else :
+        if remain in course_list:
+            course_info = lookups({"id": remain})
+            sum += course_info["hours"]
 
     if sum >= hours:
         return True
     else : 
         return False
     
-                
+
+test_list = {"PSY 1200", "PSY 2150", "PSY 2100", "PSY 3100", "PSY 3110", 
+             "PSY 3120", "PSY 3750", "NSC 2201", "PSYC 1111",
+                "PSYC 1112",
+                "PSYC 1113",
+                "PSYC 1114",
+                "PSYC 1115"}
+# print("PSYC 1115" in test_list)
+test_psychology = ingest_schema("../schemas/" + "test_psychology" + ".json")
+
+# result = determine_graduation(test_list, test_psychology)
+# print(result)
+
+test_list_fail = {"PSY 1200", "PSY 2150", "PSY 2100", "PSY 3100", "PSY 3110", 
+             "PSY 3120", "PSY 3750", "NSC 2201", "PSYC 1111",
+                "PSYC 1112",
+                "PSYC 1113",}
+
+result_fail = determine_graduation(test_list_fail, test_psychology)
+
+# print(result_fail)
