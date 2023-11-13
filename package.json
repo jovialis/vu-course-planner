@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"yarn run dev:functions\" \"yarn run dev:functions-scraping\" \"yarn run firebase:emulators\"",
-    "dev:functions-scraping": "yarn workspace functions-scraping run build:watch",
+    "dev": "concurrently \"yarn run dev:functions\" \"yarn run firebase:emulators\"",
     "dev:functions": "cd functions && chmod +x ./activate_venv.sh && ./activate_venv.sh",
     "dev:functions:shell": "firebase functions:shell",
     "firebase:emulators": "firebase emulators:start --only hosting,functions --import=./.emulatorState --export-on-exit",
