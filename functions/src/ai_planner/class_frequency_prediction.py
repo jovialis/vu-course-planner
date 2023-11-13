@@ -2,7 +2,7 @@ from src.utils.init_firestore import init_firestore
 
 all_term_ids = ["fall", "spring", "summer", "year"]
 
-def predict_class_availability(class_id: str, num_sem = 3, pre_fetched_terms = None):
+def predict_class_availability(db, class_id: str, num_sem = 3, pre_fetched_terms = None):
     db = init_firestore()
 
     ref_terms = db.collection("yes_terms") # Collection for the terms information
@@ -86,4 +86,5 @@ def predict_class_term_availability(class_id: str, term_type: str, num_sem = 3, 
             return 0
 
     else:
+        raise Exception("The course you try to look for doesn't exist")
         raise Exception("The course you try to look for doesn't exist")
