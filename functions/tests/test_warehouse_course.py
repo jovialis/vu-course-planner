@@ -67,17 +67,17 @@ def test__generate_warehoused_term_templates():
     assert earliest_recording_term_id == earliest_active_term_id - 20 * 2
 
 
+class MockDocument():
+    doc = None
+    def __init__(self, doc):
+        self.doc = doc
+
+    def to_dict(self):
+        return self.doc
+
+
 def test__warehouse_single_course():
     from src.warehousing.warehouse_course import __warehouse_single_course
-
-    class MockDocument():
-        doc = None
-        def __init__(self, doc):
-            self.doc = doc
-
-        def to_dict(self):
-            return self.doc
-
 
     single_course_demo = [
         MockDocument({
@@ -108,19 +108,240 @@ def test__warehouse_single_course():
             "number": "01",
             "schedule": "TBA;TBA",
             "term": "1015",
-            "type": "Seminar"
+            "type": "Seminar",
         })
     ]
 
     res = __warehouse_single_course("CS 1100", single_course_demo, False)
 
     assert res["id"] == "CS 1100"
+    assert res["name"] == "Intro to Programming"
 
-    # TODO: This
+    assert res["availability"]["1015"]
+    assert not res["availability"]["1010"]
+
+    assert res["active"]
+
+
+def test__warehouse_single_course_with_details():
+    from src.warehousing.warehouse_course import __warehouse_single_course
+
+    single_course_demo = [
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Intro to Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "1015",
+            "type": "Seminar",
+            "details": {
+                "description": "My Description",
+                "notes": None,
+                "school": "College of Engineering",
+                "requirements": "",
+                "attributes": []
+            }
+        }),
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Intro to Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "1015",
+            "type": "Seminar",
+            "details": {
+                "description": "My Description",
+                "notes": None,
+                "school": "College of Engineering",
+                "requirements": "",
+                "attributes": []
+            }
+        })
+    ]
+
+    res = __warehouse_single_course("CS 1100", single_course_demo, False)
+
+    assert res["description"] == "My Description"
+    assert res["school"] == "College of Engineering"
+
+
+def test__warehouse_single_course_with_details_inactive():
+    from src.warehousing.warehouse_course import __warehouse_single_course
+
+    single_course_demo = [
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Intro to Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "0915",
+            "type": "Seminar",
+            "details": {
+                "description": "My Description",
+                "notes": None,
+                "school": "College of Engineering",
+                "requirements": "",
+                "attributes": []
+            }
+        }),
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Intro to Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "0920",
+            "type": "Seminar",
+            "details": {
+                "description": "My Description",
+                "notes": None,
+                "school": "College of Engineering",
+                "requirements": "",
+                "attributes": []
+            }
+        })
+    ]
+
+    res = __warehouse_single_course("CS 1100", single_course_demo, False)
+
+    assert not res["active"]
+
+    assert res["availability"]["0920"]
+    assert res["availability"]["0915"]
+    assert not res["availability"]["1015"]
 
 
 def test__warehouse_umbrella_course():
-    pass
+    from src.warehousing.warehouse_course import __warehouse_umbrella_course
+
+    umbrella_course_demo = [
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Special Topics: Parallel Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "1015",
+            "type": "Seminar"
+        }),
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Special Topics: Intro to Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "1015",
+            "type": "Seminar",
+        })
+    ]
+
+    res = __warehouse_umbrella_course("CS 1100", umbrella_course_demo, False)
+
+    assert res["id"] == "CS 1100"
+    assert res["name"] == "Special Topics"
+
+    assert len(res["contained_courses"]) == 2
+
+    assert res["course_type"] == "umbrella"
+
+
+def test__warehouse_umbrella_course_with_details():
+    from src.warehousing.warehouse_course import __warehouse_umbrella_course
+
+    umbrella_course_demo = [
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Special Topics: Parallel Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "1015",
+            "type": "Seminar",
+            "details": {
+                "description": "My Description",
+                "notes": None,
+                "school": "College of Engineering",
+                "requirements": "",
+                "attributes": []
+            }
+        }),
+        MockDocument({
+            "course": {
+                "abbreviation": "CS 1100",
+                "name": "Special Topics: Intro to Programming",
+                "number": 1423,
+                "subject": "CS"
+            },
+            "hours": 3,
+            "id": "0001",
+            "instructors": [],
+            "number": "01",
+            "schedule": "TBA;TBA",
+            "term": "1015",
+            "type": "Seminar",
+            "details": {
+                "description": "My Description",
+                "notes": None,
+                "school": "College of Engineering",
+                "requirements": "",
+                "attributes": []
+            }
+        })
+    ]
+
+    res = __warehouse_umbrella_course("CS 1100", umbrella_course_demo, False)
+
+    assert res["id"] == "CS 1100"
+    assert res["name"] == "Special Topics"
+
+    assert len(res["contained_courses"]) == 2
+
+    assert res["course_type"] == "umbrella"
 
 
 def test__is_umbrella_course():
@@ -144,4 +365,7 @@ def test__is_umbrella_course():
 
 
 def test__warehouse_course():
-    pass
+    from src.warehousing.warehouse_course import warehouse_course
+
+    assert warehouse_course("CS 2201", write=False)["id"] == "CS 2201"
+    assert warehouse_course("CS 2201", force=True, write=False)["id"] == "CS 2201"

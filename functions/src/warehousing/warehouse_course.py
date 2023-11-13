@@ -10,7 +10,7 @@ ACTIVE_YEARS_THRESHOLD = 2  # The number of years a course can go hiatus before 
 INDEX_YEARS_THRESHOLD = 4  # How many years to index for space purposes
 
 
-def warehouse_course(course_id: str, force=False):
+def warehouse_course(course_id: str, force=False, write=True):
     """
     Reads through all available Sections for a given Course and generates a usable Course based on
     its historical availability and a few recency-weighted consensus mechanisms
@@ -35,9 +35,9 @@ def warehouse_course(course_id: str, force=False):
     )
 
     if is_umbrella:
-        return __warehouse_umbrella_course(course_id, section_docs)
+        return __warehouse_umbrella_course(course_id, section_docs, write)
     else:
-        return __warehouse_single_course(course_id, section_docs)
+        return __warehouse_single_course(course_id, section_docs, write)
 
 
 def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapshot], write=True):

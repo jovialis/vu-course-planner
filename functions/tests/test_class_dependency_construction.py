@@ -3,12 +3,18 @@ from tests.utils import initialize_app_for_testing
 initialize_app_for_testing()
 
 
+def validate_course_id(course_id: str):
+    print("CALLED TO VALIDATE COURSE ID", course_id)
+    return True
+
+
 def test__build_course_prerequisite_paths__simple():
     from src.ai_planner.class_dependency_construction import __build_course_prerequisite_paths
     from tests.utils import compare_lists
 
+
     empty_prereqs = []
-    assert __build_course_prerequisite_paths(empty_prereqs, lambda course_id: True) == []
+    assert __build_course_prerequisite_paths(empty_prereqs, validate_course_id) == []
 
     simple_prereqs = [
         {"type": "course", "course": "HIST 1101"},
@@ -16,7 +22,7 @@ def test__build_course_prerequisite_paths__simple():
     ]
 
     assert compare_lists(
-        __build_course_prerequisite_paths(simple_prereqs, lambda course_id: True),
+        __build_course_prerequisite_paths(simple_prereqs, validate_course_id),
         [["HIST 1101", "HIST 1102"]]
     )
 
@@ -39,7 +45,7 @@ def test__build_course_prerequisite_paths__complex():
     ]
 
     assert compare_lists(
-        __build_course_prerequisite_paths(complex_path_prereqs, lambda course_id: True),
+        __build_course_prerequisite_paths(complex_path_prereqs, validate_course_id),
         [
             ["CS 2201", "HIST 1100", "HIST 1110", "CS 2301"], #
             ["CS 2201", "HIST 1100", "HIST 1111", "CS 2301"], #
@@ -70,6 +76,14 @@ courses_docs_sample = [
 ]
 
 
+def test__check_course_exists():
+    from src.ai_planner.class_dependency_construction import __check_course_exists
+
+    assert __check_course_exists(["CS 2201", "CS 2301"], "CS 2301")
+    assert not __check_course_exists(["cs 2201", "cs 2301"], "CS 2301")
+    assert not __check_course_exists(["cs 2201", "cs 2301"], "CS 1101")
+
+
 def test__build_course_prerequisite_path_map():
     from src.ai_planner.class_dependency_construction import __build_course_prerequisite_path_map, __build_course_prerequisite_paths
     from tests.utils import compare_lists
@@ -81,7 +95,7 @@ def test__build_course_prerequisite_path_map():
 
     assert compare_lists(
         map["CS 2201"],
-        __build_course_prerequisite_paths(courses_docs_sample[3]["prerequisites"], lambda course_id: True),
+        __build_course_prerequisite_paths(courses_docs_sample[3]["prerequisites"], validate_course_id),
     )
 
 
@@ -184,7 +198,21 @@ def test__pick_shortest_course_list_fulfillment_path__multiple_course():
 
 def test__find_optimal_class_list():
     from src.ai_planner.class_dependency_construction import find_optimal_class_list
+    from tests.utils import compare_lists
 
-    list = find_optimal_class_list(["CS 2201"], [])
-    print("Optimal list:", list)
+    assert compare_lists(
+        find_optimal_class_list(["CS 2201"], []),
+        ["CS 1101"]
+    )
+
+    principles_swe_req = find_optimal_class_list(["CS 4278"], [])
+
+    assert compare_lists(
+        principles_swe_req,
+        ["CS 1101", "CS 2201", "CS 3251"]
+    )
+
+
+
+
 

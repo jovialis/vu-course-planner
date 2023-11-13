@@ -18,11 +18,13 @@ def test__consensus_deciders():
     assert test2.arbitrate() == "a"
 
     test2.put("b", 1)
+    assert not test2.has_majority()
+    test2.put("b", 1)
     assert test2.has_majority()
 
     test3 = ConsensusDecider()
     test3.put("a", 1000)
-    assert test2.arbitrate() == "a"
+    assert test3.arbitrate() == "a"
 
     test4 = ConsensusDecider()
     test4.put("a", 1000)

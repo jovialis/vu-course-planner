@@ -34,6 +34,8 @@ def __pick_shortest_course_list_fulfillment_path(all_course_docs, courses_requir
     for course in courses_required:
         course_paths = __dfs_course_prerequisite_paths(course, course_requisite_path_map)
 
+        print("\nCourse", course, "course paths", course_paths)
+
         if len(course_paths) == 0:
             continue
 
@@ -102,11 +104,22 @@ def __build_course_prerequisite_path_map(course_docs):
 
     requisite_path_map = {}
 
+    course_ids = [doc["id"].upper() for doc in course_docs]
+
     for course_doc in course_docs:
-        requisite_path_map[course_doc["id"]] = __build_course_prerequisite_paths(
-            course_doc["prerequisites"],
-            lambda course_id: __check_course_exists(course_docs, course_id)
-        )
+        if "prerequisites" in course_doc and isinstance(course_doc["prerequisites"], list):
+            if course_doc["id"].lower() == "math 3120":
+                print("Prerequisites valid")
+
+            requisite_path_map[course_doc["id"]] = __build_course_prerequisite_paths(
+                course_doc["prerequisites"],
+                lambda course_id: __check_course_exists(course_ids, course_id)
+            )
+        else:
+            if course_doc["id"].lower() == "math 3120":
+                print("Prerequisites not valid")
+
+            requisite_path_map[course_doc["id"]] = []
 
     return requisite_path_map
 
@@ -134,9 +147,12 @@ def __dfs_course_prerequisite_paths(parent_course_id, course_requisite_path_map)
 
     # Skip this if the parent course cannot be found in the dataset
     if parent_course_id not in course_requisite_path_map:
+        # print("Parent course not in requisite path map")
         return []
 
     parent_course_paths = course_requisite_path_map[parent_course_id]
+
+    # print("Parent course paths for", parent_course_id, parent_course_paths)
 
     all_paths = []
 
@@ -179,7 +195,7 @@ def __dfs_course_prerequisite_paths(parent_course_id, course_requisite_path_map)
     return list(all_paths)
 
 
-def __build_course_prerequisite_paths(course_prereqs, check_course_exists, merge_paths = True) -> list[list[str]]:
+def __build_course_prerequisite_paths(course_prereqs, check_course_exists, merge_paths=True) -> list[list[str]]:
     """
     Recursively constructs a 2D array where inner arrays are a complete list of courses needed
     to fulfill the requirements of the provided requirements array
@@ -199,20 +215,19 @@ def __build_course_prerequisite_paths(course_prereqs, check_course_exists, merge
 
     # Iterate over the requirements
     for req in course_prereqs:
+        if "type" not in req:
+            continue
+
         # Course is required, so add it to all of the pathways
         if req["type"] == "course" and merge_paths:
-            if check_course_exists(req["course"]):
+            if "course" in req and check_course_exists(req["course"]):
                 add_course_to_all_paths(req["course"])
-            else:
-                print("Course does not exist:", check_course_exists, check_course_exists(req["course"]))
 
         elif req["type"] == "course" and not merge_paths:
-            if check_course_exists(req["course"]):
+            if "course" in req and check_course_exists(req["course"]):
                 courses_required.append([req["course"]])
-            else:
-                print("Course does not exist:", check_course_exists, check_course_exists(req["course"]))
 
-        elif req["type"] == "path":
+        elif req["type"] == "path" and "options" in req:
             nested_pathways = __build_course_prerequisite_paths(req["options"], check_course_exists, False)
 
             new_courses_required = []
