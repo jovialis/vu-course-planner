@@ -1,7 +1,7 @@
 from src.utils.init_firestore import init_firestore
 
 
-def find_optimal_class_list(courses_required: list[str], courses_taken: list[str]) -> list[str]:
+def find_optimal_class_list(courses_required: list[str], courses_taken: list[str], all_course_docs=None) -> list[str]:
     """
     Given a list of courses that a user MUST take for their major, and the courses they've already taken,
     determine the pre-requisites for each course and compute every possible path that the user could take
@@ -10,7 +10,7 @@ def find_optimal_class_list(courses_required: list[str], courses_taken: list[str
     """
 
     db = init_firestore()
-    all_course_docs = [course.to_dict() for course in db.collection("courses").get()]
+    all_course_docs = all_course_docs if all_course_docs is not None else [course.to_dict() for course in db.collection("courses").get()]
 
     # Build a map of course ID
     required_course_docs = [course["id"] for course in all_course_docs if course["id"].upper() in courses_required]
@@ -103,9 +103,20 @@ def __build_course_prerequisite_path_map(course_docs):
     requisite_path_map = {}
 
     for course_doc in course_docs:
-        requisite_path_map[course_doc["id"]] = __build_course_prerequisite_paths(course_doc["prerequisites"])
+        requisite_path_map[course_doc["id"]] = __build_course_prerequisite_paths(
+            course_doc["prerequisites"],
+            lambda course_id: __check_course_exists(course_docs, course_id)
+        )
 
     return requisite_path_map
+
+
+def __check_course_exists(course_docs, course_id):
+    """
+    Validates that a Course ID exists given a list of all available Courses
+    """
+
+    return course_id.upper() in course_docs
 
 
 def __adjust_real_course_prerequisite_paths(course_path: list[str], courses_taken: list[str]) -> list[str]:
@@ -168,7 +179,7 @@ def __dfs_course_prerequisite_paths(parent_course_id, course_requisite_path_map)
     return list(all_paths)
 
 
-def __build_course_prerequisite_paths(course_prereqs, merge_paths = True) -> list[list[str]]:
+def __build_course_prerequisite_paths(course_prereqs, check_course_exists, merge_paths = True) -> list[list[str]]:
     """
     Recursively constructs a 2D array where inner arrays are a complete list of courses needed
     to fulfill the requirements of the provided requirements array
@@ -190,13 +201,19 @@ def __build_course_prerequisite_paths(course_prereqs, merge_paths = True) -> lis
     for req in course_prereqs:
         # Course is required, so add it to all of the pathways
         if req["type"] == "course" and merge_paths:
-            add_course_to_all_paths(req["course"])
+            if check_course_exists(req["course"]):
+                add_course_to_all_paths(req["course"])
+            else:
+                print("Course does not exist:", check_course_exists, check_course_exists(req["course"]))
 
         elif req["type"] == "course" and not merge_paths:
-            courses_required.append([req["course"]])
+            if check_course_exists(req["course"]):
+                courses_required.append([req["course"]])
+            else:
+                print("Course does not exist:", check_course_exists, check_course_exists(req["course"]))
 
         elif req["type"] == "path":
-            nested_pathways = __build_course_prerequisite_paths(req["options"], False)
+            nested_pathways = __build_course_prerequisite_paths(req["options"], check_course_exists, False)
 
             new_courses_required = []
 

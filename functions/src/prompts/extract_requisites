@@ -12,7 +12,7 @@ Courses must always match the regex expression "^[A-Za-z]{2,6} \d{4}$". Disregar
 There may also be requisite "paths" where students may qualify by completing one of a set of options.
 For example, if a student qualifies by completing courses A and B OR by completing course C, there will be two paths, one including courses A and B, and the second including course C.
 
-Respond with requisites in YAML form, including information about the pre-requisites, and/or path conditions.
+Respond with requisites in JSON form, including information about the pre-requisites, and/or path conditions.
 Do not return anything except the YAML content.
 You should respond by returning a list of prerequisites:
 
