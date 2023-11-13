@@ -27,8 +27,7 @@
       "Name": "Statistics with Calculus",
       "id": 3,
       "Hours": 3,
-      "Required": {
-        "Requirements": [
+      "Required": [
           {
             "Name": "Math Requirement",
             "id": 100,
@@ -41,8 +40,7 @@
             ],
             "Remainder": []
           }
-        ]
-      },
+      ],
       "Paths": [
         "ECON 1500",
         "ECON 1510"
@@ -269,8 +267,8 @@
       "Paths": [],
       "Remainder": [
         {
-          "subject": "Math",
-          "condition": [
+          "subject": "MATH",
+          "cond": [
             "only_math"
           ]
         }
