@@ -14,7 +14,8 @@ import {
 	ModalContent, ModalFooter,
 	ModalHeader,
 	ModalOverlay, Spinner,
-	useDisclosure, Wrap, WrapItem
+	useDisclosure, Wrap, WrapItem,
+	Card, Heading
 } from "@chakra-ui/react";
 import React from "react";
 import {ReactElement, useEffect} from "react";
@@ -61,14 +62,61 @@ export function CourseDetailsModal(props: {
                             templateRows='repeat(4, 1fr)'
                             templateColumns='repeat(20, 1fr)'
                             gap={10}>
-                            <GridItem rowSpan={4} colSpan={8} bg='gray.50' p={1}>
-	                            {data.description}
-                            </GridItem>
-                            <GridItem colSpan={6} rowSpan={3} bg='papayawhip'/>
-                            <GridItem colSpan={6} rowSpan={1} bg='papayawhip'/>
-                            <GridItem colSpan={6} rowSpan={1} bg='tomato'/>
-                            <GridItem colSpan={6} rowSpan={1} bg='tomato'/>
-                            <GridItem colSpan={6} rowSpan={1} bg='tomato'/>
+							<GridItem rowSpan={4} colSpan={8}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">Description:</Heading>
+								<Card p={1} bg="gray.50" h="95%" display="flex" flexDirection="column" justifyContent="space-between">
+										{data.description}
+								</Card>
+							</GridItem>
+                            <GridItem colSpan={6} rowSpan={3} mb={1}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">Professors:</Heading>
+								<Card p={1} bg="gray.50" h="95%" display="flex" flexDirection="column" justifyContent="space-between">
+								</Card>
+							</GridItem>
+                            <GridItem colSpan={6} rowSpan={1}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">School and Subject:</Heading>
+								<Card p={1} bg="gray.50" h="85%" display="flex" flexDirection="column" justifyContent="space-between">
+									<Text>{data.school}</Text>
+									<WrapItem>
+										<Badge colorScheme="blue" fontSize="lem" size="lem">{data.subject}</Badge>
+									</WrapItem>
+								</Card>
+							</GridItem>
+                            <GridItem colSpan={6} rowSpan={1}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">Enrollment Qualification:</Heading>
+								<Card p={1} bg="gray.50" h="85%" display="flex" flexDirection="column" justifyContent="space-between">
+									<WrapItem>
+										<Badge colorScheme="green" fontSize="lem" size="lem">Qualify(Temp)</Badge>
+									</WrapItem>
+								</Card>
+							</GridItem>
+                            <GridItem colSpan={6} rowSpan={1}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">Class Rating:</Heading>
+								<Card p={1} bg="gray.50" h="75%" display="flex" flexDirection="column" justifyContent="space-between"></Card>
+							</GridItem>
+                            <GridItem colSpan={6} rowSpan={1} bg='gray.50' mb={1}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">Semester Available</Heading>
+								<Card p={1} bg="gray.50" h="77%" display="flex" flexDirection="column" justifyContent="space-between">
+									{!data.active && <Text>
+										Course is inactive (hasn't been listed in the past four years)
+									</Text>}
+									{data.active && <Wrap>
+										{Object.keys(data.availability).map(key => <React.Fragment key={key}>
+											<WrapItem>
+												<Badge colorScheme={(() => {
+													switch (data.availability[key]) {
+														case -1: return "red";
+														case 0: return "gray";
+														case 1: return "green"
+													}
+												})()}>
+													{key}
+												</Badge>
+											</WrapItem>
+										</React.Fragment>)}
+									</Wrap>}
+								</Card>
+							</GridItem>
                         </Grid>
                         <br/>
                         <Grid
@@ -77,30 +125,17 @@ export function CourseDetailsModal(props: {
                             templateRows='repeat(3, 1fr)'
                             templateColumns='repeat(20, 1fr)'
                             gap={10}>
-                            <GridItem rowSpan={3} colSpan={8} bg='papayawhip'/>
-                            <GridItem rowSpan={2} colSpan={10} bg='gray.50' p={1}>
-								{!data.active && <Text>
-									Course is inactive (hasn't been listed in the past four years)
-								</Text>}
-								{data.active && <Wrap>
-									{Object.keys(data.availability).map(key => <React.Fragment key={key}>
-										<WrapItem>
-											<Badge colorScheme={(() => {
-												switch (data.availability[key]) {
-													case -1: return "red";
-													case 0: return "gray";
-													case 1: return "green"
-												}
-											})()}>
-												{key}
-											</Badge>
-										</WrapItem>
-								</React.Fragment>)}
-								</Wrap>}
+                            <GridItem rowSpan={3} colSpan={8}>
+								<Heading as="h4" fontWeight="bold" fontSize="x1">Prerequisites:</Heading>
+								<Card p={1} bg="gray.50" h="85%" display="flex" flexDirection="column" justifyContent="space-between">
+									{data.prerequisites}
+								</Card>
 							</GridItem>
-                            <GridItem rowSpan={1} colSpan={2}/>
-                            <GridItem rowSpan={1} colSpan={2} bg='purple'/>
-                            <GridItem rowSpan={1} colSpan={5} bg='beige'/>
+                            {/*<GridItem rowSpan={2} colSpan={10} bg='gray.50' p={1}>*/}
+							{/*</GridItem>*/}
+                            {/*<GridItem rowSpan={1} colSpan={2}/>*/}
+                            {/*<GridItem rowSpan={1} colSpan={2} bg='purple'/>*/}
+                            {/*<GridItem rowSpan={1} colSpan={5} bg='beige'/>*/}
                         </Grid>
                     </ModalBody>}
 
