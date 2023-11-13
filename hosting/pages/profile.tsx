@@ -10,13 +10,16 @@ import {
 	Stack,
 	Text,
 	UnorderedList,
-	VStack
+	VStack,
+	Badge,
+	useToast,
 } from '@chakra-ui/react'
 
 import {getFunctions, httpsCallable} from 'firebase/functions'
 import React, {useEffect, useState} from "react";
 import {CourseSearchBar} from "../components/CourseSearchBar"
 import {useUser} from "../components/UserLoginGate";
+import { CloseIcon } from '@chakra-ui/icons';
 
 export default function UserProfile() {
 	const user = useUser();
@@ -33,7 +36,8 @@ export default function UserProfile() {
 	const [listOfComplete, setListOfComplete] = useState(<Box><Text>Currently No Courses Added</Text></Box>)
 	
     const [retSubmission, setRetSubmission] = useState("")
-    
+    const toast = useToast()
+
     useEffect(() => {
 		handleRead()
         // console.log(username)
@@ -41,13 +45,18 @@ export default function UserProfile() {
 
     useEffect(() => {
         let tmp = completedCourses.map((item, index) => (
-			<ListItem>{item}</ListItem>
+			<Badge colorScheme='green' mr={4}>{item}
+			<CloseIcon 
+				w={3} 
+				h={3} 
+				ml={2} 
+				cursor="pointer" 
+				onClick={() => removeCourse(item)}
+			/></Badge>
 		))
 		setListOfComplete(
 			<Box>
-				<UnorderedList>
-					{tmp}
-				</UnorderedList>
+				{tmp}
 			</Box>
 		)
         
@@ -106,30 +115,69 @@ export default function UserProfile() {
 			.then((result) => {
 				console.log(result)
                 if(result.data){
-                    setRetSubmission("Successfully Submitted!")
+					toast({
+						title: 'Successfully Submitted!',
+						description: "Updated the profile",
+						status: 'success',
+						duration: 1500,
+						isClosable: true,
+					  })
+                    // setRetSubmission("Successfully Submitted!")
                 } else {
-                    setRetSubmission("Error Calling Cloud Function")
+					toast({
+						title: 'Error Calling Cloud Function.',
+						description: "Error Calling Cloud Function",
+						status: 'error',
+						duration: 1500,
+						isClosable: true,
+					  })
+                    // setRetSubmission("Error Calling Cloud Function")
                 }
 			}).catch((error) => {
-                setRetSubmission("Error Calling Cloud Function")
+				toast({
+					title: 'Error Calling Cloud Function.',
+					description: "Error Calling Cloud Function",
+					status: 'error',
+					duration: 1500,
+					isClosable: true,
+				  })
+                // setRetSubmission("Error Calling Cloud Function")
 		});
 
 	}
 
-	function handleAddCourse(event) {
+	function removeCourse(course) {
+		let newCourses = []
+		// for (const curCourse in completedCourses){
+		// 	if (curCourse != course) {
+		// 		newCourses.push(curCourse)
+		// 	}
+		// }
+		console.log(course)
+		newCourses = completedCourses.filter(item => item != course);
+		setComplete(newCourses)
+		// console.log(newCourses)
+		// console.log(completedCourses)
+	}
+
+	function handleAddCourse(course) {
 		let courses = completedCourses
-		courses.push(addingCourse)
+		courses.push(course)
 		setComplete(courses)
 		// console.log(completedCourses)
-
 		let tmp = completedCourses.map((item, index) => (
-			<ListItem>{item}</ListItem>
+			<Badge colorScheme='green' mr={4} >{item}
+			<CloseIcon 
+				w={3} 
+				h={3} 
+				ml={2} 
+				cursor="pointer" 
+				onClick={() => removeCourse(item)}
+			/></Badge>
 		))
 		setListOfComplete(
 			<Box>
-				<UnorderedList>
-					{tmp}
-				</UnorderedList>
+				{tmp}
 			</Box>
 		)
         setAddingCourse("")
@@ -216,22 +264,23 @@ export default function UserProfile() {
                     
                     <CourseSearchBar 
                         on_course_selected={course => {
-                            setAddingCourse(course.course_id)          
+                            setAddingCourse(course.course_id)  
+							handleAddCourse(course.course_id)        
                             // addCourseToSemester(course.course_id, course.course_name, course.course_hours)
                         }}
                     />
-                    {addingCourse != "" ? <Text fontWeight="bold" fontSize="20px" pt='10' >Adding This Course: <Text as="span" color="blue">{addingCourse.toUpperCase()}</Text> ?</Text> : <Text></Text>}
+                    {/* {addingCourse != "" ? <Text fontWeight="bold" fontSize="20px" pt='10' >Adding This Course: <Text as="span" color="blue">{addingCourse.toUpperCase()}</Text> ?</Text> : <Text></Text>}
 					<Button colorScheme='teal' size='md' onClick={handleAddCourse}
 					        style={{width: '200px',}}>
 						Add Course Completed
-					</Button>
+					</Button> */}
 				</Stack>
 
                 {/* {retSubmission != "" && ? {retSubmission == "Successfully Submitted!" ? 
                     <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text color="red" fontWeight="bold" fontSize="24px">{retSubmission}</Text>} : <Text></Text>} */}
-				{retSubmission == "Successfully Submitted!" ? <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text></Text>}
+				{/* {retSubmission == "Successfully Submitted!" ? <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text></Text>}
                 {retSubmission == "" ? <Text color="green" fontWeight="bold" fontSize="24px"></Text> : <Text></Text>}
-                {retSubmission == "Error Calling Cloud Function" ? <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text></Text>}
+                {retSubmission == "Error Calling Cloud Function" ? <Text color="green" fontWeight="bold" fontSize="24px">{retSubmission}</Text> : <Text></Text>} */}
                 <Button colorScheme='teal' size='lg' onClick={handleSubmit}>
 					Update Profile
 				</Button>

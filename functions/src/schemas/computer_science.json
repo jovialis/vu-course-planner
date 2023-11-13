@@ -98,11 +98,121 @@
             "Name":"Liberal Arts Core ",
             "id": 4,
             "Hours": 18,
-            "Required":[],
+            "Required":[
+                {
+                    "Name": "HCA",
+                    "id": null,
+                    "Hours": 3,
+                    "Required": [],
+                    "Paths": [],
+                    "Remainder": [
+                        {
+                            "type" : "HCA",
+                            "cond" : [
+                                "!= CMST 1500",
+                                "!= CMST 2100",
+                                "!= CMST 2110",
+                                "!= CMST 2120"
+                            ]
+                        }]
+                },
+                {
+                    "Name": "SBS",
+                    "id": null,
+                    "Hours": 3,
+                    "Required": [],
+                    "Paths": [],
+                    "Remainder": [
+                        {
+                            "type" : "SBS",
+                            "cond" : []
+                        }
+                    ]
+                }   
+            ],
             "Paths":[],
             "Remainder":[
                 {
-                    "subject":"All"
+                    "type" : "SBS",
+                    "cond" : []
+                },
+                {
+                    "type" : "P",
+                    "cond" : []
+                },
+                {
+                    "type" : "HCA",
+                    "cond" : []
+                },
+                {
+                    "type" : "INT",
+                    "cond" : []
+                },
+                {
+                    "type" : "US",
+                    "cond" : []
+                },
+                "ENGM 2440",
+                "ARA 1101",
+                "CHIN 1011",
+                "CHIN 1012",
+                "CHIN 1101",
+                "ENGL 1100",
+                "FREN 1101",
+                "GER 1101",
+                "GRK 1101",
+                "HEBR 1101",
+                "JAPN 1011",
+                "JAPN 1012",
+                "JAPN 1101",
+                "LAT 1101",
+                "PORT 1101",
+                "RUSS 1101",
+                "SPAN 1100",
+                "SPAN 1101",
+                "HOD 1250",
+                "HOD 1300",
+                "HOD 2100",
+                "HOD 2260",
+                "HOD 2400",
+                "HOD 2500",
+                "HOD 2700",
+                "HOD 3232",
+                {
+                    "subject": "MUSC",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MUSE",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MUSO",
+                    "condition": [
+                        "!= 1001"
+                    ]
+                },
+                {
+                    "subject": "COMP",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MREP",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MUTH",
+                    "condition": [
+                   
+                    ]
                 }
             ]
         },
@@ -176,8 +286,8 @@
             "id": 6,
             "Hours": 15,
             "Required": [],
-            "Paths": 
-            "Remainder": 
+            "Paths": [],
+            "Remainder": []
         },
         {
             "Name": "Computer Science Project",
@@ -204,13 +314,121 @@
             "Remainder": []
         },
         {
-            "Name":
-            "id":
-            "Hours":
-            "Required":
-            "Paths":
-            "Remainder": 
-        }   
+            "Name": "Technical Electives",
+            "id": 9,
+            "Hours": 6,
+            "Required": [],
+            "Paths": [],
+            "Remainder":  [
+                {
+                    "subject": "BME",
+                    "condition": [
+                      ">= 2000",
+                      "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "CHBE",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "CE",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "CS",
+                    "condition": [
+                        ">= 3000"
+                    ]
+                },
+                {
+                    "subject": "ECE",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "ME",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "ENGM",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860",
+                        "!= 2440",
+                        "!= 4800"
+                    ]
+                },
+                {
+                    "subject": "ES",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860",
+                        "!= 2700",
+                        "!= 3884"
+                    ]
+                },
+                {
+                    "subject": "MNS",
+                    "condition": [
+                        ">= 2000"
+                        
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Open Electives",
+            "id": 10,
+            "Hours": 18, 
+            "Required": [],
+            "Paths": [],
+            "Remainder": [
+                {
+                    "subject": "ALL",
+                    "condition": [
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Computers and Ethics", 
+            "id":11,
+            "Hours": 3,
+            "Required": ["CS 1151"],
+            "Paths": [],
+            "Remainder": []
+        },
+        {
+            "Name": "Writing Component",
+            "id": 12,
+            "Hours": 3,
+            "Required": [],
+            "Paths": [
+                {
+                    "Name": "W”-designated course",
+                    "id": null,
+                    "Hours": 3,
+                    "Required": [],
+                    "Paths": ["ENGL 1210W", "ENGL 1220W", "ENGL 1230W", "ENGL 1250W", "ENGL 1260W", "ENGL 1270W", "ENGL 1300W"],
+                    "Remainder": []
+                }, 
+                "ENGL 1111"
+            ],
+            "Remainder": []
+        }        
+
 
     ]
 }

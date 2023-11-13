@@ -1,8 +1,6 @@
-from src.ai_planner.satisfy_graduation import determine_graduation
-from src.ai_planner.schema_ingestion import ingest_schema
-from src.ai_planner.satisfy_graduation import check_list_cond
-
 def test_determine_graduation__simple():
+    from src.ai_planner.satisfy_graduation import determine_graduation
+    from src.ai_planner.schema_ingestion import ingest_schema
     test_list_success = {"PSY 1200", "PSY 2150", "PSY 2100", "PSY 3100", "PSY 3110", 
                 "PSY 3120", "PSY 3750", "NSC 2201", "PSYC 1111",
                     "PSYC 1112",
@@ -20,6 +18,9 @@ def test_determine_graduation__simple():
     assert((result_success, result_fail)) == (True, False)
 
 def test_determine_graduation_remainder_simple():
+    from src.ai_planner.satisfy_graduation import determine_graduation
+
+    from src.ai_planner.schema_ingestion import ingest_schema
     test_history = ingest_schema("../schemas/" + "history" + ".json")
     test_history_list = {
         "HIST 1038",
@@ -57,6 +58,10 @@ def test_determine_graduation_remainder_simple():
     assert((result_history_success, result_history_fail)) == (True, False)
 
 def test_check_list_cond():
+    from src.ai_planner.satisfy_graduation import determine_graduation
+
+    from src.ai_planner.schema_ingestion import ingest_schema
+    from src.ai_planner.satisfy_graduation import check_list_cond
     empty = check_list_cond("CS 1101", [])
     success = check_list_cond("CS 1101", ["!= 1100", ">= 1000"])
     fail = check_list_cond("CS 1101", ["!= 1101", ">= 1000"])
@@ -65,6 +70,10 @@ def test_check_list_cond():
     assert(fail == False)
 
 def test_test_determine_graduation_remainder_complex():
+    from src.ai_planner.satisfy_graduation import determine_graduation
+
+    from src.ai_planner.schema_ingestion import ingest_schema
+    from src.ai_planner.satisfy_graduation import check_list_cond
     test_psychology = ingest_schema("../schemas/" + "psychology" + ".json")
     test_psychology_list = {
         "PSY 1200",
