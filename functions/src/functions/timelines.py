@@ -15,12 +15,12 @@ def get_user_timelines(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     Queries firestore for all Timeline documents with a "user" field equal to the authenticated user's ID
     """
-    uid = req.auth.uid # -> will later use to get timeline for current logged in user
+    uid = req.auth.uid
 
     # Call function that initializes firestore
     db = init_firestore()
 
-    #  code to get all the timelines of currently logged in user
+    #  code to get all the timelines of currently log-in user
     doc_ref = db.collection('timelines').where('user_id', '==', uid).stream()
     doc_list = []
 
@@ -43,6 +43,7 @@ def get_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     db = init_firestore()
 
     timeline_id = req.data["timeline_id"]
+    # Retrieve the timeline with the given id from the collection
     doc_ref = db.collection("timelines").document(timeline_id).get()
     doc = doc_ref.to_dict()
 
@@ -181,7 +182,7 @@ def del_course_from_timeline(req: https_fn.CallableRequest) -> https_fn.Response
     sem_name = req.data['sem_name']
     timeline_id = req.data["timeline_id"]
 
-    # Hard code to retrieve the Timeline document with id 'vhFPkz7iipy0qlgj7ulo'
+    # Retrieve the documet from the timeline collection with the given id
     doc_ref = db.collection('timelines').document(timeline_id)
     doc = doc_ref.get()
 

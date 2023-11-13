@@ -65,6 +65,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         "format": ConsensusDecider(),
         "attributes": ConsensusDecider(),
         "prerequisites_raw": ConsensusDecider(),
+        "prerequisites": None,
         # What semesters are sections available in
         "listings": {},
         # In which semesters the course is available in
@@ -333,6 +334,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
                 "format": ConsensusDecider(),
                 "attributes": ConsensusDecider(),
                 "prerequisites_raw": ConsensusDecider(),
+                "prerequisites": None,
                 # What semesters are sections available in
                 "listings": listing_template.copy(),
                 # In which semesters the course is available in
