@@ -1,5 +1,5 @@
-import {DependencyList, useEffect, useState} from "react";
 import {nanoid} from "nanoid";
+import {DependencyList, useEffect, useState} from "react";
 
 
 export function useDelayedCallback(callback: () => void, delay: number, dependencies: DependencyList, skip?: boolean) {

@@ -10,6 +10,5 @@ from src.functions.timelines import del_course_from_timeline
 from src.functions.lookups import lookup_course
 from src.functions.users import set_user_data
 from src.functions.users import get_user_data
-from src.functions.testing import test_warehouse_all_courses
 
 initialize_app()
