@@ -7,7 +7,7 @@ def test_determine_graduation__simple():
                     "PSYC 1113",
                     "PSYC 1114",
                     "PSYC 1115"}
-    simple_psychology = ingest_schema("src/schemas/test_psychology.json")
+    simple_psychology = ingest_schema("src/schemas/" + "test_psychology" + ".json")
     result_success = determine_graduation(test_list_success, simple_psychology)
 
     test_list_fail = {"PSY 1200", "PSY 2150", "PSY 2100", "PSY 3100", "PSY 3110", 
@@ -21,7 +21,7 @@ def test_determine_graduation_remainder_simple():
     from src.ai_planner.satisfy_graduation import determine_graduation
 
     from src.ai_planner.schema_ingestion import ingest_schema
-    test_history = ingest_schema("schemas/" + "history" + ".json")
+    test_history = ingest_schema("src/schemas/" + "history" + ".json")
     test_history_list = {
         "HIST 1038",
         "HIST 1039",
@@ -74,7 +74,7 @@ def test_test_determine_graduation_remainder_complex():
 
     from src.ai_planner.schema_ingestion import ingest_schema
     from src.ai_planner.satisfy_graduation import check_list_cond
-    test_psychology = ingest_schema("schemas/" + "psychology" + ".json")
+    test_psychology = ingest_schema("src/schemas/" + "psychology" + ".json")
     test_psychology_list = {
         "PSY 1200",
         "PSY 2150",
