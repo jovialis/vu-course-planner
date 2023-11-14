@@ -82,7 +82,7 @@ export function SidebarMajorChunk() {
 
 }
 
-function MajorRequirementComponent(props: {
+export function MajorRequirementComponent(props: {
     name: string
     hours: number
     viewLabel: string
