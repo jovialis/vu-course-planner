@@ -126,6 +126,23 @@ def rename_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
 
 
 @https_fn.on_call()
+def del_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
+    """
+    Deletes a specific timeline document with a given ID. Should throw an error if the user doesn't have access.
+    """
+    db = init_firestore()
+
+    # Data requested from the frontend
+    timeline_id = req.data["timeline_id"]
+
+    # Retrieve reference of the timeline that needs to be renamed
+    doc_ref = db.collection("timelines").document(timeline_id)
+    doc_ref.delete()
+
+    return True
+
+
+@https_fn.on_call()
 def add_course_to_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     """
     Add a new course to the timeline course list
