@@ -6,105 +6,109 @@
  */
 import {CheckCircleIcon} from "@chakra-ui/icons";
 import {
-	Accordion,
-	AccordionButton,
-	AccordionIcon,
-	AccordionItem,
-	AccordionPanel,
-	Badge,
-	Box,
-	Card,
-	CardBody,
-	Heading,
-	HStack,
-	Link,
-	Text,
-	VStack
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Badge,
+    Box,
+    Card,
+    CardBody, Flex,
+    Heading,
+    HStack,
+    Link,
+    Text,
+    VStack
 } from "@chakra-ui/react";
+import {LogoutButton} from "../LogoutButton";
 
 export function SidebarMajorChunk() {
-	return <>
-		<CardBody>
-			<VStack alignItems={"stretch"}>
-				<Box>
-					<Badge colorScheme={"blue"} variant={"solid"}>
-						Major
-					</Badge>
-				</Box>
-				<Heading size={"sm"}>
-					Computer Science
-				</Heading>
-				<HStack>
-					<CheckCircleIcon
-						color={"green.500"}
-					/>
-					<Text>
-						Course plan complete
-					</Text>
-				</HStack>
-				<Accordion allowToggle={true} mt={2}>
-					<AccordionItem shadow={0}>
-						<AccordionButton px={0}>
-							<Text>
-								Requirements
-							</Text>
-							<AccordionIcon/>
-						</AccordionButton>
-						<AccordionPanel px={0} shadow={0} pb={2}>
-							<VStack alignItems={"stretch"} spacing={1}>
-								<MajorRequirementComponent
-									name={"Electives"}
-									hours={12}
-									viewLabel={"2 required courses"}
-								/>
-								<MajorRequirementComponent
-									name={"Electives"}
-									hours={12}
-									viewLabel={"2 required courses"}
-								/>
-								<MajorRequirementComponent
-									name={"Electives"}
-									hours={12}
-									viewLabel={"2 required courses"}
-								/>
+    return <>
+        <Flex direction="column">
+            <CardBody>
+                <VStack alignItems={"stretch"}>
+                    <Box>
+                        <Badge colorScheme={"blue"} variant={"solid"}>
+                            Major
+                        </Badge>
+                    </Box>
+                    <Heading size={"sm"}>
+                        Computer Science
+                    </Heading>
+                    <HStack>
+                        <CheckCircleIcon
+                            color={"green.500"}
+                        />
+                        <Text>
+                            Course plan complete
+                        </Text>
+                    </HStack>
+                    <Accordion allowToggle={true} mt={2}>
+                        <AccordionItem shadow={0}>
+                            <AccordionButton px={0}>
+                                <Text>
+                                    Requirements
+                                </Text>
+                                <AccordionIcon/>
+                            </AccordionButton>
+                            <AccordionPanel px={0} shadow={0} pb={2}>
+                                <VStack alignItems={"stretch"} spacing={1}>
+                                    <MajorRequirementComponent
+                                        name={"Electives"}
+                                        hours={12}
+                                        viewLabel={"2 required courses"}
+                                    />
+                                    <MajorRequirementComponent
+                                        name={"Electives"}
+                                        hours={12}
+                                        viewLabel={"2 required courses"}
+                                    />
+                                    <MajorRequirementComponent
+                                        name={"Electives"}
+                                        hours={12}
+                                        viewLabel={"2 required courses"}
+                                    />
 
-							</VStack>
+                                </VStack>
 
-						</AccordionPanel>
-					</AccordionItem>
-				</Accordion>
-			</VStack>
-		</CardBody>
-	</>
+                            </AccordionPanel>
+                        </AccordionItem>
+                    </Accordion>
+                </VStack>
+            </CardBody>
+            <LogoutButton/>
+        </Flex>
+    </>
 
 }
 
 function MajorRequirementComponent(props: {
-	name: string
-	hours: number
-	viewLabel: string
+    name: string
+    hours: number
+    viewLabel: string
 }) {
-	return <>
-		<Card size={"sm"} variant={"filled"} shadow={"none"}>
-			<CardBody>
-				<VStack
-					spacing={0}
-					w={"100%"}
-					alignItems={"stretch"}
-				>
-					<HStack justifyContent={"space-between"}>
-						<Text>
-							{props.name}
-						</Text>
-						<Text fontWeight={"bold"}>
-							{props.hours} hrs
-						</Text>
-					</HStack>
-					<Link color={"blue.500"} fontSize={"sm"}>
-						{props.viewLabel}
-					</Link>
-				</VStack>
-			</CardBody>
-		</Card>
-	</>
+    return <>
+        <Card size={"sm"} variant={"filled"} shadow={"none"}>
+            <CardBody>
+                <VStack
+                    spacing={0}
+                    w={"100%"}
+                    alignItems={"stretch"}
+                >
+                    <HStack justifyContent={"space-between"}>
+                        <Text>
+                            {props.name}
+                        </Text>
+                        <Text fontWeight={"bold"}>
+                            {props.hours} hrs
+                        </Text>
+                    </HStack>
+                    <Link color={"blue.500"} fontSize={"sm"}>
+                        {props.viewLabel}
+                    </Link>
+                </VStack>
+            </CardBody>
+        </Card>
+    </>
 }
