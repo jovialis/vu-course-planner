@@ -67,7 +67,7 @@ def create_user_timeline(req: https_fn.CallableRequest) -> https_fn.Response:
     # Functionality needed: create timeline document
 
     grad_date = 'Spring 2026'
-    name = 'CS Timeline'
+    name = 'New Timeline'
     sem = []
     hours = []
 

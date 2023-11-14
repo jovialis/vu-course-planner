@@ -1,8 +1,5 @@
 import json
-from firebase_functions import https_fn, options
-import sys
-sys.path.insert(1, 'functions/src/functions')
-import courses
+from src.functions import courses
 
 
 def ingest_schema(path: str):
@@ -149,14 +146,3 @@ class DegreeSchemaRequirement:
                 res += (" " * (offset+3) + rem + '\n')
         res += (" " * offset + "]\n")
         return res
-
-
-# subjects = ["economics", "history", "math", "psychology"]
-# schemas= []
-# for subject in subjects:
-#     # create a DegreeSchema for each major
-#     schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
-#     print("------------------------------------------------------")
-#     # print the DegreeSchema to verify json is deserialized properly
-#     schemas[-1].print_beautifully()
-#     print(schemas[-1].find_satisfying_courses())

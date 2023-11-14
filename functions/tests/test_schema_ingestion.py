@@ -1,9 +1,8 @@
-import sys
-sys.path.insert(1, 'functions/src/ai_planner')
+
 
 def test__schema_ingestion__function():
-    import schema_ingestion as si
-    path = "./functions/src/schemas/math.json"
+    import src.ai_planner.schema_ingestion as si
+    path = "src/schemas/math.json"
     ds = si.ingest_schema(path)
     assert isinstance(ds, si.DegreeSchema)
     assert ds.type == "Major"
@@ -12,8 +11,8 @@ def test__schema_ingestion__function():
     assert len(ds.requirements) == 5
 
 def test__major_schema__object():
-    import schema_ingestion as si
-    path = "./functions/src/schemas/math.json"
+    import src.ai_planner.schema_ingestion as si
+    path = "src/schemas/math.json"
     ds = si.ingest_schema(path)
     courses = {'MATH 1301', 'MATH 2420', 'MATH 2400', 'MATH 1300', 'MATH 2610', 'MATH 2300', 'MATH 2410', 'MATH 2310', 'MATH 2600', 'MATH 2501', 'MATH 2500'}   
     assert ds.courses == courses
@@ -21,8 +20,8 @@ def test__major_schema__object():
         assert isinstance(req, si.DegreeSchemaRequirement) 
 
 def test__major_schema_requirement__object():
-    import schema_ingestion as si
-    path = "./functions/src/schemas/math.json"
+    import src.ai_planner.schema_ingestion as si
+    path = "src/schemas/math.json"
     ds = si.ingest_schema(path)
     calc_seq = ds.requirements[0]
     assert calc_seq.hours == 9

@@ -35,21 +35,6 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ]
-    },
-    {
-      "source": "functions-scraping",
-      "codebase": "functions-scraping",
-      "runtime": "nodejs18",
-      "ignore": [
-        "node_modules",
-        ".env",
-        ".env.local",
-        "firebase-debug.log",
-        "firebase-debug.*.log"
-      ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run build"
-      ]
     }
   ]
 }
