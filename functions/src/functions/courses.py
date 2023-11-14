@@ -1,16 +1,13 @@
-from firebase_functions import https_fn, options
-from firebase_admin import credentials, firestore
-import firebase_admin
 import json, re
 from collections import deque
 
 def search(id):
+    from src.utils.init_firestore import init_firestore
+    db = init_firestore()
+
     major, num = id.split(' ')
     courses = set()
-    if not firebase_admin._apps:
-        cred = credentials.Certificate('functions/src/functions/firebase_cred.json')
-        firebase_admin.initialize_app(cred)
-    db = firestore.client()
+
     q = deque([id])
     def search(class_id):
         doc_ref = db.collection('courses').where('id', '==', id).stream()
@@ -28,10 +25,9 @@ def search(id):
     return courses
 
 def fetch_cond_courses(subj, cond):
-    if not firebase_admin._apps:
-        cred = credentials.Certificate('functions/src/functions/firebase_cred.json')
-        firebase_admin.initialize_app(cred)
-    db = firestore.client()
+    from src.utils.init_firestore import init_firestore
+    db = init_firestore()
+
     valid_conds = {'==', '>', '<', '>=', '<='}
     ne = set()
     res = set()

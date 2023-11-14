@@ -11,7 +11,7 @@ import {
 	Button,
 	Container,
 	Heading,
-	HStack, Link,
+	HStack, Link, Spacer,
 	Tab,
 	TabList,
 	TabPanel,
@@ -20,6 +20,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import {Timeline, TimelineProps} from "../components/dashboard/Timeline";
+import {LogoutButton} from "../components/LogoutButton";
+import {TimelineTab} from "../components/TimelineTab";
 import {useUser} from "../components/UserLoginGate";
 import {useCallable} from "../hooks/UseCallable";
 import {useLazyCallable} from "../hooks/UseLazyCallable";
@@ -130,9 +132,14 @@ export default function Dashboard() {
 								VCP
 							</Heading>
 							<TabList>
-								{data && data.map(timeline => <Tab key={timeline.timeline_id}>
-									{timeline.timeline_name}
-								</Tab>)}
+								{data && data.map(timeline => <TimelineTab
+									key={timeline.timeline_id}
+									timeline_id={timeline.timeline_id}
+									timeline_name={timeline.timeline_name}
+									refetchTimeline={() => {
+										refetch();
+									}}
+								/>)}
 							</TabList>
 							<Button
 								colorScheme={"blue"}
@@ -146,6 +153,10 @@ export default function Dashboard() {
 								Add
 							</Button>
 						</HStack>
+
+						<Spacer/>
+
+						{/*<LogoutButton/>*/}
 
 						<Link href={"/profile"}>
 							<Avatar size={"sm"} src={user.photoURL}/>

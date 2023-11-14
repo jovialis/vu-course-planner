@@ -7,6 +7,7 @@ from src.functions.timelines import rename_user_timeline
 from src.functions.timelines import create_user_timeline
 from src.functions.timelines import add_course_to_timeline
 from src.functions.timelines import del_course_from_timeline
+from src.functions.timelines import del_user_timeline
 from src.functions.lookups import lookup_course
 from src.functions.users import set_user_data
 from src.functions.users import get_user_data

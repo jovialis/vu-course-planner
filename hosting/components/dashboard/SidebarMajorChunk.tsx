@@ -77,7 +77,6 @@ export function SidebarMajorChunk() {
                     </Accordion>
                 </VStack>
             </CardBody>
-            <LogoutButton/>
         </Flex>
     </>
 

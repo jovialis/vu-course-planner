@@ -8,6 +8,12 @@ export function LogoutButton() {
     }
 
     return <>
-        <Button colorScheme="blue" onClick={handleLogOut}>Logout</Button>
+        <Button
+	        colorScheme="red"
+	        onClick={handleLogOut}
+	        size={"sm"}
+        >
+	        Logout
+		</Button>
     </>
 }

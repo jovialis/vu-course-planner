@@ -68,6 +68,10 @@ def test_check_list_cond():
     assert(empty == True)
     assert(success == True)
     assert(fail == False)
+from tests.utils import initialize_app_for_testing
+
+initialize_app_for_testing()
+
 
 def test_test_determine_graduation_remainder_complex():
     from src.ai_planner.satisfy_graduation import determine_graduation

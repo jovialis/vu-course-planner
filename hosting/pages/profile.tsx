@@ -12,6 +12,7 @@ import {
 	UnorderedList,
 	VStack,
 	Badge,
+	Flex,
 	useToast,
 } from '@chakra-ui/react'
 
@@ -82,11 +83,17 @@ export default function UserProfile() {
 
 		readDoc({}).then((result) => {
             if (result != null){
+				// @ts-ignore
                 set_first_major(result.data?.major || "")
+	            // @ts-ignore
                 set_second_major(result.data?.sec_major || "")
+	            // @ts-ignore
                 set_minor(result.data?.minor || "")
+	            // @ts-ignore
                 set_year(result.data?.graduation_year || "")
+	            // @ts-ignore
                 set_term(result.data?.graduation_term || "")
+	            // @ts-ignore
                 setComplete(result.data?.completed_courses || [])
             }
             // console.log("read")
@@ -123,6 +130,7 @@ export default function UserProfile() {
 						duration: 1500,
 						isClosable: true,
 					  })
+
                     // setRetSubmission("Successfully Submitted!")
                 } else {
 					toast({
