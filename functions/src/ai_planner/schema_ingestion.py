@@ -6,7 +6,12 @@ def ingest_schema(path: str):
     the "Degree Schema" class as its root and a series of "DegreeSchemaRequirement" classes as the recursive part.
     """
 
-    # open the file as json 
+    # path = path.lower()
+    # path = path.replace(' ', '_')
+    # path = "./functions/src/schemas/" + path
+    # path += ".json"
+
+    # open the file as json
     with open(path) as json_file:
         json_data = json.load(json_file)
     

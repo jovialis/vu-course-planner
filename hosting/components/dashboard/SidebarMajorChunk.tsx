@@ -21,8 +21,32 @@ import {
 	Text,
 	VStack
 } from "@chakra-ui/react";
+import {useEffect, useState} from "react";
+import {useCallable} from "../../hooks/UseCallable";
 
 export function SidebarMajorChunk() {
+	const {data, loading, error, refetch} = useCallable("get_user_data", {});
+	const [major, setMajor] = useState("")
+	useEffect(() => {
+		// Check if data is available and not loading
+		if (data && !loading) {
+			// Assuming data.major is a string or a value, not an object
+			setMajor(data.major)
+			console.log(data);
+
+			// Call the second function once data is loaded
+			// const {data: data2,loading: loading2,error: error2,refetch: refetch2 } = useCallable("ingest_schema", {
+			// 	path: major
+			// }, null);
+			// console.log(data2)
+		}
+	}, [data, loading]); // Re-run the effect when data or loading state changes
+
+	const {data: data2,loading: loading2,error: error2,refetch: refetch2 } = useCallable("ingest_schema", {
+			path: "../functions/src/schemas/math.json"
+		}, null);
+		console.log(data2)
+
 	return <>
 		<CardBody>
 			<VStack alignItems={"stretch"}>
@@ -32,7 +56,7 @@ export function SidebarMajorChunk() {
 					</Badge>
 				</Box>
 				<Heading size={"sm"}>
-					Computer Science
+					{major}
 				</Heading>
 				<HStack>
 					<CheckCircleIcon
