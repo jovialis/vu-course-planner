@@ -6,21 +6,13 @@
  */
 
 import {ChakraProvider, extendTheme} from "@chakra-ui/react";
-import {getApp, getApps, initializeApp} from "firebase/app"
+import {getApp} from "firebase/app"
 import {connectFunctionsEmulator, getFunctions} from "firebase/functions";
 import {AppProps} from "next/app";
 import {UserLoginGate} from "../components/UserLoginGate";
+import {initializeFirebaseApp} from "../utils/initializeFirebaseApp";
 
-const firebaseConfig = {
-	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-	authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-	projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-	appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
-};
-
-if (!getApps().length) {
-	initializeApp(firebaseConfig);
-}
+initializeFirebaseApp()
 
 export default function App({Component, pageProps}: AppProps) {
 	if (process.env.NEXT_PUBLIC_FIREBASE_EMULATOR) {

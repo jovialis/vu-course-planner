@@ -1,3 +1,8 @@
+from tests.utils import initialize_app_for_testing
+
+initialize_app_for_testing()
+
+
 from src.ai_planner.class_frequency_prediction import predict_class_availability
 from src.ai_planner.class_frequency_prediction import predict_class_term_availability
 
@@ -21,5 +26,4 @@ def test_class_avai():
     test_class="ENGL 3611"
     all_term_ids = ["fall", "spring", "summer", "year"]
     assert(predict_class_availability(test_class, 3, None) == [-1, 0, -1, -1])
-
 
