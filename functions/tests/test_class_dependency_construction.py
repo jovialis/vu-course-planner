@@ -4,7 +4,6 @@ initialize_app_for_testing()
 
 
 def validate_course_id(course_id: str):
-    print("CALLED TO VALIDATE COURSE ID", course_id)
     return True
 
 
