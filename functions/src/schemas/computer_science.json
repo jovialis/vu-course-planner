@@ -4,164 +4,440 @@
     "Track": null,
     "Requirements": [
         {
-            "Name" : "Calculus/Linear algebra",
-            "id" : 1,
-            "Hours" : "N/A",
-            "Required" : [
-                "Math 1300",
-                "Math 1301"
-            ], "Path" : [
-                {
-                    "Name": "path1",
-                    "id": null,
-                    "Hours": 8,
-                    "Required": [
-                        "MATH 2500",
-                        "MATH 2501"
-                    ],
-                    "Paths": [],
-                    "Remainder": null
-                },
-                {
-                    "Name" : "path2",
-                    "id" : null,
-                    "Hours": 3,
-                    "Required": [
-                        "Math 2300"
-                    ], "Paths" : [
-                        "Math 2410",
-                        "Math 2600"
-                    ], 
-                    "Remainder": null
-                }
-                
-            ]
-
-        },{
-            "Name" : "Statistics/Probability", 
-            "id": 2,
-            "Hours": 3,
-            "Required": null,
-            "Path" : [
-                "MATH 2810", 
-                "Math 2820", 
-                "Math 3640"
-            ]
-        }, {
-            "Name" : "Science",
-            "id": 3,
-            "Hours":"",
-            "Required":"",
-            "Path" :""
-        }, {
-            "Name" : "Introduction to Engineering ",
-            "id": 4,
-            "Hours": 3,
-            "Required":[
-                "ES 1401", 
-                "ES 1402", 
-                "ES 1403"
-            ],
-            "Path" : null
-        },{
-            "Name" : "Liberal Arts Core", //Not complete
-            "id": 5,
-            "Hours": 18,
-            "Required": null,
-            "Path" :[
-
-            ]
-        },{
-            "Name" : "Software/Problem Solving",
-            "id": 6,
-            "Hours": 12,
+            "Name": "Mathematics",
+            "id": 1,
+            "Hours": 17,
             "Required": [
-                "CS 2201", 
-                "CS 3251", 
-                "CS 3270"
-            ],
-            "Path" : [
-                "CS 1101",
-                "CS 1104"
-            ]
-        }, {
-            "Name" : "Hardware/Systems",
-            "id": 7,
-            "Hours": 7,
-            "Required": ["CS 3281"],
-            "Path" : [
                 {
-                    "Name" : "path1",
-                    "id": 1,
-                    "Hours": 4,
-                    "Required":["CS 2281", "CS 2281L"],
-                    "Path" : null
+                    "Name": "Calculus/Linear algebra",
+                    "id": null,
+                    "Hours": 14,
+                    "Required": ["Math 1300", "Math 1301"],
+                    "Paths": [
+                       {
+                        "Name": "CS Math Path 1",
+                        "id": null,
+                        "Hours": 8,
+                        "Required": ["Math 2500", "Math 2501"],
+                        "Paths":[],
+                        "Remainder":[]
+                       },
+                       {
+                        "Name": "CS Math Path 2",
+                        "id": null,
+                        "Hours": 8,
+                        "Required": ["Math 2300"],
+                        "Paths": ["Math 2410", "Math 2600"],
+                        "Remainder":[]
+                       }
+                    ],
+                    "Remainder": []
+                }, 
+                {
+                    "Name": "Statistics/Probability",
+                    "id": null,
+                    "Hours": 14,
+                    "Required": [],
+                    "Path": ["MATH 2810","Math 2820", "Math 3640"],
+                    "Remainder": []
+                }
+            ], 
+            "Paths": [],
+            "Remainder": []
+        },
+        {
+           "Name": "Science",
+           "id": 2,
+           "Hours": 12,
+           "Required":[],
+           "Paths": [
+                "BSCI 1100L",
+                "BSCI 1510L",
+                "BSCI 1511L",
+                "CHEM 1601L",
+                "CHEM 1602L",
+                "EES 1510L",
+                "MSE 1500L",
+                "PHYS 1601L",
+                "PHYS 1602L"
+            ],
+            "Remainder":[
+                "BSCI 1100",
+                "BSCI 1100L",
+                "BSCI 1510",
+                "BSCI 1510L",
+                "BSCI 1511",
+                "BSCI 1511L",
+                "BSCI 2218",
+                "BSCI 2219",
+                "CHEM 1601",
+                "CHEM 1601L",
+                "CHEM 1602",
+                "CHEM 1602L",
+                "EES 1510",
+                "EES 1510L",
+                "MSE 1500",
+                "MSE 1500L",
+                "PHYS 1601",
+                "PHYS 1601L",
+                "PHYS 1602",
+                "PHYS 1602L"
+            ]
+        },
+        {
+            "Name": "Introduction to Engineering",
+            "id": 3,
+            "Hours": 3,
+            "Required": [
+                "ES 1401", "ES 1402", "ES 1403"
+            ],
+            "Paths":[],
+            "Remainder":[]
+        },
+        {
+            "Name":"Liberal Arts Core ",
+            "id": 4,
+            "Hours": 18,
+            "Required":[
+                {
+                    "Name": "HCA",
+                    "id": null,
+                    "Hours": 3,
+                    "Required": [],
+                    "Paths": [],
+                    "Remainder": [
+                        {
+                            "type" : "HCA",
+                            "cond" : [
+                                "!= CMST 1500",
+                                "!= CMST 2100",
+                                "!= CMST 2110",
+                                "!= CMST 2120"
+                            ]
+                        }]
                 },
                 {
-                    "Name" : "path1",
-                    "id": 1,
-                    "Hours": 4,
-                    "Required":["ECE 2281", "ECE 2281L"],
-                    "Path" : null
+                    "Name": "SBS",
+                    "id": null,
+                    "Hours": 3,
+                    "Required": [],
+                    "Paths": [],
+                    "Remainder": [
+                        {
+                            "type" : "SBS",
+                            "cond" : []
+                        }
+                    ]
+                }   
+            ],
+            "Paths":[],
+            "Remainder":[
+                {
+                    "type" : "SBS",
+                    "cond" : []
+                },
+                {
+                    "type" : "P",
+                    "cond" : []
+                },
+                {
+                    "type" : "HCA",
+                    "cond" : []
+                },
+                {
+                    "type" : "INT",
+                    "cond" : []
+                },
+                {
+                    "type" : "US",
+                    "cond" : []
+                },
+                "ENGM 2440",
+                "ARA 1101",
+                "CHIN 1011",
+                "CHIN 1012",
+                "CHIN 1101",
+                "ENGL 1100",
+                "FREN 1101",
+                "GER 1101",
+                "GRK 1101",
+                "HEBR 1101",
+                "JAPN 1011",
+                "JAPN 1012",
+                "JAPN 1101",
+                "LAT 1101",
+                "PORT 1101",
+                "RUSS 1101",
+                "SPAN 1100",
+                "SPAN 1101",
+                "HOD 1250",
+                "HOD 1300",
+                "HOD 2100",
+                "HOD 2260",
+                "HOD 2400",
+                "HOD 2500",
+                "HOD 2700",
+                "HOD 3232",
+                {
+                    "subject": "MUSC",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MUSE",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MUSO",
+                    "condition": [
+                        "!= 1001"
+                    ]
+                },
+                {
+                    "subject": "COMP",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MREP",
+                    "condition": [
+                   
+                    ]
+                },
+                {
+                    "subject": "MUTH",
+                    "condition": [
+                   
+                    ]
                 }
             ]
-        }, {
-            "Name" : "Foundations",
-            "id": 8,
-            "Hours": 6,
-            "Required": ["CS 2212", "CS 3250"],
-            "Path": null
-        }, {
-            "Name" : "Computer Science Depth",  // Not complete
-            "id": 9,
+        },
+        {
+            "Name": "Computer Science Core",
+            "id": 5,
+            "Hours": 25,
+            "Required": [
+                {
+                    "Name": "Software/Problem Solving",
+                    "id": null,
+                    "Hours": 12,
+                    "Required":[
+                        "CS 2201", 
+                        "CS 3251", 
+                        "CS 3270"
+                    ],
+                    "Paths":[
+                        "CS 1101",
+                        "CS 1104"
+                    ],
+                    "Remainder":[]
+                },
+                {
+                    "Name": "Hardware/Systems",
+                    "id": null,
+                    "Hours": 7,
+                    "Required": [
+                        "CS 3281"
+                    ], 
+                    "Paths":[
+                        {
+                            "Name": "CS",
+                            "id": null,
+                            "Hours": 4,
+                            "Required": [
+                                "CS 2281", "CS 2281L"
+                            ],
+                            "Paths":[],
+                            "Remainder":[]
+                        },
+                        {
+                            "Name": "ECE",
+                            "id": null,
+                            "Hours": 4,
+                            "Required": [
+                                "ECE 2281", "ECE 2281L"
+                            ],
+                            "Paths":[],
+                            "Remainder":[]
+                        }
+                    ],
+                    "Remainder": []
+                },
+                {
+                    "Name":"Foundations",
+                    "id": null,
+                    "Hours": 6,
+                    "Required": [
+                        "CS 2212", "CS 3250"
+                    ],
+                    "Paths":[],
+                    "Remainder":[]
+                }
+            ],
+            "Paths": [],
+            "Remainder": []
+        },
+        {
+            "Name": "Computer Science Depth",
+            "id": 6,
             "Hours": 15,
-            "Required":[],
-            "Path":[]
-        }, {
+            "Required": [],
+            "Paths": [],
+            "Remainder": []
+        },
+        {
             "Name": "Computer Science Project",
-            "id": 10,
+            "id": 7,
             "Hours": 3,
-            "Required": null,
-            "Path": [
-                "CS 3892", 
-                "CS 4239", 
-                "CS 4249", 
+            "Required":[],
+            "Paths":[
+                "CS 3892",
+                "CS 4239",
+                "CS 4249",
                 "CS 4269",
-                "CS 4279", 
-                "CS 4287", 
+                "CS 4279",
+                "CS 4287",
                 "CS 4289"
-            ]
-        }, {
-            "Name" : "Computer Science Seminar",
-            "id": 11,
+            ],
+            "Remainder": []
+        }, 
+        {
+            "Name": "Computer Science Seminar",
+            "id": 8,
             "Hours": 1,
             "Required": ["CS 4959"],
-            "Path" : null
-        }, {
-            "Name" : "Technical Electives", //Incomplete
-            "id": 12,
+            "Paths": [],
+            "Remainder": []
+        },
+        {
+            "Name": "Technical Electives",
+            "id": 9,
             "Hours": 6,
-            "Required": null,
-            "Path": [] 
-        }, {
-            "Name" : "Open Elective",
-            "id": 13,
-            "Hours": "N/A",
-            "Required": null,
-            "Path" : []
-        }, {
-            "Name" : "Computers and Ethics", // Can be used for Liberal Art Core
-            "id": 14,
-            "Hours": "3",
-            "Required": ["CS 1151"],
-            "Path": null
-        }, {
-            "Name" : "Writing Component", // Not sure is this needed
-            "id": 15,
+            "Required": [],
+            "Paths": [],
+            "Remainder":  [
+                {
+                    "subject": "BME",
+                    "condition": [
+                      ">= 2000",
+                      "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "CHBE",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "CE",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "CS",
+                    "condition": [
+                        ">= 3000"
+                    ]
+                },
+                {
+                    "subject": "ECE",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "ME",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860"
+                    ]
+                },
+                {
+                    "subject": "ENGM",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860",
+                        "!= 2440",
+                        "!= 4800"
+                    ]
+                },
+                {
+                    "subject": "ES",
+                    "condition": [
+                        ">= 2000",
+                        "!= 2860",
+                        "!= 2700",
+                        "!= 3884"
+                    ]
+                },
+                {
+                    "subject": "MNS",
+                    "condition": [
+                        ">= 2000"
+                        
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Open Electives",
+            "id": 10,
+            "Hours": 18, 
+            "Required": [],
+            "Paths": [],
+            "Remainder": [
+                {
+                    "subject": "ALL",
+                    "condition": [
+                    ]
+                }
+            ]
+        },
+        {
+            "Name": "Computers and Ethics", 
+            "id":11,
             "Hours": 3,
-            "Required": []
-            "Path" :
-        }
+            "Required": ["CS 1151"],
+            "Paths": [],
+            "Remainder": []
+        },
+        {
+            "Name": "Writing Component",
+            "id": 12,
+            "Hours": 3,
+            "Required": [],
+            "Paths": [
+                {
+                    "Name": "W”-designated course",
+                    "id": null,
+                    "Hours": 3,
+                    "Required": [],
+                    "Paths": ["ENGL 1210W", "ENGL 1220W", "ENGL 1230W", "ENGL 1250W", "ENGL 1260W", "ENGL 1270W", "ENGL 1300W"],
+                    "Remainder": []
+                }, 
+                "ENGL 1111"
+            ],
+            "Remainder": []
+        }        
+
 
     ]
 }
+
+{
+    "Name":
+    "id":
+    "Hours":
+    "Required":
+    "Paths":
+    "Remainder": 
+}   

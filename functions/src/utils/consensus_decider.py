@@ -43,7 +43,7 @@ class ConsensusDecider:
 
         total_val = sum(self.values.values())
         for value in self.values.values():
-            if value >= total_val / 2:
+            if value > total_val / 2:
                 return True
 
         return False

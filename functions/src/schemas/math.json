@@ -101,7 +101,7 @@
             "Required": [],
             "Paths": [],
             "Remainder": [{
-                "subject": "Math",
+                "subject": " MATH",
                 "cond": [
                     ">= 2800",
                     "!= 3000"
@@ -115,7 +115,7 @@
             "Required": [],
             "Paths": [],
             "Remainder": [{
-                "subject": "Math",
+                "subject": "MATH",
                 "cond": [
                     ">= 2800"
                 ]
@@ -134,7 +134,7 @@
                     "Required": [],
                     "Paths": [],
                     "Remainder": [{
-                        "subject": "Math",
+                        "subject": "MATH",
                         "cond": [
                             "dir_approval"
                         ]
@@ -147,7 +147,7 @@
                     "Required": [],
                     "Paths": [],
                     "Remainder": [{
-                        "subject": null,
+                        "subject": "MATH",
                         "cond": [
                             "another_major"
                         ]

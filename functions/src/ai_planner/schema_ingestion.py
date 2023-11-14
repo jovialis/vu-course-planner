@@ -1,4 +1,9 @@
 import json
+from firebase_functions import https_fn, options
+import sys
+sys.path.insert(1, 'functions/src/functions')
+import courses
+
 
 def ingest_schema(path: str):
     """
@@ -67,7 +72,7 @@ class DegreeSchemaRequirement:
         self.hours = req['Hours']
         self.required = self.create_required(req['Required'])
         self.paths = self.create_paths(req['Paths'])
-        self.remainder = req['Remainder']
+        self.remainder = self.create_remainder(req['Remainder'])
 
     # Deserializes the required field in our json data 
     def create_required(self, required):
@@ -80,7 +85,7 @@ class DegreeSchemaRequirement:
             # Requirement is simply a class
             else:
                 reqs.append(r)
-                self.courses.add(r)
+                self.courses.update(courses.search(r))
         return reqs
 
     # Deserializes the path field in our json data 
@@ -94,9 +99,22 @@ class DegreeSchemaRequirement:
             # Requirement is simply a class
             else:
                 ps.append(p)
-                self.courses.add(p)
+                self.courses.update(courses.search(p))
         return ps
     
+    def create_remainder(self, remainder):
+        rem = set()
+        for r in remainder:
+            if isinstance(r, dict):
+                if "cond" in r:
+                    ret = courses.fetch_cond_courses(r["subject"], r["cond"])
+                    rem.update(ret)
+                    self.courses.update(ret)
+            else:
+                rem.add(r)
+                self.courses.update(courses.search(r))
+        return list(rem)
+
     def find_satisfying_courses(self):
         """
         Return all the unique course ids that may contribute to the DegreeSchemaRequirement
@@ -132,14 +150,13 @@ class DegreeSchemaRequirement:
         res += (" " * offset + "]\n")
         return res
 
-# testing
-subjects = ["economics", "history", "math", "psychology"]
-schemas= []
-for subject in subjects:
-    # create a DegreeSchema for each major
-    schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
-    print("------------------------------------------------------")
-    # print the DegreeSchema to verify json is deserialized properly
-    schemas[-1].print_beautifully()
-    print(schemas[-1].find_satisfying_courses())
 
+# subjects = ["economics", "history", "math", "psychology"]
+# schemas= []
+# for subject in subjects:
+#     # create a DegreeSchema for each major
+#     schemas.append(ingest_schema("./functions/src/schemas/" + subject + ".json"))
+#     print("------------------------------------------------------")
+#     # print the DegreeSchema to verify json is deserialized properly
+#     schemas[-1].print_beautifully()
+#     print(schemas[-1].find_satisfying_courses())
