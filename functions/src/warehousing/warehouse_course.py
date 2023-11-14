@@ -10,7 +10,7 @@ ACTIVE_YEARS_THRESHOLD = 2  # The number of years a course can go hiatus before 
 INDEX_YEARS_THRESHOLD = 4  # How many years to index for space purposes
 
 
-def warehouse_course(course_id: str, force=False):
+def warehouse_course(course_id: str, force=False, write=True):
     """
     Reads through all available Sections for a given Course and generates a usable Course based on
     its historical availability and a few recency-weighted consensus mechanisms
@@ -35,12 +35,12 @@ def warehouse_course(course_id: str, force=False):
     )
 
     if is_umbrella:
-        return __warehouse_umbrella_course(course_id, section_docs)
+        return __warehouse_umbrella_course(course_id, section_docs, write)
     else:
-        return __warehouse_single_course(course_id, section_docs)
+        return __warehouse_single_course(course_id, section_docs, write)
 
 
-def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapshot]):
+def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapshot], write=True):
     """
     Reads through all available Sections for a given Course and generates a usable Course based on
     its historical availability and a few recency-weighted consensus mechanisms.
@@ -108,7 +108,7 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
         course_listing["hours"].put(course_hours, section_term_number_value)
         course_listing["format"].put(section_format, section_term_number_value)
 
-        if doc_data["details"] is not None:
+        if "details" in doc_data:
             section_desc = doc_data["details"]["description"]
             section_notes = doc_data["details"]["notes"]
             section_school = doc_data["details"]["school"]
@@ -151,17 +151,18 @@ def __warehouse_single_course(course_id: str, section_docs: list[DocumentSnapsho
     course_listing["format"] = course_listing["format"].arbitrate()
 
     # Set the course listing
-    course_ref = db.collection("courses").document(course_id.lower())
-    course_ref.set(course_listing)
+    if write:
+        course_ref = db.collection("courses").document(course_id.lower())
+        course_ref.set(course_listing)
 
-    # Commit the batch
-    listing_batch.commit()
+        # Commit the batch
+        listing_batch.commit()
 
-    # Predict class frequency availability
-    if course_listing["active"]:
-        course_ref.update({
-            "availability_pred": predict_class_availability(course_id.lower())
-        })
+        # Predict class frequency availability
+        if course_listing["active"]:
+            course_ref.update({
+                "availability_pred": predict_class_availability(course_id.lower())
+            })
 
     return course_listing
 
@@ -239,7 +240,7 @@ def __generate_warehoused_term_templates():
     return listing_template, availability_template, earliest_active_term_id, earliest_recording_term_id
 
 
-def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnapshot]):
+def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnapshot], write=True):
     """
     Reads through all available Sections for a given Course and generates a usable Course based on
     its historical availability and a few recency-weighted consensus mechanisms.
@@ -269,28 +270,11 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
     course_listing["name"] = __find_umbrella_course_name(
         list(
             map(
-                lambda doc: doc.get("course.name"),
+                lambda doc: doc.to_dict()["course"]["name"],
                 section_docs
             )
         )
     )
-
-    def strip_umbrella_course_name(course_title: str) -> str:
-        """
-        Removes the Umbrella Course's title from a sub-course
-        :param course_title:
-        :return:
-        """
-        umbrella_course_name = course_listing["name"]
-        course_title = course_title.replace(umbrella_course_name, "", 1)
-        course_title = course_title.strip()
-
-        import re
-        course_title = re.sub(r'[^a-zA-Z0-9]+$', '', course_title)
-        course_title = re.sub(r'^[^a-zA-Z0-9]+', '', course_title)
-        course_title = course_title.strip()
-
-        return course_title
 
     # Map for us to keep the sub-courses
     contained_courses = {}
@@ -327,7 +311,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         if course_name not in contained_courses:
             contained_courses[course_name] = {
                 "id": subcourse_id,
-                "name": strip_umbrella_course_name(course_name),
+                "name": __strip_umbrella_course_name(course_name, course_listing["name"]),
                 "description": ConsensusDecider(),
                 "school": ConsensusDecider(),
                 "hours": ConsensusDecider(),
@@ -350,7 +334,7 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
         contained_courses[course_name]["hours"].put(course_hours, section_term_number_value)
         contained_courses[course_name]["format"].put(section_format, section_term_number_value)
 
-        if doc_data["details"] is not None:
+        if "details" in doc_data:
             section_desc = doc_data["details"]["description"]
             section_notes = doc_data["details"]["notes"]
             section_school = doc_data["details"]["school"]
@@ -406,14 +390,33 @@ def __warehouse_umbrella_course(course_id: str, section_docs: list[DocumentSnaps
 
     course_listing["contained_courses"] = written_contained_course_paths
 
-    # Set the course listing
-    db.collection("courses").document(course_id.lower()).set(course_listing)
+    if write:
+        # Set the course listing
+        db.collection("courses").document(course_id.lower()).set(course_listing)
 
-    # Commit the batches
-    listings_batch.commit()
-    subcourse_batch.commit()
+        # Commit the batches
+        listings_batch.commit()
+        subcourse_batch.commit()
 
     return course_listing
+
+
+def __strip_umbrella_course_name(course_title: str, umbrella_course_name: str) -> str:
+    """
+    Removes the Umbrella Course's title from a sub-course
+    :param course_title:
+    :return:
+    """
+    # umbrella_course_name = course_listing["name"]
+    course_title = course_title.replace(umbrella_course_name, "", 1)
+    course_title = course_title.strip()
+
+    import re
+    course_title = re.sub(r'[^a-zA-Z0-9]+$', '', course_title)
+    course_title = re.sub(r'^[^a-zA-Z0-9]+', '', course_title)
+    course_title = course_title.strip()
+
+    return course_title
 
 
 def __find_umbrella_course_name(course_titles: list[str]):

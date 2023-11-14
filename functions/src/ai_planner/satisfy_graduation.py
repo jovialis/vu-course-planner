@@ -1,6 +1,6 @@
-from schema_ingestion import DegreeSchema
-from schema_ingestion import DegreeSchemaRequirement
-from schema_ingestion import ingest_schema
+from src.ai_planner.schema_ingestion import DegreeSchema
+from src.ai_planner.schema_ingestion import DegreeSchemaRequirement
+from src.ai_planner.schema_ingestion import ingest_schema
 # from firebase_functions import https_fn
 # from src.utils.init_firestore import init_firestore
 
@@ -10,7 +10,7 @@ def lookups(obj):
     }
     return ret
 
-psychology = ingest_schema("../schemas/" + "psychology" + ".json")
+# psychology = ingest_schema("../schemas/" + "psychology" + ".json")
 # print(psychology)
 # print(1)
 
