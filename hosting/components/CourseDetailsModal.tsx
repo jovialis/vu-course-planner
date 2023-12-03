@@ -15,12 +15,17 @@ import {
 	ModalHeader,
 	ModalOverlay, Spinner,
 	useDisclosure, Wrap, WrapItem,
-	Card, Heading
+	Card, Heading,
+	Button,
+	HStack
 } from "@chakra-ui/react";
 import React from "react";
 import {ReactElement, useEffect} from "react";
 import {useCallable} from "../hooks/UseCallable";
 import {CourseInfo} from "./CourseInfo";
+import {getFunctions, httpsCallable} from 'firebase/functions'
+import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons';
+
 
 export function CourseDetailsModal(props: {
 	course_id: string
@@ -38,6 +43,18 @@ export function CourseDetailsModal(props: {
 			refetch();
 		}
 	}, [isOpen]);
+
+	function update_rate(rate, course_id){
+		const functions = getFunctions()
+		const rating = httpsCallable(functions, 'rating')
+
+		let data = {
+			rate: rate,
+			course: course_id,
+        }
+		const ret = rating(data)
+		console.log(ret)
+	}
 
 	return (
 		<>
@@ -92,7 +109,17 @@ export function CourseDetailsModal(props: {
 							</GridItem>
                             <GridItem colSpan={6} rowSpan={1}>
 								<Heading as="h4" fontWeight="bold" fontSize="x1">Class Rating:</Heading>
-								<Card p={1} bg="gray.50" h="75%" display="flex" flexDirection="column" justifyContent="space-between"></Card>
+								<Card p={1} bg="gray.50" h="75%" display="flex" flexDirection="column" justifyContent="space-between">
+									<HStack>
+										<Button onClick={() => update_rate(1,props.course_id.toUpperCase())}>
+											<ChevronUpIcon />
+										</Button>
+										<Button onClick={() => update_rate(-1,props.course_id.toUpperCase())}>
+											<ChevronDownIcon />
+										</Button>
+									</HStack>
+
+								</Card>
 							</GridItem>
                             <GridItem colSpan={6} rowSpan={1} bg='gray.50' mb={1}>
 								<Heading as="h4" fontWeight="bold" fontSize="x1">Semester Available</Heading>
