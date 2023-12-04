@@ -28,7 +28,7 @@ def set_user_data(req: https_fn.CallableRequest) -> https_fn.Response:
     ref = db.collection("users").document(req.auth.uid)
 
     ret = ref.set(data)
-    print("ret")
+    
     print(ret)
     return True
 
