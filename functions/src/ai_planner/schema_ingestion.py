@@ -82,7 +82,7 @@ class DegreeSchemaRequirement:
             # Requirement is simply a class
             else:
                 reqs.append(r)
-                self.courses.update(courses.search(r))
+                # self.courses.update(courses.search(r))
         return reqs
 
     # Deserializes the path field in our json data 
@@ -96,7 +96,7 @@ class DegreeSchemaRequirement:
             # Requirement is simply a class
             else:
                 ps.append(p)
-                self.courses.update(courses.search(p))
+                # self.courses.update(courses.search(p))
         return ps
     
     def create_remainder(self, remainder):
@@ -109,7 +109,7 @@ class DegreeSchemaRequirement:
                     self.courses.update(ret)
             else:
                 rem.add(r)
-                self.courses.update(courses.search(r))
+                # self.courses.update(courses.search(r))
         return list(rem)
 
     def find_satisfying_courses(self):

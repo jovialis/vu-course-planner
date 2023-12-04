@@ -11,5 +11,7 @@ from src.functions.timelines import del_user_timeline
 from src.functions.lookups import lookup_course
 from src.functions.users import set_user_data
 from src.functions.users import get_user_data
+from src.functions.requirements import get_user_reqs
+from src.functions.requirements import get_user_grad_status
 
 initialize_app()
