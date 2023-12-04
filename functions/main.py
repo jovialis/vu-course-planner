@@ -13,5 +13,6 @@ from src.functions.users import set_user_data
 from src.functions.users import get_user_data
 from src.functions.rating import get_rating
 from src.functions.rating import rating
+from src.functions.rating import scoring
 
 initialize_app()

@@ -41,6 +41,9 @@ export default function UserProfile() {
     const [rating, setRating] = useState({})
     const toast = useToast()
 
+    const [diffScore, setDiffScore] = useState({})
+    const [useScore, setUseScore] = useState({})
+
     useEffect(() => {
         handleRead()
         // console.log(username)
@@ -98,6 +101,10 @@ export default function UserProfile() {
                 setComplete(result.data?.completed_courses || [])
                 
                 setRating(result.data?.rating || {}) 
+
+                setDiffScore(result.data?.diff_rating || {})
+
+                setUseScore(result.data?.use_rating || {})
             }
             // console.log("read")
             // console.log(result.data)
@@ -119,7 +126,9 @@ export default function UserProfile() {
             year: year,
             term: term,
             completeCourses: completedCourses,
-            rating: rating
+            rating: rating,
+            use_score: useScore,
+            diff_score: diffScore,
         }
         setRetSubmission("")
 		// console.log(data);
