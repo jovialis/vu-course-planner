@@ -10,7 +10,8 @@ def find_optimal_class_list(courses_required: list[str], courses_taken: list[str
     """
 
     db = init_firestore()
-    all_course_docs = all_course_docs if all_course_docs is not None else [course.to_dict() for course in db.collection("courses").get()]
+    all_course_docs = all_course_docs if all_course_docs is not None else [course.to_dict() for course in
+                                                                           db.collection("courses").get()]
 
     # Build a map of course ID
     required_course_docs = [course["id"] for course in all_course_docs if course["id"].upper() in courses_required]
@@ -19,7 +20,8 @@ def find_optimal_class_list(courses_required: list[str], courses_taken: list[str
     return __pick_shortest_course_list_fulfillment_path(all_course_docs, required_course_docs, taken_course_docs)
 
 
-def __pick_shortest_course_list_fulfillment_path(all_course_docs, courses_required: list[str], courses_taken: list[str]):
+def __pick_shortest_course_list_fulfillment_path(all_course_docs, courses_required: list[str],
+                                                 courses_taken: list[str]):
     """
     Of all the possible pre-requisite paths to take in fulfilling "courses_required," which possible combinations
     will satisfy the required courses AND minimize the number of courses required when taking into account
@@ -75,26 +77,26 @@ def __pick_shortest_course_list_fulfillment_path(all_course_docs, courses_requir
     return shortest_path if shortest_path is not None else []
 
 
-
-def __pick_shortest_course_fulfillment_path(course_doc, courses_taken: list[str], course_requisite_path_map) -> list[str]:
-    """
-    Builds out prerequisite paths for the given course. Searches for any paths that are already
-    completed by the courses taken. If so, return an empty 2d array. Otherwise iterate through the possible paths.
-    """
-
-    possible_paths = __dfs_course_prerequisite_paths(course_doc["id"], course_requisite_path_map)
-
-    shortest_path = None
-    shortest_path_length = -1
-
-    for i, path in enumerate(possible_paths):
-        adjusted_path = __adjust_real_course_prerequisite_paths(path, courses_taken)
-
-        if shortest_path is None or len(adjusted_path) < shortest_path_length:
-            shortest_path = adjusted_path
-            shortest_path_length = len(adjusted_path)
-
-    return shortest_path
+# def __pick_shortest_course_fulfillment_path(course_doc, courses_taken: list[str], course_requisite_path_map) -> list[
+#     str]:
+#     """
+#     Builds out prerequisite paths for the given course. Searches for any paths that are already
+#     completed by the courses taken. If so, return an empty 2d array. Otherwise iterate through the possible paths.
+#     """
+#
+#     possible_paths = __dfs_course_prerequisite_paths(course_doc["id"], course_requisite_path_map)
+#
+#     shortest_path = None
+#     shortest_path_length = -1
+#
+#     for i, path in enumerate(possible_paths):
+#         adjusted_path = __adjust_real_course_prerequisite_paths(path, courses_taken)
+#
+#         if shortest_path is None or len(adjusted_path) < shortest_path_length:
+#             shortest_path = adjusted_path
+#             shortest_path_length = len(adjusted_path)
+#
+#     return shortest_path
 
 
 def __build_course_prerequisite_path_map(course_docs):
@@ -184,7 +186,7 @@ def __dfs_course_prerequisite_paths(parent_course_id, course_requisite_path_map)
 
         # Extend each subpath with "path" contents
         for subpath in subpaths_to_pick_from:
-            all_paths.append([ *path, *subpath ])
+            all_paths.append([*path, *subpath])
 
     # Flatten all paths
     from more_itertools import collapse

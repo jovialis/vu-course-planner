@@ -233,3 +233,108 @@ def del_course_from_timeline(req: https_fn.CallableRequest) -> https_fn.Response
     })
 
     return True
+
+
+@https_fn.on_call()
+def update_timeline_major(req: https_fn.CallableRequest) -> https_fn.Response:
+    from src.lookups.schemas import AVAILABLE_SCHEMAS
+
+    db = init_firestore()
+
+    timeline_id = req.data["timeline_id"]
+    major_id = req.data["major_id"]
+
+    if major_id is not None and major_id not in AVAILABLE_SCHEMAS.keys():
+        raise ValueError("Major does not exist")
+
+    doc_ref = db.collection('timelines').document(timeline_id)
+    doc = doc_ref.get()
+
+    if not doc.exists:
+        raise ValueError("Timeline does not exist")
+
+    doc_ref.update({
+        "timeline_major": major_id
+    })
+
+    return True
+
+
+@https_fn.on_call()
+def generate_timeline_courses(req: https_fn.CallableRequest) -> https_fn.Response:
+    from src.ai_planner.simple_course_prediction import pick_courses_and_assign_to_semesters
+    from src.lookups.schemas import AVAILABLE_SCHEMAS
+
+    db = init_firestore()
+
+    timeline_id = req.data["timeline_id"]
+    major_id = req.data["major_id"]
+    selected_paths = req.data["selected_paths"]
+
+    if timeline_id is None:
+        raise ValueError("Timeline ID must be provided")
+
+    if major_id is not None and major_id not in AVAILABLE_SCHEMAS.keys():
+        raise ValueError("Major does not exist")
+
+    doc_ref = db.collection('timelines').document(timeline_id)
+    doc = doc_ref.get()
+
+    if not doc.exists:
+        raise ValueError("Timeline does not exist")
+
+    semester_courses = []
+
+    for semester in doc.get("timeline_semesters"):
+        semester_offerings = []
+
+        for course in semester["semester_courses"]:
+            semester_offerings.append(course)
+
+        semester_courses.append(semester_offerings)
+
+    flattened_taken_courses = [item for sublist in semester_courses for item in sublist]
+    flattened_taken_courses = [x["course_id"] for x in flattened_taken_courses]
+
+    picked_courses = pick_courses_and_assign_to_semesters(
+        major_id,
+        flattened_taken_courses,
+        selected_paths=selected_paths,
+        semesters=semester_courses
+    )
+
+    semesters_to_write = doc.get("timeline_semesters")
+    for i, semester in enumerate(semesters_to_write):
+        semester["semester_courses"] = picked_courses[i]
+    #
+    # doc_ref.update({
+    #     "timeline_semesters": semesters_to_write
+    # })
+
+    return semesters_to_write
+
+
+@https_fn.on_call()
+def replace_timeline_semesters(req: https_fn.CallableRequest) -> https_fn.Response:
+    from src.ai_planner.simple_course_prediction import pick_courses_and_assign_to_semesters
+    from src.lookups.schemas import AVAILABLE_SCHEMAS
+
+    db = init_firestore()
+
+    timeline_id = req.data["timeline_id"]
+    timeline_semesters = req.data["timeline_semesters"]
+
+    if timeline_id is None:
+        raise ValueError("Timeline ID must be provided")
+
+    doc_ref = db.collection('timelines').document(timeline_id)
+    doc = doc_ref.get()
+
+    if not doc.exists:
+        raise ValueError("Timeline does not exist")
+
+    doc_ref.update({
+        "timeline_semesters": timeline_semesters
+    })
+
+    return True

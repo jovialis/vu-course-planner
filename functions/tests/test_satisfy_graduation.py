@@ -31,7 +31,7 @@ def test_determine_graduation_remainder_simple():
         "HIST 3000W",
         "HIST 3883",
         "HIST 3880",
-        "HIST 3883",
+        "HIST 3889",
         "HIST 3890",
         "HIST 3980",
         "HIST 4960",

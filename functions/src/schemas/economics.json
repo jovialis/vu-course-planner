@@ -7,20 +7,20 @@
       "Name": "Principles of Macroeconomics",
       "id": 1,
       "Hours": 3,
-      "Required": [],
-      "Paths": [
-        "ECON 1010"
-      ],
+      "Required": [
+		  "ECON 1010"
+	  ],
+      "Paths": [],
       "Remainder": []
     },
     {
       "Name": "Principles of Microeconomics",
       "id": 2,
       "Hours": 3,
-      "Required": [],
-      "Paths": [
-        "ECON 1020"
-      ],
+      "Required": [
+		  "ECON 1020"
+	  ],
+      "Paths": [],
       "Remainder": []
     },
     {
@@ -52,23 +52,9 @@
       "id": 4,
       "Hours": 3,
       "Required": [
-        "ECON 1010",
-        "ECON 1020",
-        {
-          "Name": "Math Prerequisite",
-          "id": 101,
-          "Hours": 3,
-          "Required": [],
-          "Paths": [
-            "MATH 1201",
-            "MATH 1301"
-          ],
-          "Remainder": []
-        }
+	  	"ECON 3012"
       ],
-      "Paths": [
-        "ECON 3012"
-      ],
+      "Paths": [],
       "Remainder": []
     },
     {
@@ -76,23 +62,9 @@
       "id": 5,
       "Hours": 3,
       "Required": [
-        "ECON 1010",
-        "ECON 1020",
-        {
-          "Name": "Math Prerequisite",
-          "id": 102,
-          "Hours": 3,
-          "Required": [],
-          "Paths": [
-            "MATH 1201",
-            "MATH 1301"
-          ],
-          "Remainder": []
-        }
+		  "ECON 3022"
       ],
-      "Paths": [
-        "ECON 3022"
-      ],
+      "Paths": [],
       "Remainder": []
     },
     {
@@ -100,29 +72,26 @@
       "id": 6,
       "Hours": 3,
       "Required": [
-        "ECON 1020",
         {
           "Name": "Stats Prerequisite",
           "id": 103,
           "Hours": 3,
-          "Required": [],
-          "Paths": [
-            "MATH 1201",
-            "MATH 1301",
-            {
-              "Name": "Math Replacement",
-              "id": 104,
-              "Hours": 3,
-              "Required": [
-                "Math 2820L"
-              ],
-              "Paths": [
-                "Math 2810",
-                "Math 2820"
-              ],
-              "Remainder": []
-            }
-          ],
+          "Required": [
+			  {
+				  "Name": "Math Replacement",
+				  "id": 104,
+				  "Hours": 3,
+				  "Required": [
+					  "MATH 2820L"
+				  ],
+				  "Paths": [
+					  "MATH 2810",
+					  "MATH 2820"
+				  ],
+				  "Remainder": []
+			  }
+		  ],
+          "Paths": [],
           "Remainder": []
         },
         {
@@ -268,9 +237,7 @@
       "Remainder": [
         {
           "subject": "MATH",
-          "cond": [
-            "only_math"
-          ]
+          "cond": []
         }
       ]
     }

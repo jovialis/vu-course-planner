@@ -6,6 +6,7 @@
  */
 
 import {
+	Box,
 	Button,
 	Card,
 	Heading,
@@ -21,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import React, {PropsWithChildren, useContext, useState} from "react";
 import {MdCalendarToday} from "react-icons/md";
+import {MajorPickerBar} from "../MajorPickerBar";
 import {SemesterCard, SemesterCardProps} from "./SemesterCard";
 import {SidebarMajorChunk} from "./SidebarMajorChunk";
 
@@ -39,40 +41,23 @@ export function useTimeline() {
 export interface TimelineProps {
 	timeline_id: string
 	timeline_name: string
-	timeline_semesters: SemesterCardProps[]
+	timeline_major?: string
+	timeline_semesters: SemesterCardProps[],
+	refetchTimeline: () => void
 }
 
 export function Timeline(props: TimelineProps) {
-	const [name, setName] = useState(props.timeline_name);
-	const [semesters, setSemesters] = useState(props.timeline_semesters);
-
-	function setTimelineName(name: string) {
-		// TODO: Update this on the server
-
-		setName(name);
-	}
-
-	function addTimelineSemester() {
-		// TODO: Update this on the server
-
-		setSemesters(semesters => [
-			...semesters,
-			{
-				semester_name: "Fall 202X",
-				semester_id: "fall202x",
-				semester_courses: []
-			}
-		])
-	}
 
 	return <TimelineProvider {...{
 		timeline_id: props.timeline_id,
-		timeline_semesters: semesters,
-		timeline_name: name
+		timeline_semesters: props.timeline_semesters,
+		timeline_name: props.timeline_name,
+		timeline_major: props.timeline_major,
+		refetchTimeline: props.refetchTimeline
 	}}>
 		<VStack alignItems={"stretch"} spacing={8}>
 			<Heading size={"md"}>
-				{name}
+				{props.timeline_name}
 			</Heading>
 
 			<HStack
@@ -80,12 +65,12 @@ export function Timeline(props: TimelineProps) {
 				alignItems={"flex-start"}
 			>
 				<Stepper
-					index={semesters.length + 1}
+					index={props.timeline_semesters.length + 1}
 					orientation='vertical'
 					gap={0}
 					size={"md"}
 				>
-					{semesters.map((semester, i) => <Step key={i}>
+					{props.timeline_semesters.map((semester, i) => <Step key={i}>
 						<StepIndicator>
 							<StepStatus
 								complete={<Icon as={MdCalendarToday} boxSize={4}/>}
@@ -107,9 +92,14 @@ export function Timeline(props: TimelineProps) {
 
 				<HStack flex={1} justifyContent={"flex-end"}>
 					<Spacer/>
-					<Card w={80}>
-						<SidebarMajorChunk/>
-					</Card>
+
+					<Box w={80}>
+						<MajorPickerBar/>
+						<Box h={4}/>
+						<Card>
+							<SidebarMajorChunk/>
+						</Card>
+					</Box>
 				</HStack>
 
 			</HStack>
