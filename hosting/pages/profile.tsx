@@ -38,7 +38,11 @@ export default function UserProfile() {
     const [listOfComplete, setListOfComplete] = useState(<Box><Text>Currently No Courses Added</Text></Box>)
 
     const [retSubmission, setRetSubmission] = useState("")
+    const [rating, setRating] = useState({})
     const toast = useToast()
+
+    const [diffScore, setDiffScore] = useState({})
+    const [useScore, setUseScore] = useState({})
 
     useEffect(() => {
         handleRead()
@@ -95,6 +99,12 @@ export default function UserProfile() {
                 set_term(result.data?.graduation_term || "")
 	            // @ts-ignore
                 setComplete(result.data?.completed_courses || [])
+                
+                setRating(result.data?.rating || {}) 
+
+                setDiffScore(result.data?.diff_rating || {})
+
+                setUseScore(result.data?.use_rating || {})
             }
             // console.log("read")
             // console.log(result.data)
@@ -116,6 +126,9 @@ export default function UserProfile() {
             year: year,
             term: term,
             completeCourses: completedCourses,
+            rating: rating,
+            use_score: useScore,
+            diff_score: diffScore,
         }
         setRetSubmission("")
 		// console.log(data);

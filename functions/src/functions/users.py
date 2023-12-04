@@ -21,13 +21,16 @@ def set_user_data(req: https_fn.CallableRequest) -> https_fn.Response:
             "sec_major": req.data["second_major"],
             "graduation_year": req.data["year"],
             "graduation_term": req.data["term"],
-            "completed_courses": req.data["completeCourses"]
+            "completed_courses": req.data["completeCourses"],
+            "rating": req.data["rating"],
+            "diff_score" : req.data["diff_score"],
+            "use_score" : req.data["use_score"],
     }
 
     ref = db.collection("users").document(req.auth.uid)
 
     ret = ref.set(data)
-    print("ret")
+    
     print(ret)
     return True
 
