@@ -22,7 +22,7 @@ def warehouse_course_requisites(course_id: str):
 
 def __structure_course_requisites(requisites: str):
     import openai
-    openai.api_key = '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'
+    openai.api_key = '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'
 
     try:
         with open("src/prompts/extract_requisites", "r") as prompt_file:

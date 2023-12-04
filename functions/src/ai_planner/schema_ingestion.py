@@ -1,5 +1,5 @@
 import json
-from src.functions import courses
+from src.lookups import courses
 
 
 def ingest_schema(path: str):
@@ -13,7 +13,8 @@ def ingest_schema(path: str):
         json_data = json.load(json_file)
     
     # pass in the json data to be deserialized as a DegreeSchema object
-    return DegreeSchema(json_data)
+    return DegreeSchema(json_data, {}, [])
+
 
 class DegreeSchema:
     """
@@ -22,20 +23,20 @@ class DegreeSchema:
     It encapsulates all the data in our major schema
     """
 
-    def __init__(self, data) -> None:
+    def __init__(self, data, with_paths: dict[str, int], taken_courses: list[str]) -> None:
         self.type = data['Type']
         self.name = data['Name']
         self.track = data['Track']
         # this contains all the unique courses that may be required for the major
         self.courses = set()
-        self.requirements = self.generate_requirements(data['Requirements'])
+        self.requirements = self.generate_requirements(data['Requirements'], with_paths, taken_courses)
 
     # Function that iterates through the requirements and creates a 
     # nested DegreeSchemaRequirement object
-    def generate_requirements(self, requirement):
+    def generate_requirements(self, requirement, with_paths: dict[str, int], taken_courses: list[str]):
         requirements = []
         for req in requirement:
-            requirements.append(DegreeSchemaRequirement(req))
+            requirements.append(DegreeSchemaRequirement(req, with_paths, taken_courses))
             self.courses.update(requirements[-1].find_satisfying_courses())
         return requirements
     
@@ -62,54 +63,69 @@ class DegreeSchemaRequirement:
     overall degree requirement 
     """
 
-    def __init__(self, req) -> None:  
+    def __init__(self, req, with_paths: dict[str, int], taken_courses: list[str], all_existing_courses: list[dict]) -> None:
         self.courses = set()
         self.name = req['Name']
         self.id = req['id']
         self.hours = req['Hours']
-        self.required = self.create_required(req['Required'])
-        self.paths = self.create_paths(req['Paths'])
-        self.remainder = self.create_remainder(req['Remainder'])
+        self.required = self.create_required(req['Required'], with_paths, taken_courses, all_existing_courses)
+        self.paths = self.create_paths(req['Paths'], req["id"], with_paths, taken_courses, all_existing_courses)
+        self.remainder = self.create_remainder(req['Remainder'], with_paths, taken_courses, all_existing_courses)
 
     # Deserializes the required field in our json data 
-    def create_required(self, required):
+    def create_required(self, required, with_paths: dict[str, int], taken_courses: list[str], all_existing_courses: list[dict]):
         reqs = []
         for r in required:
             # Create a nested DegreeSchemaRequirement
             if isinstance(r,dict):
-                reqs.append(DegreeSchemaRequirement(r))
+                reqs.append(DegreeSchemaRequirement(r, with_paths, taken_courses, all_existing_courses))
                 self.courses.update(reqs[-1].find_satisfying_courses())
             # Requirement is simply a class
             else:
-                reqs.append(r)
-                self.courses.update(courses.search(r))
+                print("Not nested requirement for", r)
+
+                # Only return if the course hasn't been taken
+                if r.lower() not in taken_courses:
+                    reqs.append(r)
+                    self.courses.update(courses.find_dependencies(r, all_existing_courses))
+
+        print("Create required", reqs, "courses", self.courses)
         return reqs
 
     # Deserializes the path field in our json data 
-    def create_paths(self, paths):
+    def create_paths(self, paths, my_id: str, with_paths: dict[str, int], taken_courses: list[str], all_existing_courses: list[dict]):
         ps = []
-        for p in paths:
+
+        selected_paths = paths
+
+        # If there is a path selected for this requirement, only process that one
+        if len(paths) > 0 and my_id in with_paths and with_paths[my_id] < len(selected_paths):
+            selected_paths = [paths[with_paths[my_id]]]
+
+        for p in selected_paths:
             # Create a nested DegreeSchemaRequirement
             if isinstance(p,dict):
-                ps.append(DegreeSchemaRequirement(p))
+                ps.append(DegreeSchemaRequirement(p, with_paths, taken_courses, all_existing_courses))
                 self.courses.update(ps[-1].find_satisfying_courses())
             # Requirement is simply a class
             else:
-                ps.append(p)
-                self.courses.update(courses.search(p))
+                if p.lower() not in taken_courses:
+                    ps.append(p)
+                    self.courses.update(courses.find_dependencies(p, all_existing_courses))
         return ps
     
-    def create_remainder(self, remainder):
+    def create_remainder(self, remainder, with_paths: dict[str, int], taken_courses: list[str], all_existing_courses: list[dict]):
         rem = set()
         for r in remainder:
             if isinstance(r, dict):
                 if "cond" in r:
-                    ret = courses.fetch_cond_courses(r["subject"], r["cond"])
+                    ret = courses.fetch_cond_courses(r["subject"], r["cond"], all_existing_courses)
                     rem.update(ret)
                     self.courses.update(ret)
             else:
-                rem.add(r)
-                self.courses.update(courses.search(r))
+                if r.lower() not in taken_courses:
+                    rem.add(r)
+                    self.courses.update(courses.find_dependencies(r, all_existing_courses))
         return list(rem)
 
     def find_satisfying_courses(self):

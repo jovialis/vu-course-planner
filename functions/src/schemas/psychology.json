@@ -5,7 +5,7 @@
     "Requirements": [
         {
             "Name": "General Requirements",
-            "id": 1,
+            "id": "general-req",
             "Hours": 9,
             "Required": ["PSY 1200",
                          "PSY 2150"],
@@ -15,7 +15,7 @@
         },
         {
             "Name": "Distribution Courses",
-            "id": 2,
+            "id": "distribution",
             "Hours": 12,
             "Required": [],
             "Paths": [],
@@ -27,8 +27,8 @@
                           "PSY-PC 1250"]
         },
         {
-            "Name": "Distribution Courses",
-            "id": 2,
+            "Name": "Elective Courses",
+            "id": "elective",
             "Hours": 12,
             "Required": [],
             "Paths": [],
@@ -49,7 +49,8 @@
                     ]
                 },
                 {
-                    "subject": "HOD"
+                    "subject": "HOD",
+					"cond": []
                 }
             ]
         }

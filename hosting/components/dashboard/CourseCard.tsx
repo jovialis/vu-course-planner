@@ -32,7 +32,8 @@ export interface CourseCardProps {
 }
 
 export function CourseCard(props: CourseCardProps & {
-	onRemove: () => void
+	onRemove?: () => void,
+	hideOptions?: boolean
 }) {
 	return <>
 		<Tag size={"lg"} key={props.course_id}>
@@ -66,23 +67,23 @@ export function CourseCard(props: CourseCardProps & {
 				</HStack>
 			</TagLabel>
 			<Spacer/>
-			<Menu>
-				<MenuButton
-					as={IconButton}
-					aria-label={"Open course options"}
-					icon={<Icon ml={"auto"} as={MdMoreHoriz}/>}
-					variant={"link"}
-					w={"auto"}
-				/>
-				<MenuList shadow={"xl"}>
-					<MenuItem
-						color={"red.400"}
-						onClick={props.onRemove}
-					>
-						Remove
-					</MenuItem>
-				</MenuList>
-			</Menu>
+			{!props.hideOptions && <Menu>
+                <MenuButton
+                    as={IconButton}
+                    aria-label={"Open course options"}
+                    icon={<Icon ml={"auto"} as={MdMoreHoriz}/>}
+                    variant={"link"}
+                    w={"auto"}
+                />
+                <MenuList shadow={"xl"}>
+                    <MenuItem
+                        color={"red.400"}
+                        onClick={props.onRemove}
+                    >
+                        Remove
+                    </MenuItem>
+                </MenuList>
+            </Menu>}
 
 		</Tag>
 	</>

@@ -661,8 +661,8 @@
 			"Remainder": []
 		},
 		{
-			"Name": "Concentration",
-			"id": "concentration",
+			"Name": "Electives",
+			"id": "electives",
 			"Hours": 12,
 			"Required": [],
 			"Paths": [],

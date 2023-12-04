@@ -8,10 +8,10 @@ import {
 	Alert, AlertDescription, AlertTitle,
 	Avatar,
 	Box,
-	Button,
+	Button, Center,
 	Container,
 	Heading,
-	HStack, Link, Spacer,
+	HStack, Link, Modal, ModalBody, ModalContent, ModalOverlay, Portal, Spacer, Spinner,
 	Tab,
 	TabList,
 	TabPanel,
@@ -44,7 +44,7 @@ export default function Dashboard() {
 				status: "success",
 				title: "Created a new timeline"
 			})
-		}
+		},
 	});
 
 	console.log(data)
@@ -166,9 +166,14 @@ export default function Dashboard() {
 
 				<Box h={10}/>
 
-				{loading && <>
-					<Text>Loading...</Text>
-				</>}
+				{loading && <Modal isOpen={true} onClose={() => {}} size={"full"}>
+                    <ModalOverlay/>
+                    <ModalContent bg={"blackAlpha.700"} h={"100%"}>
+                        <Center h={"100%"}>
+                            <Spinner color={"white"} size={"xl"}/>
+                        </Center>
+                    </ModalContent>
+                </Modal>}
 
 				{data && data.length === 0 && <>
 					<Alert flexDir={"column"}>
@@ -193,7 +198,9 @@ export default function Dashboard() {
 									key={"Timeline"}
 									p={0}
 								>
-									<Timeline {...timeline}/>
+									<Timeline {...timeline} refetchTimeline={() => {
+										refetch()
+									}}/>
 								</TabPanel>
 							</React.Fragment>
 						))}
