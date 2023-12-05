@@ -9,7 +9,7 @@
             "Hours": 9,
             "Required": ["PSY 1200",
                          "PSY 2150"],
-            "Paths": ["PSY 2100", 
+            "Paths": ["PSY 2100",
                       "PSY-PC 2110"],
             "Remainder": []
         },
@@ -23,8 +23,7 @@
                           "PSY 3110", 
                           "PSY 3120", 
                           "PSY 3750",
-                          "NSC 2201", 
-                          "PSY-PC 1250"]
+                          "NSC 2201"]
         },
         {
             "Name": "Distribution Courses",

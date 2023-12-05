@@ -2,11 +2,7 @@ def test_determine_graduation__simple():
     from src.ai_planner.satisfy_graduation import determine_graduation
     from src.ai_planner.schema_ingestion import ingest_schema
     test_list_success = {"PSY 1200", "PSY 2150", "PSY 2100", "PSY 3100", "PSY 3110", 
-                "PSY 3120", "PSY 3750", "NSC 2201", "PSYC 1111",
-                    "PSYC 1112",
-                    "PSYC 1113",
-                    "PSYC 1114",
-                    "PSYC 1115"}
+                "PSY 3120", "PSY 3750", "NSC 2201"}
     simple_psychology = ingest_schema("src/schemas/" + "test_psychology" + ".json")
     result_success = determine_graduation(test_list_success, simple_psychology)
 

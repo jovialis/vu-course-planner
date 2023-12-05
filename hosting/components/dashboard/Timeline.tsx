@@ -108,7 +108,7 @@ export function Timeline(props: TimelineProps) {
 				<HStack flex={1} justifyContent={"flex-end"}>
 					<Spacer/>
 					<Card w={80}>
-						<SidebarMajorChunk/>
+						<SidebarMajorChunk timeline_id={props.timeline_id}/>
 					</Card>
 				</HStack>
 

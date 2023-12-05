@@ -27,12 +27,16 @@ import {useState} from "react";
 import {useLazyCallable} from "../../hooks/UseLazyCallable";
 import {useCallable} from "../../hooks/UseCallable";
 
-export function SidebarMajorChunk() {
+export function SidebarMajorChunk(props: {
+    timeline_id: string
+}) {
     const [selectedMajor, setSelectedMajor] = useState('');
     const [passReq, setPassReq] = useState(false);
     const [status, {data:data, loading: loading}] = useLazyCallable("get_user_grad_status", {
-        major_id: selectedMajor
+        major_id: selectedMajor,
+        timeline_id: props.timeline_id
     })
+    console.log(data)
 
     const handleMajorChange = (event) => {
         setSelectedMajor(event.target.value);
