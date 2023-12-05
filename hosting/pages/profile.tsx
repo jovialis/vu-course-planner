@@ -99,11 +99,11 @@ export default function UserProfile() {
                 set_term(result.data?.graduation_term || "")
 	            // @ts-ignore
                 setComplete(result.data?.completed_courses || [])
-                
-                setRating(result.data?.rating || {}) 
-
+	            // @ts-ignore
+                setRating(result.data?.rating || {})
+	            // @ts-ignore
                 setDiffScore(result.data?.diff_rating || {})
-
+	            // @ts-ignore
                 setUseScore(result.data?.use_rating || {})
             }
             // console.log("read")

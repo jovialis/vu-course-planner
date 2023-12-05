@@ -66,3 +66,6 @@ The idea here is to import the Component you're testing, give it different param
 - Write all tests in the `__tests__` folder of hosting
 - Run tests by executing the `test.sh` script, or by typing `yarn workspace hosting run test`.
 - Read the documentation for [Testing Library](https://testing-library.com/docs/react-testing-library/setup/#jest-28)
+
+## Deployment
+Deploy using `firebase deploy`.

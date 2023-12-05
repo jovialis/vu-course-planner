@@ -48,6 +48,9 @@ export function CourseDetailsModal(props: {
 	const [diffText, setDiffText] = useState(<Text fontSize='1xl' fontWeight="bold" color="black">0</Text>)
 	const [useText, setUseText] = useState(<Text fontSize='1xl' fontWeight="bold" color="black">0</Text>)
 
+	const [diffRating, setDiffRating] = useState(0);
+	const [useRating, setUseRating] = useState(0);
+
 	const [diffStars, setDiffStars] = useState(
 	<Box>{[...Array(5)].map((_, index) => (
 		<IconButton
@@ -109,7 +112,9 @@ export function CourseDetailsModal(props: {
 						isClosable: true,
 					  })
 				} else {
+					// @ts-ignore
 					setLikes(result.data?.like || 0)
+					// @ts-ignore
 					setDislikes(result.data?.dislike || 0)   
 					toast({
 						title: 'Successfully Voted!',
@@ -134,9 +139,13 @@ export function CourseDetailsModal(props: {
 		getRating(data).then((result) => {
 			console.log(result)
             if (result != null){
+				// @ts-ignore
 				setLikes(result.data?.like || 0)
-				setDislikes(result.data?.dislike || 0)     
+	            // @ts-ignore
+				setDislikes(result.data?.dislike || 0)
+	            // @ts-ignore
 				setDiffRating(result.data?.difficulties || 0)
+	            // @ts-ignore
 				setUseRating(result.data?.usefulness || 0)
 				setUseStars(
 					<Box>
@@ -145,6 +154,7 @@ export function CourseDetailsModal(props: {
 						key={index}
 						icon={<StarIcon />}
 						variant="ghost"
+						// @ts-ignore
 						color={index < result.data?.usefulness ? "yellow.400" : "gray.300"}
 						onClick={() => handleRating(index + 1, "usefulness")}
 						aria-label={`${index + 1}`}
@@ -157,6 +167,7 @@ export function CourseDetailsModal(props: {
 						key={index}
 						icon={<StarIcon />}
 						variant="ghost"
+						// @ts-ignore
 						color={index < result.data?.difficulties ? "yellow.400" : "gray.300"}
 						onClick={() => handleRating(index + 1, "difficulty")}
 						aria-label={`${index + 1}`}
@@ -167,8 +178,6 @@ export function CourseDetailsModal(props: {
 			
         })
 	}
-	const [diffRating, setDiffRating] = useState(0);
-	const [useRating, setUseRating] = useState(0);
 
 	function handleRating(index: number, type: string ) {
 		const functions = getFunctions()
@@ -198,11 +207,17 @@ export function CourseDetailsModal(props: {
 						isClosable: true,
 					  })
 				} else {
+					// @ts-ignore
 					setLikes(result.data?.like || 0)
-					setDislikes(result.data?.dislike || 0)     
+					// @ts-ignore
+					setDislikes(result.data?.dislike || 0)
+					// @ts-ignore
 					setDiffRating(result.data?.difficulties || 0)
+					// @ts-ignore
 					setUseRating(result.data?.usefulness || 0)
+					// @ts-ignore
 					setUseText(<Text fontSize='1xl' fontWeight="bold" color="black">{result.data?.usefulness}</Text>)
+					// @ts-ignore
 					setDiffText(<Text fontSize='1xl' fontWeight="bold" color="black">{result.data?.difficulties}</Text>)
 					setUseStars(
 						<Box>
@@ -211,6 +226,7 @@ export function CourseDetailsModal(props: {
 							key={index}
 							icon={<StarIcon />}
 							variant="ghost"
+							// @ts-ignore
 							color={index < result.data?.usefulness ? "yellow.400" : "gray.300"}
 							onClick={() => handleRating(index + 1, "usefulness")}
 							aria-label={`${index + 1}`}
@@ -223,6 +239,7 @@ export function CourseDetailsModal(props: {
 							key={index}
 							icon={<StarIcon />}
 							variant="ghost"
+							// @ts-ignore
 							color={index < result.data?.difficulties ? "yellow.400" : "gray.300"}
 							onClick={() => handleRating(index + 1, "difficulty")}
 							aria-label={`${index + 1}`}
